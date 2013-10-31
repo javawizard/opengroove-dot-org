@@ -1,0 +1,363 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package parcon.railroad</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+// START JCP ADD
+  if(window.location.href.indexOf("http://www.opengroove.org/") == 0) {
+// END JCP ADD
+  _gaq.push(['_setAccount', 'UA-6079740-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// START JCP ADD
+}
+// END JCP ADD
+
+</script>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="parcon.html"><font color="#ffffff">parcon</font></a>.railroad</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jcp/github/parcon/parcon/railroad/__init__.py">/home/jcp/github/parcon/parcon/railroad/__init__.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;provides&nbsp;various&nbsp;classes&nbsp;for&nbsp;specifying&nbsp;what&nbsp;a&nbsp;particular&nbsp;syntax<br>
+diagram&nbsp;(a.k.a.&nbsp;railroad&nbsp;diagram)&nbsp;should&nbsp;look&nbsp;like.<br>
+&nbsp;<br>
+The&nbsp;actual&nbsp;drawing&nbsp;of&nbsp;diagrams&nbsp;created&nbsp;with&nbsp;classes&nbsp;in&nbsp;this&nbsp;module&nbsp;is&nbsp;left&nbsp;up<br>
+to&nbsp;other&nbsp;modules&nbsp;included&nbsp;with&nbsp;Parcon&nbsp;in&nbsp;order&nbsp;to&nbsp;allow&nbsp;railroad&nbsp;diagrams&nbsp;that<br>
+look&nbsp;different&nbsp;to&nbsp;be&nbsp;created.&nbsp;The&nbsp;main&nbsp;one&nbsp;of&nbsp;these&nbsp;is&nbsp;the&nbsp;submodule&nbsp;raildraw,<br>
+which&nbsp;is&nbsp;a&nbsp;from-scratch&nbsp;railroad&nbsp;diagram&nbsp;drawing&nbsp;engine&nbsp;that&nbsp;can&nbsp;take&nbsp;a<br>
+railroad&nbsp;diagram&nbsp;as&nbsp;specified&nbsp;by&nbsp;classes&nbsp;in&nbsp;this&nbsp;module&nbsp;and&nbsp;convert&nbsp;it&nbsp;to&nbsp;a&nbsp;PNG<br>
+image.<br>
+&nbsp;<br>
+Here's&nbsp;a&nbsp;really&nbsp;simple&nbsp;example&nbsp;that&nbsp;uses&nbsp;raildraw&nbsp;to&nbsp;draw&nbsp;a&nbsp;syntax&nbsp;diagram:<br>
+&nbsp;<br>
+from&nbsp;parcon&nbsp;import&nbsp;First<br>
+#&nbsp;Create&nbsp;a&nbsp;parser&nbsp;to&nbsp;draw<br>
+some_parser&nbsp;=&nbsp;"Hello,&nbsp;"&nbsp;+&nbsp;First("world",&nbsp;"all&nbsp;you&nbsp;people")<br>
+#&nbsp;<a href="#Then">Then</a>&nbsp;draw&nbsp;a&nbsp;diagram&nbsp;of&nbsp;it.<br>
+some_parser.draw_railroad_to_png({},&nbsp;"test.png")</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="parcon.railroad.raildraw.html">raildraw</a><br>
+</td><td width="25%" valign=top><a href="parcon.railroad.regex.html">regex</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.railroad.html#Component">Component</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.railroad.html#Bullet">Bullet</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.railroad.html#Loop">Loop</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.railroad.html#Nothing">Nothing</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.railroad.html#Or">Or</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.railroad.html#Then">Then</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.railroad.html#Token">Token</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="parcon.railroad.html#Railroadable">Railroadable</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Bullet">class <strong>Bullet</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Bullet">Bullet</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Bullet-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Bullet-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Bullet-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Bullet-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Component">class <strong>Component</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Component-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Component-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Component-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Loop">class <strong>Loop</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Loop">Loop</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Loop-__init__"><strong>__init__</strong></a>(self, component, delimiter)</dt></dl>
+
+<dl><dt><a name="Loop-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Loop-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Loop-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Loop-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Nothing">class <strong>Nothing</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Nothing">Nothing</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Nothing-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Nothing-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Nothing-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Nothing-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Or">class <strong>Or</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Or">Or</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Or-__init__"><strong>__init__</strong></a>(self, *constructs)</dt></dl>
+
+<dl><dt><a name="Or-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Or-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Or-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Or-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Railroadable">class <strong>Railroadable</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;class&nbsp;representing&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;that&nbsp;can&nbsp;be&nbsp;drawn&nbsp;as&nbsp;a&nbsp;railroad&nbsp;diagram.<br>
+Most&nbsp;Parcon&nbsp;parsers&nbsp;subclass&nbsp;this&nbsp;class&nbsp;in&nbsp;addition&nbsp;to&nbsp;parcon.Parser.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Railroadable-create_railroad"><strong>create_railroad</strong></a>(self, options)</dt></dl>
+
+<dl><dt><a name="Railroadable-draw_productions_to_png"><strong>draw_productions_to_png</strong></a>(self, options, filename, tail<font color="#909090">=[]</font>)</dt></dl>
+
+<dl><dt><a name="Railroadable-draw_railroad_to_png"><strong>draw_railroad_to_png</strong></a>(self, options, filename)</dt><dd><tt>Draws&nbsp;a&nbsp;syntax&nbsp;diagram&nbsp;for&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;the&nbsp;specified&nbsp;.png&nbsp;image&nbsp;file<br>
+using&nbsp;the&nbsp;specified&nbsp;options.&nbsp;For&nbsp;now,&nbsp;just&nbsp;pass&nbsp;{}&nbsp;(i.e.&nbsp;an&nbsp;empty<br>
+dictionary)&nbsp;as&nbsp;options;&nbsp;I'll&nbsp;document&nbsp;what&nbsp;this&nbsp;actually&nbsp;does&nbsp;at&nbsp;a<br>
+later&nbsp;date.</tt></dd></dl>
+
+<dl><dt><a name="Railroadable-get_productions"><strong>get_productions</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>railroad_children</strong> = []</dl>
+
+<dl><dt><strong>railroad_production_delegate</strong> = None</dl>
+
+<dl><dt><strong>railroad_production_name</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Then">class <strong>Then</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Then">Then</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Then-__init__"><strong>__init__</strong></a>(self, *constructs)</dt></dl>
+
+<dl><dt><a name="Then-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Then-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Then-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Then-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Token">class <strong>Token</strong></a>(<a href="parcon.railroad.html#Component">Component</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.railroad.html#Token">Token</a></dd>
+<dd><a href="parcon.railroad.html#Component">Component</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Token-__init__"><strong>__init__</strong></a>(self, type, text)</dt></dl>
+
+<dl><dt><a name="Token-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Token-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><a name="Token-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Token-optimize"><strong>optimize</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.railroad.html#Component">Component</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-create_railroad"><strong>create_railroad</strong></a>(value, options)</dt></dl>
+ <dl><dt><a name="-ensure_railroadable"><strong>ensure_railroadable</strong></a>(value)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ANYCASE</strong> = 3<br>
+<strong>DESCRIPTION</strong> = 4<br>
+<strong>PRODUCTION</strong> = 1<br>
+<strong>TEXT</strong> = 2</td></tr></table>
+</body></html>

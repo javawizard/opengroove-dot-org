@@ -1,0 +1,807 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module parcon.static</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+// START JCP ADD
+  if(window.location.href.indexOf("http://www.opengroove.org/") == 0) {
+// END JCP ADD
+  _gaq.push(['_setAccount', 'UA-6079740-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// START JCP ADD
+}
+// END JCP ADD
+
+</script>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="parcon.html"><font color="#ffffff">parcon</font></a>.static</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jcp/github/parcon/parcon/static.py">/home/jcp/github/parcon/parcon/static.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;static&nbsp;typing&nbsp;library&nbsp;for&nbsp;Python.&nbsp;That&nbsp;may&nbsp;sound&nbsp;at&nbsp;first&nbsp;as&nbsp;if&nbsp;this&nbsp;module<br>
+was&nbsp;designed&nbsp;to&nbsp;simply&nbsp;decorate&nbsp;methods&nbsp;specifying&nbsp;the&nbsp;type&nbsp;of&nbsp;objects&nbsp;that<br>
+must&nbsp;be&nbsp;passed&nbsp;to&nbsp;them,&nbsp;and&nbsp;it&nbsp;can&nbsp;definitely&nbsp;do&nbsp;that.&nbsp;However,&nbsp;it's&nbsp;quite&nbsp;a<br>
+bit&nbsp;more&nbsp;powerful&nbsp;than&nbsp;that.&nbsp;It&nbsp;has&nbsp;a&nbsp;collection&nbsp;of&nbsp;constructs&nbsp;that&nbsp;allow<br>
+constructing&nbsp;type&nbsp;patterns,&nbsp;objects&nbsp;that&nbsp;allow&nbsp;a&nbsp;form&nbsp;of&nbsp;pattern&nbsp;matching<br>
+against&nbsp;Python&nbsp;objects.&nbsp;For&nbsp;example,&nbsp;<a href="#And">And</a>(<a href="#Type">Type</a>(list),&nbsp;<a href="#All">All</a>(<a href="#Type">Type</a>(int)))&nbsp;is&nbsp;a&nbsp;type<br>
+pattern&nbsp;that&nbsp;matches&nbsp;all&nbsp;objects&nbsp;that&nbsp;are&nbsp;instances&nbsp;of&nbsp;list&nbsp;and&nbsp;whose&nbsp;values<br>
+are&nbsp;all&nbsp;ints.&nbsp;<a href="#All">All</a>(<a href="#Type">Type</a>(int))&nbsp;would&nbsp;match&nbsp;any&nbsp;iterable&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;not&nbsp;just&nbsp;a&nbsp;list,<br>
+whose&nbsp;values&nbsp;are&nbsp;ints,&nbsp;while&nbsp;<a href="#Or">Or</a>(<a href="#Not">Not</a>(<a href="#Iterable">Iterable</a>()),&nbsp;<a href="#All">All</a>(<a href="#Type">Type</a>(int)))&nbsp;would<br>
+additionally&nbsp;match&nbsp;objects&nbsp;that&nbsp;are&nbsp;not&nbsp;iterable,&nbsp;and&nbsp;<a href="#Type">Type</a>(int)&nbsp;would&nbsp;simply<br>
+match&nbsp;objects&nbsp;of&nbsp;type&nbsp;int.<br>
+&nbsp;<br>
+A&nbsp;short&nbsp;notation&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;represent&nbsp;some&nbsp;of&nbsp;the&nbsp;type&nbsp;constructs.&nbsp;These<br>
+must&nbsp;be&nbsp;passed&nbsp;to&nbsp;the&nbsp;compile&nbsp;function&nbsp;to&nbsp;convert&nbsp;them&nbsp;to&nbsp;type&nbsp;patterns&nbsp;for<br>
+actual&nbsp;use.&nbsp;<a href="#Any">Any</a>&nbsp;Python&nbsp;type&nbsp;is&nbsp;a&nbsp;type&nbsp;pattern&nbsp;matching&nbsp;objects&nbsp;of&nbsp;that&nbsp;type.<br>
+A&nbsp;list&nbsp;containing&nbsp;one&nbsp;item,&nbsp;a&nbsp;type&nbsp;pattern&nbsp;(short&nbsp;or&nbsp;otherwise),&nbsp;is&nbsp;a&nbsp;type<br>
+pattern&nbsp;matching&nbsp;objects&nbsp;that&nbsp;are&nbsp;iterable&nbsp;and&nbsp;whose&nbsp;values&nbsp;are&nbsp;all&nbsp;of&nbsp;that<br>
+type&nbsp;and&nbsp;a&nbsp;tuple&nbsp;containing&nbsp;one&nbsp;or&nbsp;more&nbsp;items&nbsp;is&nbsp;a&nbsp;type&nbsp;pattern&nbsp;that&nbsp;matches<br>
+any&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;that&nbsp;matches&nbsp;at&nbsp;least&nbsp;one&nbsp;of&nbsp;its&nbsp;contained&nbsp;types.&nbsp;In&nbsp;that&nbsp;way,<br>
+Python&nbsp;types&nbsp;are&nbsp;converted&nbsp;to&nbsp;instances&nbsp;of&nbsp;<a href="#Type">Type</a>,&nbsp;lists&nbsp;are&nbsp;converted&nbsp;to<br>
+instances&nbsp;of&nbsp;<a href="#All">All</a>,&nbsp;and&nbsp;tuples&nbsp;are&nbsp;converted&nbsp;to&nbsp;instances&nbsp;of&nbsp;<a href="#Or">Or</a>.<br>
+&nbsp;<br>
+<a href="#Type">Type</a>&nbsp;patterns&nbsp;have&nbsp;two&nbsp;methods,&nbsp;matches&nbsp;and&nbsp;check_matches.&nbsp;Both&nbsp;take&nbsp;a&nbsp;single<br>
+argument,&nbsp;the&nbsp;value&nbsp;to&nbsp;match&nbsp;against.&nbsp;matches&nbsp;returns&nbsp;true&nbsp;if&nbsp;the&nbsp;specified<br>
+value&nbsp;matches&nbsp;the&nbsp;type&nbsp;pattern&nbsp;on&nbsp;which&nbsp;the&nbsp;matches&nbsp;function&nbsp;was&nbsp;called.<br>
+check_matches&nbsp;calls&nbsp;matches&nbsp;and&nbsp;throws&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;if&nbsp;it&nbsp;returned&nbsp;false.<br>
+&nbsp;<br>
+Each&nbsp;of&nbsp;the&nbsp;type&nbsp;pattern&nbsp;constructs&nbsp;clearly&nbsp;defines&nbsp;what&nbsp;fields&nbsp;it&nbsp;creates,<br>
+which&nbsp;allows&nbsp;for&nbsp;metatyping:&nbsp;creating&nbsp;type&nbsp;patterns&nbsp;that&nbsp;match&nbsp;type&nbsp;patterns<br>
+themselves.&nbsp;Such&nbsp;a&nbsp;thing&nbsp;is&nbsp;used&nbsp;in&nbsp;JPath's&nbsp;query&nbsp;optimizer,&nbsp;where&nbsp;the<br>
+optimizer&nbsp;uses&nbsp;metatyping&nbsp;to&nbsp;determine&nbsp;if&nbsp;the&nbsp;type&nbsp;pattern&nbsp;that&nbsp;an&nbsp;optimizer<br>
+will&nbsp;be&nbsp;called&nbsp;for&nbsp;makes&nbsp;any&nbsp;definitive&nbsp;assertions&nbsp;as&nbsp;to&nbsp;what&nbsp;type&nbsp;of&nbsp;compiler<br>
+production&nbsp;it&nbsp;operates&nbsp;on,&nbsp;which&nbsp;allows&nbsp;the&nbsp;compiler&nbsp;to&nbsp;significantly&nbsp;decrease<br>
+the&nbsp;time&nbsp;it&nbsp;takes&nbsp;to&nbsp;look&nbsp;up&nbsp;the&nbsp;set&nbsp;of&nbsp;optimizations&nbsp;to&nbsp;be&nbsp;applied&nbsp;to&nbsp;a<br>
+particular&nbsp;compiler&nbsp;production.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.static.html#StaticType">StaticType</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.static.html#All">All</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#And">And</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Any">Any</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Everything">Everything</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Field">Field</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Is">Is</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Iterable">Iterable</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Not">Not</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Or">Or</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Positional">Positional</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Sequence">Sequence</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#Type">Type</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.static.html#InternalError">InternalError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#StaticTypeError">StaticTypeError</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.static.html#TypeFormatError">TypeFormatError</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="All">class <strong>All</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;that&nbsp;particular&nbsp;value&nbsp;is&nbsp;iterable<br>
+and&nbsp;all&nbsp;of&nbsp;its&nbsp;values&nbsp;match&nbsp;the&nbsp;component&nbsp;type&nbsp;with&nbsp;which&nbsp;this&nbsp;<a href="#All">All</a><br>
+instance&nbsp;was&nbsp;created.&nbsp;The&nbsp;type&nbsp;is&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;component_type.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#All">All</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="All-__init__"><strong>__init__</strong></a>(self, component_type)</dt></dl>
+
+<dl><dt><a name="All-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="All-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="All-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="All-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#All-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="And">class <strong>And</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;all&nbsp;of&nbsp;its&nbsp;constructs&nbsp;match&nbsp;that<br>
+particular&nbsp;value.&nbsp;The&nbsp;constructs&nbsp;are&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;constructs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#And">And</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="And-__init__"><strong>__init__</strong></a>(self, *constructs)</dt></dl>
+
+<dl><dt><a name="And-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="And-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="And-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="And-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#And-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Any">class <strong>Any</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;that&nbsp;particular&nbsp;value&nbsp;is&nbsp;iterable<br>
+and&nbsp;any&nbsp;of&nbsp;its&nbsp;values&nbsp;match&nbsp;the&nbsp;component&nbsp;type&nbsp;with&nbsp;which&nbsp;this&nbsp;<a href="#All">All</a><br>
+instance&nbsp;was&nbsp;created.&nbsp;The&nbsp;type&nbsp;is&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;component_type.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Any">Any</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Any-__init__"><strong>__init__</strong></a>(self, component_type)</dt></dl>
+
+<dl><dt><a name="Any-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Any-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Any-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Any-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Any-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Everything">class <strong>Everything</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;all&nbsp;values.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Everything">Everything</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Everything-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Everything-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Everything-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Everything-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Everything-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Everything-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Field">class <strong>Field</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;that&nbsp;particular&nbsp;value&nbsp;has&nbsp;all&nbsp;of&nbsp;the<br>
+fields&nbsp;named&nbsp;when&nbsp;constructing&nbsp;this&nbsp;<a href="#Field">Field</a>&nbsp;instance&nbsp;and&nbsp;they&nbsp;are&nbsp;all&nbsp;match<br>
+the&nbsp;type&nbsp;specified&nbsp;when&nbsp;constructing&nbsp;this&nbsp;<a href="#Field">Field</a>&nbsp;instance.&nbsp;The&nbsp;field&nbsp;type<br>
+is&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;field_type&nbsp;and&nbsp;the&nbsp;field&nbsp;names&nbsp;are&nbsp;stored&nbsp;in&nbsp;a<br>
+field&nbsp;named&nbsp;field_names.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Field">Field</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Field-__init__"><strong>__init__</strong></a>(self, field_type, *field_names)</dt></dl>
+
+<dl><dt><a name="Field-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Field-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Field-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Field-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Field-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="InternalError">class <strong>InternalError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;exception&nbsp;thrown&nbsp;when&nbsp;an&nbsp;internal&nbsp;problem&nbsp;occurs&nbsp;with&nbsp;the&nbsp;static&nbsp;type<br>
+library.&nbsp;This&nbsp;usually&nbsp;indicates&nbsp;a&nbsp;bug&nbsp;in&nbsp;this&nbsp;library.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#InternalError">InternalError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="InternalError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#InternalError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="InternalError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="InternalError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="InternalError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#InternalError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="InternalError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Is">class <strong>Is</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;equal,&nbsp;as&nbsp;determined&nbsp;by<br>
+the&nbsp;==&nbsp;operator,&nbsp;to&nbsp;a&nbsp;specified&nbsp;value.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Is">Is</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Is-__init__"><strong>__init__</strong></a>(self, value)</dt></dl>
+
+<dl><dt><a name="Is-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Is-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Is-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Is-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Is-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Iterable">class <strong>Iterable</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;iterable.&nbsp;A&nbsp;value&nbsp;is<br>
+iterable&nbsp;if&nbsp;calling&nbsp;the&nbsp;Python&nbsp;function&nbsp;iter(value)&nbsp;does&nbsp;not&nbsp;raise&nbsp;a<br>
+TypeError.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Iterable">Iterable</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Iterable-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Iterable-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Iterable-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Iterable-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Iterable-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Iterable-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Not">class <strong>Not</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;that&nbsp;particular&nbsp;value&nbsp;does&nbsp;not&nbsp;match<br>
+the&nbsp;construct&nbsp;with&nbsp;which&nbsp;this&nbsp;<a href="#Not">Not</a>&nbsp;instance&nbsp;was&nbsp;created.&nbsp;The&nbsp;construct&nbsp;is<br>
+stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;construct.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Not">Not</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Not-__init__"><strong>__init__</strong></a>(self, construct)</dt></dl>
+
+<dl><dt><a name="Not-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Not-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Not-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Not-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Not-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Or">class <strong>Or</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;any&nbsp;of&nbsp;its&nbsp;constructs&nbsp;match&nbsp;that<br>
+particular&nbsp;value.&nbsp;The&nbsp;constructs&nbsp;are&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;constructs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Or">Or</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Or-__init__"><strong>__init__</strong></a>(self, *constructs)</dt></dl>
+
+<dl><dt><a name="Or-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Or-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Or-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Or-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Or-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Positional">class <strong>Positional</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;sequence,&nbsp;it&nbsp;has<br>
+exactly&nbsp;the&nbsp;same&nbsp;number&nbsp;of&nbsp;value&nbsp;as&nbsp;were&nbsp;passed&nbsp;to&nbsp;the&nbsp;<a href="#Positional">Positional</a>&nbsp;instance<br>
+when&nbsp;it&nbsp;was&nbsp;created,&nbsp;and&nbsp;each&nbsp;item&nbsp;matches&nbsp;the&nbsp;corresponding&nbsp;static&nbsp;type<br>
+passed&nbsp;to&nbsp;the&nbsp;<a href="#Positional">Positional</a>&nbsp;instance&nbsp;when&nbsp;it&nbsp;was&nbsp;created.&nbsp;For&nbsp;example,<br>
+<a href="#Positional">Positional</a>(int,&nbsp;str,&nbsp;bool)&nbsp;would&nbsp;match&nbsp;a&nbsp;sequence&nbsp;of&nbsp;length&nbsp;3&nbsp;containing<br>
+an&nbsp;integer,&nbsp;a&nbsp;string,&nbsp;and&nbsp;a&nbsp;boolean,&nbsp;at&nbsp;each&nbsp;respective&nbsp;position&nbsp;in&nbsp;the<br>
+sequence.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Positional">Positional</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Positional-__init__"><strong>__init__</strong></a>(self, *types)</dt></dl>
+
+<dl><dt><a name="Positional-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Positional-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Positional-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Positional-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Positional-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Sequence">class <strong>Sequence</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;matches&nbsp;a&nbsp;value&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;sequence.&nbsp;A&nbsp;value&nbsp;is<br>
+defined&nbsp;to&nbsp;be&nbsp;a&nbsp;sequence&nbsp;if&nbsp;calling&nbsp;len(value)&nbsp;does&nbsp;not&nbsp;raise&nbsp;a&nbsp;TypeError.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Sequence">Sequence</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Sequence-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Sequence-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Sequence-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Sequence-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Sequence-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="StaticType">class <strong>StaticType</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;class&nbsp;that&nbsp;all&nbsp;static&nbsp;types&nbsp;extend&nbsp;from.&nbsp;It&nbsp;has&nbsp;two&nbsp;useful&nbsp;methods:<br>
+matches&nbsp;and&nbsp;check_matches.<br>
+&nbsp;<br>
+<a href="#StaticType">StaticType</a>&nbsp;cannot&nbsp;itself&nbsp;be&nbsp;instantiated;&nbsp;you&nbsp;can&nbsp;only&nbsp;construct&nbsp;instances<br>
+of&nbsp;subclasses&nbsp;of&nbsp;<a href="#StaticType">StaticType</a>.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="StaticType-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="StaticType-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="StaticType-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#StaticType-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<dl><dt><a name="StaticType-matches"><strong>matches</strong></a>(self, value)</dt><dd><tt>Checks&nbsp;to&nbsp;see&nbsp;if&nbsp;the&nbsp;specified&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;matches&nbsp;this&nbsp;static&nbsp;type.&nbsp;If&nbsp;it<br>
+does,&nbsp;True&nbsp;will&nbsp;be&nbsp;returned,&nbsp;and&nbsp;False&nbsp;will&nbsp;be&nbsp;returned&nbsp;if&nbsp;it&nbsp;doesn't.<br>
+Subclasses&nbsp;of&nbsp;<a href="#StaticType">StaticType</a>&nbsp;must&nbsp;override&nbsp;this&nbsp;to&nbsp;perform&nbsp;the&nbsp;actual<br>
+matching;&nbsp;<a href="#StaticType">StaticType</a>'s&nbsp;implementation&nbsp;throws&nbsp;an&nbsp;<a href="#InternalError">InternalError</a>.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="StaticTypeError">class <strong>StaticTypeError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;exception&nbsp;thrown&nbsp;when&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;passed&nbsp;to&nbsp;check_matches&nbsp;does&nbsp;not&nbsp;match<br>
+the&nbsp;specified&nbsp;static&nbsp;type.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#StaticTypeError">StaticTypeError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="StaticTypeError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#StaticTypeError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="StaticTypeError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="StaticTypeError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="StaticTypeError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#StaticTypeError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="StaticTypeError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Type">class <strong>Type</strong></a>(<a href="parcon.static.html#StaticType">StaticType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;static&nbsp;type&nbsp;that&nbsp;checks&nbsp;to&nbsp;make&nbsp;sure&nbsp;values&nbsp;are&nbsp;instances&nbsp;of&nbsp;a<br>
+particular&nbsp;Python&nbsp;type&nbsp;as&nbsp;per&nbsp;Python's&nbsp;bult-in&nbsp;isinstance&nbsp;function.<br>
+&nbsp;<br>
+The&nbsp;type&nbsp;is&nbsp;stored&nbsp;in&nbsp;a&nbsp;field&nbsp;named&nbsp;type.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#Type">Type</a></dd>
+<dd><a href="parcon.static.html#StaticType">StaticType</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Type-__init__"><strong>__init__</strong></a>(self, type)</dt></dl>
+
+<dl><dt><a name="Type-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Type-matches"><strong>matches</strong></a>(self, value)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><a name="Type-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Type-check_matches"><strong>check_matches</strong></a>(self, value)</dt><dd><tt>Calls&nbsp;<a href="#Type-matches">matches</a>(value).&nbsp;If&nbsp;the&nbsp;reslt&nbsp;is&nbsp;false,&nbsp;a&nbsp;<a href="#StaticTypeError">StaticTypeError</a>&nbsp;is<br>
+raised.&nbsp;If&nbsp;the&nbsp;result&nbsp;is&nbsp;true,&nbsp;this&nbsp;method&nbsp;simply&nbsp;returns.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.static.html#StaticType">StaticType</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TypeFormatError">class <strong>TypeFormatError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;exception&nbsp;thrown&nbsp;when&nbsp;a&nbsp;static&nbsp;type&nbsp;is&nbsp;malformed.&nbsp;This&nbsp;could&nbsp;happen&nbsp;if,<br>
+for&nbsp;example,&nbsp;the&nbsp;number&nbsp;5&nbsp;was&nbsp;passed&nbsp;to&nbsp;the&nbsp;compile&nbsp;function;&nbsp;5&nbsp;is<br>
+obviously&nbsp;not&nbsp;a&nbsp;valid&nbsp;static&nbsp;type,&nbsp;so&nbsp;a&nbsp;<a href="#TypeFormatError">TypeFormatError</a>&nbsp;would&nbsp;be&nbsp;raised.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.static.html#TypeFormatError">TypeFormatError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="TypeFormatError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#TypeFormatError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="TypeFormatError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TypeFormatError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TypeFormatError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#TypeFormatError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="TypeFormatError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-check_matches"><strong>check_matches</strong></a>(value, type)</dt><dd><tt>Short&nbsp;for&nbsp;<a href="#-compile">compile</a>(type).<a href="#-check_matches">check_matches</a>(value).</tt></dd></dl>
+ <dl><dt><a name="-compile"><strong>compile</strong></a>(short_type)</dt><dd><tt>Compiles&nbsp;the&nbsp;specified&nbsp;static&nbsp;type.&nbsp;This&nbsp;involves&nbsp;converting&nbsp;Python&nbsp;classes<br>
+to&nbsp;instances&nbsp;of&nbsp;<a href="#Type">Type</a>,&nbsp;tuples&nbsp;to&nbsp;instances&nbsp;of&nbsp;<a href="#Or">Or</a>,&nbsp;and&nbsp;lists&nbsp;to&nbsp;instances&nbsp;of<br>
+<a href="#All">All</a>.&nbsp;Instances&nbsp;of&nbsp;one&nbsp;of&nbsp;<a href="#StaticType">StaticType</a>'s&nbsp;subclasses&nbsp;are&nbsp;returned&nbsp;as-is,&nbsp;so<br>
+this&nbsp;function&nbsp;doesn't&nbsp;need&nbsp;to&nbsp;be&nbsp;called&nbsp;on&nbsp;them.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;essentially&nbsp;analogous&nbsp;to&nbsp;Parcon&nbsp;and&nbsp;Pargen's&nbsp;promote<br>
+functions.</tt></dd></dl>
+ <dl><dt><a name="-matches"><strong>matches</strong></a>(value, type)</dt><dd><tt>Short&nbsp;for&nbsp;<a href="#-compile">compile</a>(type).<a href="#-matches">matches</a>(value).</tt></dd></dl>
+</td></tr></table>
+</body></html>
