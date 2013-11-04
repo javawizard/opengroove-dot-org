@@ -1,0 +1,32 @@
+
+
+=====================
+:mod:`stm.utils` --- 
+=====================
+
+.. module:: stm.utils
+   :synopsis: 
+
+
+
+---------
+Functions
+---------
+
+
+
+.. function:: atomic_function(function)
+
+   A decorator that causes calls to functions decorated with it to be
+   implicitly run inside a call to stm.atomically(). Thus the following::
+
+       @atomic_function
+       def something(foo, bar):
+           ...
+
+   is equivalent to::
+
+       def something(foo, bar):
+           def do_something():
+               ...
+           return stm.atomically(do_something)

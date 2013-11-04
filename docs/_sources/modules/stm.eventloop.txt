@@ -1,0 +1,45 @@
+
+
+=========================
+:mod:`stm.eventloop` --- 
+=========================
+
+.. module:: stm.eventloop
+   :synopsis: 
+
+
+
+---------------
+Class EventLoop
+---------------
+
+
+
+.. class:: EventLoop(self)
+
+
+
+   .. method:: run(self)
+
+
+
+   .. method:: schedule(self, function)
+
+
+
+   .. method:: start(self)
+
+
+
+   .. method:: stop(self)
+
+
+
+---------
+Functions
+---------
+
+
+
+.. function:: schedule(function)
+

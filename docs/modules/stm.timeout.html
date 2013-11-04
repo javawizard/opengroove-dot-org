@@ -1,0 +1,208 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stm.timeout — Obsolete module providing timeout support for transactions &mdash; Test Project  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Test Project  documentation" href="../index.html" />
+    <link rel="next" title="stm.utils —" href="stm.utils.html" />
+    <link rel="prev" title="stm.eventloop —" href="stm.eventloop.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.utils.html" title="stm.utils —"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="stm.eventloop.html" title="stm.eventloop —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Test Project  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-stm.timeout">
+<span id="stm-timeout-obsolete-module-providing-timeout-support-for-transactions"></span><h1><a class="reference internal" href="#module-stm.timeout" title="stm.timeout: Obsolete module providing timeout support for transactions"><tt class="xref py py-mod docutils literal"><span class="pre">stm.timeout</span></tt></a> &#8212; Obsolete module providing timeout support for transactions<a class="headerlink" href="#module-stm.timeout" title="Permalink to this headline">¶</a></h1>
+<p>NOTE: This module is now mostly obsolete with the introduction of first-class
+timeouts to stm.retry(). It offers an alternative mechanism for effecting
+timeouts that, while not requiring any additional support in the core STM
+system, does not compose nearly as well as the mechanism now built into
+stm.retry(). It will likely be going away soon.</p>
+<div class="section" id="class-timeout">
+<h2>Class Timeout<a class="headerlink" href="#class-timeout" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="stm.timeout.Timeout">
+<em class="property">class </em><tt class="descclassname">stm.timeout.</tt><tt class="descname">Timeout</tt><a class="headerlink" href="#stm.timeout.Timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="stm.timeout.make_delay">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">make_delay</tt><big>(</big><em>seconds</em><big>)</big><a class="headerlink" href="#stm.timeout.make_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a TVar whose initial value is False. After the
+specified number of seconds (which can be fractional), the var&#8217;s value will
+be set to True.</p>
+<p>This can be used to implement timeouts in transactions. For example, one
+could wait for an item to become available on a queue, timing out after,
+say, ten seconds, with the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">var</span> <span class="o">=</span> <span class="n">make_delay</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">some_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Empty</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">Timeout</span> <span class="c"># Or some other exception</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">retry</span><span class="p">()</span>
+<span class="n">item</span> <span class="o">=</span> <span class="n">atomically</span><span class="p">(</span><span class="n">get_item</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that this function must be called outside of a transaction (indeed, it
+will throw an exception if called from within one). The reasons for this
+are somewhat involved, and I&#8217;ll hopefully write more here about them soon.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.timeout.make_timeout">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">make_timeout</tt><big>(</big><em>stop_time</em><big>)</big><a class="headerlink" href="#stm.timeout.make_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>A variant of make_delay that sets the returned TVar to True when
+time.time() becomes greater than stop_time.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.timeout.wait_for_true">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">wait_for_true</tt><big>(</big><em>var</em><big>)</big><a class="headerlink" href="#stm.timeout.wait_for_true" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the specified var to become True (or any true value), retrying if
+it&#8217;s False (or any non-true value).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.timeout.wait_then_raise">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">wait_then_raise</tt><big>(</big><em>var</em>, <em>exception_type=&lt;class 'stm.timeout.Timeout'&gt;</em><big>)</big><a class="headerlink" href="#stm.timeout.wait_then_raise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like wait_for_true(var), but raise a new instance of the specified
+exception type once the specified var becomes True. This is used primarily
+by with_delay to handle raising Timeout if the transaction doesn&#8217;t retry
+soon enough.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.timeout.with_delay">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">with_delay</tt><big>(</big><em>seconds</em>, <em>function</em><big>)</big><a class="headerlink" href="#stm.timeout.with_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternative to stm.atomically that runs a transaction, throwing Timeout if
+it retries and does not resume and run to completion before the specified
+number of seconds are up.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.timeout.with_timeout">
+<tt class="descclassname">stm.timeout.</tt><tt class="descname">with_timeout</tt><big>(</big><em>stop_time</em>, <em>function</em><big>)</big><a class="headerlink" href="#stm.timeout.with_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>A variant of with_delay that accepts its timeout as a number of seconds
+since the epoch at which the transaction should raise Timeout.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">stm.timeout</span></tt> &#8212; Obsolete module providing timeout support for transactions</a><ul>
+<li><a class="reference internal" href="#class-timeout">Class Timeout</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="stm.eventloop.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">stm.eventloop</span></tt> &#8212;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="stm.utils.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">stm.utils</span></tt> &#8212;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/stm.timeout.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.utils.html" title="stm.utils —"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="stm.eventloop.html" title="stm.eventloop —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Test Project  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

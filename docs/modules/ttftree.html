@@ -1,0 +1,810 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ttftree — An implementation of functional 2-3 finger trees. &mdash; Test Project  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Test Project  documentation" href="../index.html" />
+    <link rel="prev" title="stm.utils —" href="stm.utils.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.utils.html" title="stm.utils —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Test Project  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-ttftree">
+<span id="ttftree-an-implementation-of-functional-2-3-finger-trees"></span><h1><a class="reference internal" href="#module-ttftree" title="ttftree: An implementation of functional 2-3 finger trees."><tt class="xref py py-mod docutils literal"><span class="pre">ttftree</span></tt></a> &#8212; An implementation of functional 2-3 finger trees.<a class="headerlink" href="#module-ttftree" title="Permalink to this headline">¶</a></h1>
+<p>This module provides an implementation of 2-3 finger trees for Python.</p>
+<p>More documentation will be provided soon.</p>
+<div class="section" id="class-compoundmeasure">
+<h2>Class CompoundMeasure<a class="headerlink" href="#class-compoundmeasure" title="Permalink to this headline">¶</a></h2>
+<p>A measure that combines the specified measures and produces a tuple of
+their computed values. It can be used to annotate a tree with multiple
+measures at the same time.</p>
+<dl class="class">
+<dt id="ttftree.CompoundMeasure">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">CompoundMeasure</tt><big>(</big><em>self</em>, <em>*measures</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ttftree.CompoundMeasure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a measure that combines the specified measures.</p>
+<p>One keyword argument, tuple_class, can be present. It specifies a
+subclass of tuple to use to combine the measures&#8217; computed values. This
+is primarily intended to allow named tuples (classes returned from
+collections.namedtuple) to be used instead of plain vanilla tuples.</p>
+<dl class="method">
+<dt id="ttftree.CompoundMeasure.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.CompoundMeasure.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.CompoundMeasure.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a_values</em>, <em>b_values</em><big>)</big><a class="headerlink" href="#ttftree.CompoundMeasure.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-custommeasure">
+<h2>Class CustomMeasure<a class="headerlink" href="#class-custommeasure" title="Permalink to this headline">¶</a></h2>
+<p>A class for creating custom measures when one would rather just pass in the
+convert, operator, and identity functions instead of creating a subclass of
+Measure.</p>
+<dl class="class">
+<dt id="ttftree.CustomMeasure">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">CustomMeasure</tt><big>(</big><em>self</em>, <em>convert</em>, <em>operator</em>, <em>identity</em><big>)</big><a class="headerlink" href="#ttftree.CustomMeasure" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.CustomMeasure.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.CustomMeasure.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a value stored in a tree to a value in the monoid on which
+this measure operates. This will be called for each value added to a
+tree using this measure, and only values returned from this function
+(as well as self.identity) will be passed to self.operator().</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.CustomMeasure.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.CustomMeasure.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take two values returned from self.convert() (or possibly
+self.identity) and combine them according to whatever logic this
+measure deems appropriate.</p>
+<p>This is the sum operator of the monoid under which this measure
+operates. As such, when passed self.identity as either of its
+arguments, it must return the other argument without any changes.</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-deep">
+<h2>Class Deep<a class="headerlink" href="#class-deep" title="Permalink to this headline">¶</a></h2>
+<p>A subclass of Tree representing trees containing two or more values.</p>
+<p>Deep instances store two buffers (instances of Digit) representing their
+first and last 1, 2, 3, or 4 values, and another Tree instance storing
+groups (specifically Node instances) of all of the values in between.</p>
+<p>Values added to a Deep instance with add_first and add_last are initially
+stored in their respective Digit; when the digit becomes full, items are
+popped off of it and turned into a Node, then pushed onto the nested tree.
+This is where 2-3 finger trees get their amortized constant time complexity
+for deque operations: because of the Digit buffers at either end and
+because Nodes can contain only 2 or 3 items, a call to add_first or
+add_last can descend into the nested tree at most every other call, and by
+extension can only descend one more level every /fourth/ call, and so on.</p>
+<p>Removal is accomplished the same way: if the Digit buffer on the side from
+which an item is to be removed has only one item, a Node instance is popped
+off of the nested tree and expanded into the Digit buffer. Thus the same
+amortized constant time performance guarantees apply to without_first and
+without_last as well.</p>
+<dl class="class">
+<dt id="ttftree.Deep">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Deep</tt><big>(</big><em>self</em>, <em>measure</em>, <em>left</em>, <em>spine</em>, <em>right</em><big>)</big><a class="headerlink" href="#ttftree.Deep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Deep instance using the specified measure (an instance of
+Measure), left buffer (an instance of Digit), spine (or nested tree; an
+instance of Tree whose values are Node instances), and right buffer
+(also an instance of Digit).</p>
+<dl class="method">
+<dt id="ttftree.Deep.add_first">
+<tt class="descname">add_first</tt><big>(</big><em>self</em>, <em>new_item</em><big>)</big><a class="headerlink" href="#ttftree.Deep.add_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Tree instance representing this tree with the specified
+item at the beginning.</p>
+<p>Time complexity: amortized O(1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.add_last">
+<tt class="descname">add_last</tt><big>(</big><em>self</em>, <em>new_item</em><big>)</big><a class="headerlink" href="#ttftree.Deep.add_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Tree instance representing this tree with the specified
+item at the end.</p>
+<p>Time complexity: amortized O(1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.append">
+<tt class="descname">append</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Deep.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate the specified tree onto the end of this tree.</p>
+<p>Note that this tree and the other tree must use the same measure. If
+they don&#8217;t, the resulting tree will pick one of their measures to use
+arbitrarily, which will likely cause pain and headaches if the two
+measures aren&#8217;t designed to work with values produced by each other.</p>
+<p>Time complexity: amortized O(log min(m, n)), where m and n are the
+number of items stored in self and other, respectively. As a result,
+appending a tree of length 1 to another tree runs in amortized O(1)
+time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.get_first">
+<tt class="descname">get_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Deep.get_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns this tree&#8217;s first value.</p>
+<p>Time complexity: O(1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.get_last">
+<tt class="descname">get_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Deep.get_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns this tree&#8217;s last value.</p>
+<p>Time complexity: O(1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.partition">
+<tt class="descname">partition</tt><big>(</big><em>self</em>, <em>predicate</em><big>)</big><a class="headerlink" href="#ttftree.Deep.partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that simply returns
+self.partition_with(predicate, self.measure.identity).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.partition_with">
+<tt class="descname">partition_with</tt><big>(</big><em>self</em>, <em>predicate</em>, <em>initial_annotation</em><big>)</big><a class="headerlink" href="#ttftree.Deep.partition_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partitions this tree around the specified monotonic predicate function.
+predicate is a function that takes a value in the monoid under which
+this tree&#8217;s measure operates (i.e. a value returned from
+self.measure.convert(...)) and returns False or True.
+initial_annotation is a value to be combined (with
+self.measure.operator) with items before passing them to the predicate.</p>
+<p>The return value will be a tuple (left, right), where left is a tree
+containing the items just before the predicate transitioned from False
+to True and right is a tree containing the items after said transition.
+If the predicate returns False or True for every value it&#8217;s passed,
+then right or left, respectively, will be empty.</p>
+<p>Note that the predicate need not necessarily be monotonic, but if it
+isn&#8217;t, the particular False -&gt; True transition on which the tree will
+be split is arbitrary. A monotonic predicate will give rise to exactly
+one such transition, so the location of the split will be
+deterministic.</p>
+<p>(For those unfamiliar with the term, a monotonic function is a function
+from one set of ordered values to another that maintains the relative
+order of the items given to it. In other words, the predicate function
+is monotonic if, when called on the monoidal value corresponding to
+every item in this tree, it returns False for the first m of them and
+then switches to returning True for the remaining n items.)</p>
+<p>See MeasureItemCount&#8217;s docstring for an example of how to use this
+function.</p>
+<p>Time complexity: O(log min(m, n)), where m and n are the sizes of the
+resulting trees. As a result, splitting a tree with a predicate such
+that the left or right result tree has only one item (or zero items)
+runs in O(1) time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.prepend">
+<tt class="descname">prepend</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Deep.prepend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new tree representing the specified tree&#8217;s items followed by
+this tree&#8217;s items. This is just short for other.append(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.without_first">
+<tt class="descname">without_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Deep.without_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Tree instance representing this tree with its first item
+removed.</p>
+<p>Time complexity: amortized O(1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Deep.without_last">
+<tt class="descname">without_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Deep.without_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Tree instance representing this tree with its last item
+removed.</p>
+<p>Time complexity: amortized O(1).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-digit">
+<h2>Class Digit<a class="headerlink" href="#class-digit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ttftree.Digit">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Digit</tt><big>(</big><em>self</em>, <em>measure</em>, <em>*values</em><big>)</big><a class="headerlink" href="#ttftree.Digit" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.Digit.count">
+<tt class="descname">count</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.Digit.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>S.count(value) -&gt; integer &#8211; return number of occurrences of value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Digit.index">
+<tt class="descname">index</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.Digit.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>S.index(value) -&gt; integer &#8211; return first index of value.
+Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Digit.partition_digit">
+<tt class="descname">partition_digit</tt><big>(</big><em>self</em>, <em>initial_annotation</em>, <em>predicate</em><big>)</big><a class="headerlink" href="#ttftree.Digit.partition_digit" title="Permalink to this definition">¶</a></dt>
+<dd><p>partition_digit(function) =&gt; ((...), (...))</p>
+<p>Note that the two return values are tuples, not Digits, as they may
+need to be empty.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-empty">
+<h2>Class Empty<a class="headerlink" href="#class-empty" title="Permalink to this headline">¶</a></h2>
+<p>A subclass of Tree representing the empty tree.</p>
+<dl class="class">
+<dt id="ttftree.Empty">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Empty</tt><big>(</big><em>self</em>, <em>measure</em><big>)</big><a class="headerlink" href="#ttftree.Empty" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.Empty.add_first">
+<tt class="descname">add_first</tt><big>(</big><em>self</em>, <em>item</em><big>)</big><a class="headerlink" href="#ttftree.Empty.add_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.add_last">
+<tt class="descname">add_last</tt><big>(</big><em>self</em>, <em>item</em><big>)</big><a class="headerlink" href="#ttftree.Empty.add_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.append">
+<tt class="descname">append</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Empty.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.get_first">
+<tt class="descname">get_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Empty.get_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.get_last">
+<tt class="descname">get_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Empty.get_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.iterate_values">
+<tt class="descname">iterate_values</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Empty.iterate_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.partition">
+<tt class="descname">partition</tt><big>(</big><em>self</em>, <em>predicate</em><big>)</big><a class="headerlink" href="#ttftree.Empty.partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that simply returns
+self.partition_with(predicate, self.measure.identity).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.partition_with">
+<tt class="descname">partition_with</tt><big>(</big><em>self</em>, <em>predicate</em>, <em>initial_annotation</em><big>)</big><a class="headerlink" href="#ttftree.Empty.partition_with" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.prepend">
+<tt class="descname">prepend</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Empty.prepend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.without_first">
+<tt class="descname">without_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Empty.without_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Empty.without_last">
+<tt class="descname">without_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Empty.without_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-identity">
+<h2>Class Identity<a class="headerlink" href="#class-identity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ttftree.Identity">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Identity</tt><a class="headerlink" href="#ttftree.Identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-measure">
+<h2>Class Measure<a class="headerlink" href="#class-measure" title="Permalink to this headline">¶</a></h2>
+<p>An object used to compute a tree&#8217;s annotation.</p>
+<p>Measures consist of a function capable of converting values in a tree to
+values in a particular monoid (the convert attribute of Measure objects)
+and the monoid&#8217;s binary operation (the operator attribute) and identity
+element (the identity attribute). The value of any given tree is the
+monoidal sum of the values produced by the conversion function for all
+values contained within the tree.</p>
+<dl class="class">
+<dt id="ttftree.Measure">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Measure</tt><a class="headerlink" href="#ttftree.Measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="ttftree.Measure.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.Measure.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a value stored in a tree to a value in the monoid on which
+this measure operates. This will be called for each value added to a
+tree using this measure, and only values returned from this function
+(as well as self.identity) will be passed to self.operator().</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Measure.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.Measure.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take two values returned from self.convert() (or possibly
+self.identity) and combine them according to whatever logic this
+measure deems appropriate.</p>
+<p>This is the sum operator of the monoid under which this measure
+operates. As such, when passed self.identity as either of its
+arguments, it must return the other argument without any changes.</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-measureitemcount">
+<h2>Class MeasureItemCount<a class="headerlink" href="#class-measureitemcount" title="Permalink to this headline">¶</a></h2>
+<p>A measure that measures the number of items contained within a given tree.</p>
+<p>Trees annotated with such a measure can be asked for the number of items
+that they contain in O(1) time by simply referencing the tree&#8217;s annotation:</p>
+<blockquote>
+<div>tree_size = some_tree.annotation</div></blockquote>
+<p>They can also be asked to produce their nth item in O(log n) time:</p>
+<blockquote>
+<div>left, right = some_tree.partition(lambda v: v &gt; n)
+nth_value = right.get_first()</div></blockquote>
+<p>A value can be inserted just before their nth item in O(log n) time:</p>
+<blockquote>
+<div>left, right = some_tree.partition(lambda v: v &gt; n)
+some_tree = left.add_last(value_to_insert).append(right)</div></blockquote>
+<p>The value at the nth position in the tree can be removed in O(log n) time:</p>
+<blockquote>
+<div>left, right = some_tree.partition(lambda v: v &gt; n)
+some_tree = left.append(right.without_first())</div></blockquote>
+<p>A subtree consisting of the mth (inclusive) through nth (exclusive) values
+can be constructed in O(log n) time:</p>
+<blockquote>
+<div>mid, right = some_tree.partition(lambda v: v &gt; n)
+left, mid = mid.partition(lambda v: v &gt; m)
+subtree = mid</div></blockquote>
+<p>And finally, the mth (inclusive) through nth (exclusive) values can be
+removed in O(log n) time:</p>
+<blockquote>
+<div>mid, right = some_tree.partition(lambda v: v &gt; n)
+left, mid = mid.partition(lambda v: v &gt; m)
+some_tree = left.append(right)</div></blockquote>
+<p>A singleton instance of this class is stored in ttftree.MEASURE_ITEM_COUNT.
+You&#8217;ll typically want to use that constant instead of constructing a whole
+new instance of MeasureItemCount.</p>
+<dl class="class">
+<dt id="ttftree.MeasureItemCount">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">MeasureItemCount</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.MeasureItemCount" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.MeasureItemCount.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.MeasureItemCount.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureItemCount.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureItemCount.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-measurelastitem">
+<h2>Class MeasureLastItem<a class="headerlink" href="#class-measurelastitem" title="Permalink to this headline">¶</a></h2>
+<p>A measure that simply produces the second of the two items it&#8217;s passed.</p>
+<dl class="class">
+<dt id="ttftree.MeasureLastItem">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">MeasureLastItem</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.MeasureLastItem" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.MeasureLastItem.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.MeasureLastItem.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureLastItem.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureLastItem.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureLastItem.semigroup_operator">
+<tt class="descname">semigroup_operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureLastItem.semigroup_operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-measureminmax">
+<h2>Class MeasureMinMax<a class="headerlink" href="#class-measureminmax" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ttftree.MeasureMinMax">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">MeasureMinMax</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.MeasureMinMax" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.MeasureMinMax.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.MeasureMinMax.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureMinMax.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureMinMax.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureMinMax.semigroup_operator">
+<tt class="descname">semigroup_operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureMinMax.semigroup_operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-measurewithidentity">
+<h2>Class MeasureWithIdentity<a class="headerlink" href="#class-measurewithidentity" title="Permalink to this headline">¶</a></h2>
+<p>An abstract subclass of Measure that uses ttftree.IDENTITY as the identity
+element and automatically handles checking for IDENTITY in its
+implementation of operator(). It thus allows a semigroup (such as the set
+of comparable objects under the min or max functions) to be used as a
+monoid and therefore as a measure.</p>
+<p>Subclasses must override convert and semigroup_operator. They must not
+change self.identity or override operator.</p>
+<dl class="class">
+<dt id="ttftree.MeasureWithIdentity">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">MeasureWithIdentity</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.MeasureWithIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.MeasureWithIdentity.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.MeasureWithIdentity.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a value stored in a tree to a value in the monoid on which
+this measure operates. This will be called for each value added to a
+tree using this measure, and only values returned from this function
+(as well as self.identity) will be passed to self.operator().</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureWithIdentity.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureWithIdentity.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.MeasureWithIdentity.semigroup_operator">
+<tt class="descname">semigroup_operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.MeasureWithIdentity.semigroup_operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-node">
+<h2>Class Node<a class="headerlink" href="#class-node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ttftree.Node">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Node</tt><big>(</big><em>self</em>, <em>measure</em>, <em>*values</em><big>)</big><a class="headerlink" href="#ttftree.Node" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.Node.count">
+<tt class="descname">count</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.Node.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>S.count(value) -&gt; integer &#8211; return number of occurrences of value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Node.index">
+<tt class="descname">index</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.Node.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>S.index(value) -&gt; integer &#8211; return first index of value.
+Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-single">
+<h2>Class Single<a class="headerlink" href="#class-single" title="Permalink to this headline">¶</a></h2>
+<p>A subclass of Tree representing trees containing a single value.</p>
+<p>Instances of Single simply store a reference to the item passed to them.</p>
+<dl class="class">
+<dt id="ttftree.Single">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Single</tt><big>(</big><em>self</em>, <em>measure</em>, <em>item</em><big>)</big><a class="headerlink" href="#ttftree.Single" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.Single.add_first">
+<tt class="descname">add_first</tt><big>(</big><em>self</em>, <em>new_item</em><big>)</big><a class="headerlink" href="#ttftree.Single.add_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.add_last">
+<tt class="descname">add_last</tt><big>(</big><em>self</em>, <em>new_item</em><big>)</big><a class="headerlink" href="#ttftree.Single.add_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.append">
+<tt class="descname">append</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Single.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.get_first">
+<tt class="descname">get_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Single.get_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.get_last">
+<tt class="descname">get_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Single.get_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.iterate_values">
+<tt class="descname">iterate_values</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Single.iterate_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.partition">
+<tt class="descname">partition</tt><big>(</big><em>self</em>, <em>predicate</em><big>)</big><a class="headerlink" href="#ttftree.Single.partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that simply returns
+self.partition_with(predicate, self.measure.identity).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.partition_with">
+<tt class="descname">partition_with</tt><big>(</big><em>self</em>, <em>predicate</em>, <em>initial_annotation</em><big>)</big><a class="headerlink" href="#ttftree.Single.partition_with" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.prepend">
+<tt class="descname">prepend</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#ttftree.Single.prepend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.without_first">
+<tt class="descname">without_first</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Single.without_first" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.Single.without_last">
+<tt class="descname">without_last</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#ttftree.Single.without_last" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-ttftreeerror">
+<h2>Class TTFTreeError<a class="headerlink" href="#class-ttftreeerror" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ttftree.TTFTreeError">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">TTFTreeError</tt><a class="headerlink" href="#ttftree.TTFTreeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-translatemeasure">
+<h2>Class TranslateMeasure<a class="headerlink" href="#class-translatemeasure" title="Permalink to this headline">¶</a></h2>
+<p>A measure that wraps another measure and behaves identically to it except
+that it passes all values passed to self.convert() into the specified
+function and passes the result into the wrapped measure&#8217;s convert().</p>
+<p>This can be used to, for example, create a wrapper around MeasureMinMax
+that compares a certain attribute of its values instead of the values
+themselves. For example, consider a tree with objects that have a
+&#8220;priority&#8221; attribute. A measure suitable for using this tree as a priority
+queue based on this attribute could be constructed thus:</p>
+<p>measure = TranslateMeasure(lambda v: v.priority, MeasureMinMax())</p>
+<dl class="class">
+<dt id="ttftree.TranslateMeasure">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">TranslateMeasure</tt><big>(</big><em>self</em>, <em>function</em>, <em>measure</em><big>)</big><a class="headerlink" href="#ttftree.TranslateMeasure" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="ttftree.TranslateMeasure.convert">
+<tt class="descname">convert</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#ttftree.TranslateMeasure.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ttftree.TranslateMeasure.operator">
+<tt class="descname">operator</tt><big>(</big><em>self</em>, <em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#ttftree.TranslateMeasure.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take two values returned from self.convert() (or possibly
+self.identity) and combine them according to whatever logic this
+measure deems appropriate.</p>
+<p>This is the sum operator of the monoid under which this measure
+operates. As such, when passed self.identity as either of its
+arguments, it must return the other argument without any changes.</p>
+<p>The default implementation raises NotImplementedError.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-tree">
+<h2>Class Tree<a class="headerlink" href="#class-tree" title="Permalink to this headline">¶</a></h2>
+<p>A class representing a 2-3 finger tree.</p>
+<p>Tree is an abstract class, so it can&#8217;t itself be instantiated. Instead,
+you&#8217;ll want to construct an instance of Empty, one of the three subclasses
+of Tree needed for the 2-3 finger tree algorithm (the other two are Single
+and Deep), then add items to it as necessary.</p>
+<p>A convenience function, to_tree, is provided to convert any Python sequence
+into a Tree instance.</p>
+<dl class="class">
+<dt id="ttftree.Tree">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">Tree</tt><a class="headerlink" href="#ttftree.Tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="ttftree.Tree.partition">
+<tt class="descname">partition</tt><big>(</big><em>self</em>, <em>predicate</em><big>)</big><a class="headerlink" href="#ttftree.Tree.partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that simply returns
+self.partition_with(predicate, self.measure.identity).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-treeisempty">
+<h2>Class TreeIsEmpty<a class="headerlink" href="#class-treeisempty" title="Permalink to this headline">¶</a></h2>
+<p>Exception raised from within Empty when things like get_first or
+without_first are called on it.</p>
+<dl class="class">
+<dt id="ttftree.TreeIsEmpty">
+<em class="property">class </em><tt class="descclassname">ttftree.</tt><tt class="descname">TreeIsEmpty</tt><a class="headerlink" href="#ttftree.TreeIsEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ttftree.deep_left">
+<tt class="descclassname">ttftree.</tt><tt class="descname">deep_left</tt><big>(</big><em>measure</em>, <em>maybe_left</em>, <em>spine</em>, <em>right</em><big>)</big><a class="headerlink" href="#ttftree.deep_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as Deep(measure, maybe_left, spine, right), except that maybe_left can
+be a list and is permitted to contain no items at all. In such a case, a
+node will be popped off of the spine and used as the left digit, with
+to_tree(right) being returned if the spine is actually empty.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ttftree.deep_right">
+<tt class="descclassname">ttftree.</tt><tt class="descname">deep_right</tt><big>(</big><em>measure</em>, <em>left</em>, <em>spine</em>, <em>maybe_right</em><big>)</big><a class="headerlink" href="#ttftree.deep_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetrical operation to deep_left that allows its right digit to be a list
+that&#8217;s potentially empty.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ttftree.to_tree">
+<tt class="descclassname">ttftree.</tt><tt class="descname">to_tree</tt><big>(</big><em>measure</em>, <em>sequence</em><big>)</big><a class="headerlink" href="#ttftree.to_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a given Python sequence (list, iterator, or anything else that
+can be the target of a for loop) into a Tree instance.</p>
+<p>This just creates an Empty instance and adds items to it with its add_last
+function, taking advantage of the fact that add_last runs in amortized
+O(1) time. The time complexity of to_tree is therefore O(n).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ttftree.value_iterator">
+<tt class="descclassname">ttftree.</tt><tt class="descname">value_iterator</tt><big>(</big><em>tree</em><big>)</big><a class="headerlink" href="#ttftree.value_iterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator function that yields each value from the given tree in
+succession.</p>
+<p>Each item is yielded in amortized O(1) time, so a full iteration requires
+O(n) time.</p>
+<p>The returned iterator only holds references to values that have yet to be
+produced; values earlier on in the tree will not be held on to, and as such
+can be garbage collected if nothing else holds references to them.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">ttftree</span></tt> &#8212; An implementation of functional 2-3 finger trees.</a><ul>
+<li><a class="reference internal" href="#class-compoundmeasure">Class CompoundMeasure</a></li>
+<li><a class="reference internal" href="#class-custommeasure">Class CustomMeasure</a></li>
+<li><a class="reference internal" href="#class-deep">Class Deep</a></li>
+<li><a class="reference internal" href="#class-digit">Class Digit</a></li>
+<li><a class="reference internal" href="#class-empty">Class Empty</a></li>
+<li><a class="reference internal" href="#class-identity">Class Identity</a></li>
+<li><a class="reference internal" href="#class-measure">Class Measure</a></li>
+<li><a class="reference internal" href="#class-measureitemcount">Class MeasureItemCount</a></li>
+<li><a class="reference internal" href="#class-measurelastitem">Class MeasureLastItem</a></li>
+<li><a class="reference internal" href="#class-measureminmax">Class MeasureMinMax</a></li>
+<li><a class="reference internal" href="#class-measurewithidentity">Class MeasureWithIdentity</a></li>
+<li><a class="reference internal" href="#class-node">Class Node</a></li>
+<li><a class="reference internal" href="#class-single">Class Single</a></li>
+<li><a class="reference internal" href="#class-ttftreeerror">Class TTFTreeError</a></li>
+<li><a class="reference internal" href="#class-translatemeasure">Class TranslateMeasure</a></li>
+<li><a class="reference internal" href="#class-tree">Class Tree</a></li>
+<li><a class="reference internal" href="#class-treeisempty">Class TreeIsEmpty</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="stm.utils.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">stm.utils</span></tt> &#8212;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/ttftree.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.utils.html" title="stm.utils —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Test Project  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
