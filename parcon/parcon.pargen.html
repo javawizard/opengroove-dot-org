@@ -1,0 +1,928 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package parcon.pargen</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+// START JCP ADD
+  if(window.location.href.indexOf("http://www.opengroove.org/") == 0) {
+// END JCP ADD
+  _gaq.push(['_setAccount', 'UA-6079740-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// START JCP ADD
+}
+// END JCP ADD
+
+</script>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="parcon.html"><font color="#ffffff">parcon</font></a>.pargen</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jcp/github/parcon/parcon/pargen/__init__.py">/home/jcp/github/parcon/parcon/pargen/__init__.py</a></font></td></tr></table>
+    <p><tt>Pargen&nbsp;is&nbsp;a&nbsp;formatter&nbsp;combinator&nbsp;library.&nbsp;It's&nbsp;much&nbsp;the&nbsp;opposite&nbsp;of&nbsp;parcon:<br>
+while&nbsp;parcon&nbsp;parses&nbsp;text&nbsp;into&nbsp;objects,&nbsp;pargen&nbsp;formats&nbsp;objects&nbsp;into&nbsp;text.<br>
+I'll&nbsp;get&nbsp;more&nbsp;documentation&nbsp;up&nbsp;on&nbsp;here&nbsp;soon,&nbsp;but&nbsp;for&nbsp;now,&nbsp;here's&nbsp;a&nbsp;JSON<br>
+formatter&nbsp;(essentially&nbsp;a&nbsp;simplified&nbsp;reimplementation&nbsp;of&nbsp;Python's&nbsp;json.dumps):<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;from&nbsp;parcon.pargen&nbsp;import&nbsp;*<br>
+&gt;&gt;&gt;&nbsp;from&nbsp;decimal&nbsp;import&nbsp;Decimal<br>
+&gt;&gt;&gt;&nbsp;json&nbsp;=&nbsp;<a href="#Forward">Forward</a>()<br>
+&gt;&gt;&gt;&nbsp;number&nbsp;=&nbsp;<a href="#Type">Type</a>(float,&nbsp;int,&nbsp;long,&nbsp;Decimal)&nbsp;&amp;&nbsp;<a href="#String">String</a>()<br>
+&gt;&gt;&gt;&nbsp;boolean&nbsp;=&nbsp;<a href="#Type">Type</a>(bool)&nbsp;&amp;&nbsp;((<a href="#Is">Is</a>(True)&nbsp;&amp;&nbsp;"true")&nbsp;|&nbsp;(<a href="#Is">Is</a>(False)&nbsp;&amp;&nbsp;"false"))<br>
+&gt;&gt;&gt;&nbsp;null&nbsp;=&nbsp;<a href="#Is">Is</a>(None)&nbsp;&amp;&nbsp;"null"<br>
+&gt;&gt;&gt;&nbsp;string&nbsp;=&nbsp;<a href="#Type">Type</a>(basestring)&nbsp;&amp;&nbsp;'"'&nbsp;+&nbsp;<a href="#String">String</a>()&nbsp;+&nbsp;'"'<br>
+&gt;&gt;&gt;&nbsp;json_list&nbsp;=&nbsp;<a href="#Type">Type</a>(list,&nbsp;tuple)&nbsp;&amp;&nbsp;("["&nbsp;+&nbsp;<a href="#ForEach">ForEach</a>(json,&nbsp;",&nbsp;")&nbsp;+&nbsp;"]")<br>
+&gt;&gt;&gt;&nbsp;json_map&nbsp;=<a href="#Type">Type</a>(dict)&nbsp;&amp;&nbsp;&nbsp;("{"&nbsp;+&nbsp;<a href="#ForEach">ForEach</a>(<a href="#Head">Head</a>(json)&nbsp;+&nbsp;":&nbsp;"&nbsp;+&nbsp;<a href="#Tail">Tail</a>(json),&nbsp;",&nbsp;")&nbsp;+&nbsp;"}")<br>
+&gt;&gt;&gt;&nbsp;json&nbsp;&lt;&lt;&nbsp;(boolean&nbsp;|&nbsp;number&nbsp;|&nbsp;null&nbsp;|&nbsp;string&nbsp;|&nbsp;json_list&nbsp;|&nbsp;json_map)<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;then&nbsp;do&nbsp;things&nbsp;like:<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;json.format([True,1,{"2":3,"4":None},5,None,False,"hello"]).text<br>
+'[true,&nbsp;1,&nbsp;{"2":&nbsp;3,&nbsp;"4":&nbsp;null},&nbsp;5,&nbsp;null,&nbsp;false,&nbsp;"hello"]'<br>
+&nbsp;<br>
+You'll&nbsp;probably&nbsp;want&nbsp;to&nbsp;take&nbsp;a&nbsp;look&nbsp;at&nbsp;the&nbsp;<a href="#Formatter">Formatter</a>&nbsp;class.&nbsp;It's&nbsp;the&nbsp;"main"<br>
+class&nbsp;for&nbsp;pargen,&nbsp;analogous&nbsp;to&nbsp;parcon.Parser.&nbsp;It&nbsp;contains&nbsp;some&nbsp;module<br>
+documentation&nbsp;that&nbsp;can&nbsp;probably&nbsp;help&nbsp;to&nbsp;get&nbsp;you&nbsp;started.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.pargen.html#Formatter">Formatter</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.pargen.html#And">And</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#First">First</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#ForEach">ForEach</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Forward">Forward</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Is">Is</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#IsExactly">IsExactly</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Literal">Literal</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Repr">Repr</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#String">String</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Then">Then</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Type">Type</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="parcon.pargen.html#Result">Result</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="parcon.pargen.html#Back">Back</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Front">Front</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Head">Head</a>
+</font></dt><dt><font face="helvetica, arial"><a href="parcon.pargen.html#Tail">Tail</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="And">class <strong>And</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;acts&nbsp;like&nbsp;its&nbsp;second&nbsp;formatter,&nbsp;except&nbsp;that&nbsp;its&nbsp;first<br>
+formatter&nbsp;must&nbsp;succeed&nbsp;in&nbsp;order&nbsp;for&nbsp;the&nbsp;second&nbsp;formatter&nbsp;to&nbsp;be&nbsp;considered.<br>
+What&nbsp;the&nbsp;first&nbsp;formatter&nbsp;consumes&nbsp;will&nbsp;be&nbsp;ignored;&nbsp;the&nbsp;second&nbsp;formatter<br>
+will&nbsp;be&nbsp;provided&nbsp;with&nbsp;the&nbsp;exact&nbsp;value&nbsp;that&nbsp;was&nbsp;passed&nbsp;into&nbsp;the&nbsp;<a href="#And">And</a>&nbsp;instance.<br>
+&nbsp;<br>
+This&nbsp;could&nbsp;be&nbsp;used&nbsp;with&nbsp;<a href="#Type">Type</a>,&nbsp;for&nbsp;example,&nbsp;to&nbsp;make&nbsp;a&nbsp;certain&nbsp;formatter&nbsp;only<br>
+succeed&nbsp;if&nbsp;its&nbsp;input&nbsp;is&nbsp;of&nbsp;a&nbsp;specific&nbsp;type;&nbsp;for&nbsp;example:<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;int_formatter&nbsp;=&nbsp;<a href="#Type">Type</a>(int,&nbsp;long)&nbsp;&amp;&nbsp;<a href="#String">String</a>()<br>
+&nbsp;<br>
+would&nbsp;be&nbsp;a&nbsp;formatter&nbsp;that&nbsp;formats&nbsp;ints&nbsp;and&nbsp;longs&nbsp;as&nbsp;per&nbsp;the&nbsp;<a href="#String">String</a><br>
+formatter&nbsp;but&nbsp;that&nbsp;fails&nbsp;if&nbsp;any&nbsp;other&nbsp;type&nbsp;is&nbsp;passed&nbsp;to&nbsp;it.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#And">And</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="And-__init__"><strong>__init__</strong></a>(self, first, second)</dt></dl>
+
+<dl><dt><a name="And-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="And-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="And-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="And-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="And-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="And-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="And-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Back">class <strong>Back</strong></a>(<a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Same&nbsp;as&nbsp;<a href="#Front">Front</a>,&nbsp;but&nbsp;this&nbsp;operates&nbsp;on&nbsp;the&nbsp;last&nbsp;item&nbsp;in&nbsp;the&nbsp;list&nbsp;instead&nbsp;of<br>
+the&nbsp;first&nbsp;item.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Back">Back</a></dd>
+<dd><a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>:<br>
+<dl><dt><a name="Back-__init__"><strong>__init__</strong></a>(self, formatter)</dt></dl>
+
+<dl><dt><a name="Back-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Back-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Back-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Back-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Back-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Back-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Back-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="First">class <strong>First</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;attempts&nbsp;to&nbsp;apply&nbsp;all&nbsp;of&nbsp;its&nbsp;formatters&nbsp;in&nbsp;sequence&nbsp;to&nbsp;the<br>
+value&nbsp;provided&nbsp;to&nbsp;<a href="#First">First</a>;&nbsp;<a href="#First">First</a>&nbsp;then&nbsp;acts&nbsp;exactly&nbsp;like&nbsp;the&nbsp;first&nbsp;of&nbsp;its<br>
+formatters&nbsp;to&nbsp;succeed.&nbsp;Each&nbsp;formatter&nbsp;is&nbsp;passed&nbsp;a&nbsp;fresh&nbsp;copy&nbsp;of&nbsp;the&nbsp;value<br>
+provided&nbsp;to&nbsp;<a href="#First">First</a>,&nbsp;without&nbsp;regard&nbsp;to&nbsp;what&nbsp;the&nbsp;formatter&nbsp;applied&nbsp;before&nbsp;it<br>
+may&nbsp;have&nbsp;consumed.<br>
+&nbsp;<br>
+If&nbsp;none&nbsp;of&nbsp;the&nbsp;formatters&nbsp;match,&nbsp;<a href="#First">First</a>&nbsp;fails.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#First">First</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="First-__init__"><strong>__init__</strong></a>(self, *formatters)</dt></dl>
+
+<dl><dt><a name="First-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="First-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="First-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="First-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="First-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="First-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="First-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ForEach">class <strong>ForEach</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;expects&nbsp;a&nbsp;sequence&nbsp;or&nbsp;dict&nbsp;as&nbsp;input.&nbsp;If&nbsp;the&nbsp;input&nbsp;is&nbsp;a<br>
+dict,&nbsp;its&nbsp;items()&nbsp;method&nbsp;will&nbsp;be&nbsp;called,&nbsp;and&nbsp;the&nbsp;resulting&nbsp;list&nbsp;used&nbsp;as&nbsp;the<br>
+input&nbsp;sequence.&nbsp;For&nbsp;each&nbsp;item&nbsp;in&nbsp;the&nbsp;input&nbsp;sequence,&nbsp;<a href="#ForEach">ForEach</a>&nbsp;calls&nbsp;the<br>
+specified&nbsp;formatter,&nbsp;passing&nbsp;in&nbsp;that&nbsp;item.&nbsp;The&nbsp;results&nbsp;of&nbsp;all&nbsp;of&nbsp;these<br>
+formatters&nbsp;are&nbsp;then&nbsp;concatenated&nbsp;into&nbsp;a&nbsp;single&nbsp;string,&nbsp;separated&nbsp;by&nbsp;the<br>
+specified&nbsp;delimiter&nbsp;string&nbsp;(which&nbsp;defaults&nbsp;to&nbsp;the&nbsp;empty&nbsp;string).&nbsp;This<br>
+string&nbsp;is&nbsp;then&nbsp;returned.&nbsp;<a href="#ForEach">ForEach</a>&nbsp;consumes&nbsp;all&nbsp;of&nbsp;the&nbsp;input&nbsp;so&nbsp;that&nbsp;the<br>
+remainder&nbsp;is&nbsp;the&nbsp;empty&nbsp;list.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#ForEach">ForEach</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ForEach-__init__"><strong>__init__</strong></a>(self, formatter, delimiter<font color="#909090">=''</font>)</dt></dl>
+
+<dl><dt><a name="ForEach-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="ForEach-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="ForEach-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="ForEach-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="ForEach-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="ForEach-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="ForEach-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Formatter">class <strong>Formatter</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;main&nbsp;class&nbsp;of&nbsp;this&nbsp;module,&nbsp;analogous&nbsp;to&nbsp;parcon.Parser,&nbsp;but&nbsp;for<br>
+formatters.<br>
+&nbsp;<br>
+Like&nbsp;parcon.Parser,&nbsp;instances&nbsp;of&nbsp;<a href="#Formatter">Formatter</a>&nbsp;should&nbsp;not&nbsp;be&nbsp;directly<br>
+constructed;&nbsp;instances&nbsp;of&nbsp;its&nbsp;various&nbsp;subclasses&nbsp;should&nbsp;be&nbsp;created&nbsp;and&nbsp;used<br>
+instead.<br>
+&nbsp;<br>
+The&nbsp;main&nbsp;method&nbsp;that&nbsp;you'll&nbsp;want&nbsp;to&nbsp;look&nbsp;at&nbsp;is&nbsp;format.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Formatter-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Formatter-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Formatter-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Formatter-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Formatter-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Formatter-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Formatter-format"><strong>format</strong></a>(self, input)</dt><dd><tt>Formats&nbsp;a&nbsp;specified&nbsp;input&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;into&nbsp;a&nbsp;piece&nbsp;of&nbsp;text.&nbsp;Subclasses&nbsp;of<br>
+<a href="#Formatter">Formatter</a>&nbsp;should&nbsp;override&nbsp;this&nbsp;and&nbsp;provide&nbsp;an&nbsp;actual&nbsp;implementation.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;of&nbsp;this&nbsp;method&nbsp;is&nbsp;a&nbsp;<a href="#Result">Result</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;created&nbsp;by&nbsp;calling<br>
+either&nbsp;the&nbsp;match&nbsp;function&nbsp;or&nbsp;the&nbsp;failure&nbsp;function.&nbsp;The&nbsp;former&nbsp;function<br>
+is&nbsp;used&nbsp;to&nbsp;indicate&nbsp;success;&nbsp;the&nbsp;latter&nbsp;is&nbsp;used&nbsp;to&nbsp;indicate&nbsp;that&nbsp;the<br>
+formatter&nbsp;failed&nbsp;for&nbsp;some&nbsp;reason,&nbsp;such&nbsp;as&nbsp;the&nbsp;input&nbsp;not&nbsp;being&nbsp;of&nbsp;an<br>
+appropriate&nbsp;type.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Forward">class <strong>Forward</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;forward-declared&nbsp;formatter.&nbsp;This&nbsp;allows&nbsp;for&nbsp;mutually-recursive<br>
+formatters;&nbsp;the&nbsp;actual&nbsp;underlying&nbsp;formatter&nbsp;that&nbsp;a&nbsp;particular&nbsp;<a href="#Forward">Forward</a><br>
+delegates&nbsp;to&nbsp;can&nbsp;be&nbsp;set&nbsp;later&nbsp;on&nbsp;after&nbsp;the&nbsp;<a href="#Forward">Forward</a>&nbsp;is&nbsp;created.<br>
+&nbsp;<br>
+A&nbsp;formatter&nbsp;can&nbsp;be&nbsp;set&nbsp;into&nbsp;this&nbsp;<a href="#Forward">Forward</a>&nbsp;by&nbsp;doing:<br>
+&nbsp;<br>
+some_forward_formatter&nbsp;&lt;&lt;&nbsp;formatter_to_delegate_to<br>
+&nbsp;<br>
+or:<br>
+&nbsp;<br>
+some_forward_formatter.<a href="#Forward-set">set</a>(formatter_to_delegate_to)<br>
+&nbsp;<br>
+It's&nbsp;important&nbsp;to&nbsp;remember&nbsp;that&nbsp;&lt;&lt;&nbsp;is&nbsp;not&nbsp;the&nbsp;lowest&nbsp;precedence&nbsp;of&nbsp;all<br>
+operators;&nbsp;you'll&nbsp;probably&nbsp;want&nbsp;to&nbsp;wrap&nbsp;the&nbsp;right-hand&nbsp;side&nbsp;in&nbsp;parentheses<br>
+in&nbsp;order&nbsp;to&nbsp;avoid&nbsp;precedence&nbsp;issues&nbsp;that&nbsp;might&nbsp;otherwise&nbsp;occur.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Forward">Forward</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Forward-__init__"><strong>__init__</strong></a>(self, formatter<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Forward-__lshift__"><strong>__lshift__</strong></a> = <a href="#Forward-set">set</a>(self, formatter)</dt></dl>
+
+<dl><dt><a name="Forward-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<dl><dt><a name="Forward-set"><strong>set</strong></a>(self, formatter)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Forward-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Forward-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Forward-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Forward-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Forward-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Forward-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Front">class <strong>Front</strong></a>(<a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Same&nbsp;as&nbsp;<a href="#Head">Head</a>,&nbsp;but&nbsp;the&nbsp;remainder&nbsp;of&nbsp;this&nbsp;parser&nbsp;is&nbsp;exactly&nbsp;the&nbsp;value&nbsp;passed<br>
+to&nbsp;it,&nbsp;I.E.&nbsp;it&nbsp;doesn't&nbsp;consume&nbsp;any&nbsp;input.&nbsp;Thus&nbsp;the&nbsp;formatter:<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;first_three_times&nbsp;=&nbsp;<a href="#Front">Front</a>(<a href="#String">String</a>())&nbsp;+&nbsp;<a href="#Front">Front</a>(<a href="#String">String</a>())&nbsp;+&nbsp;<a href="#Front">Front</a>(<a href="#String">String</a>())<br>
+&gt;&gt;&gt;&nbsp;first_three_times.<a href="#Front-format">format</a>("12345").text<br>
+'111'<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Front">Front</a></dd>
+<dd><a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>:<br>
+<dl><dt><a name="Front-__init__"><strong>__init__</strong></a>(self, formatter)</dt></dl>
+
+<dl><dt><a name="Front-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Front-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Front-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Front-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Front-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Front-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Front-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Head">class <strong>Head</strong></a>(<a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;meant&nbsp;to&nbsp;be&nbsp;used&nbsp;on&nbsp;lists.&nbsp;It's&nbsp;constructed&nbsp;with&nbsp;another<br>
+formatter.&nbsp;When&nbsp;it's&nbsp;called,&nbsp;it&nbsp;expects&nbsp;some&nbsp;sort&nbsp;of&nbsp;sequence;&nbsp;it&nbsp;fails&nbsp;if<br>
+the&nbsp;value&nbsp;provided&nbsp;to&nbsp;it&nbsp;is&nbsp;not&nbsp;a&nbsp;sequence,&nbsp;or&nbsp;if&nbsp;it's&nbsp;an&nbsp;empty&nbsp;sequence.<br>
+If&nbsp;there's&nbsp;at&nbsp;least&nbsp;one&nbsp;item,&nbsp;this&nbsp;formatter&nbsp;calls&nbsp;its&nbsp;underlying&nbsp;formatter<br>
+with&nbsp;the&nbsp;first&nbsp;item&nbsp;in&nbsp;the&nbsp;sequence.&nbsp;It&nbsp;returns&nbsp;whatever&nbsp;this&nbsp;formatter<br>
+returns,&nbsp;with&nbsp;the&nbsp;remainder&nbsp;being&nbsp;all&nbsp;of&nbsp;the&nbsp;list&nbsp;items&nbsp;except&nbsp;for&nbsp;the<br>
+first.&nbsp;In&nbsp;this&nbsp;way,&nbsp;repeated&nbsp;invocations&nbsp;of&nbsp;<a href="#Head">Head</a>&nbsp;remove&nbsp;items&nbsp;from&nbsp;the<br>
+front&nbsp;of&nbsp;the&nbsp;list,&nbsp;so,&nbsp;for&nbsp;example,&nbsp;the&nbsp;formatter:<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;first_three&nbsp;=&nbsp;<a href="#Head">Head</a>(<a href="#String">String</a>())&nbsp;+&nbsp;<a href="#Head">Head</a>(<a href="#String">String</a>())&nbsp;+&nbsp;<a href="#Head">Head</a>(<a href="#String">String</a>())<br>
+&gt;&gt;&gt;&nbsp;first_three.<a href="#Head-format">format</a>("12345").text<br>
+'123'<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Head">Head</a></dd>
+<dd><a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>:<br>
+<dl><dt><a name="Head-__init__"><strong>__init__</strong></a>(self, formatter)</dt></dl>
+
+<dl><dt><a name="Head-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Head-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Head-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Head-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Head-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Head-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Head-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Is">class <strong>Is</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;consumes&nbsp;no&nbsp;input&nbsp;and&nbsp;returns&nbsp;the&nbsp;empty&nbsp;string.&nbsp;However,<br>
+it&nbsp;only&nbsp;succeeds&nbsp;if&nbsp;its&nbsp;input&nbsp;is&nbsp;equal,&nbsp;as&nbsp;per&nbsp;the&nbsp;==&nbsp;operator,&nbsp;to&nbsp;a&nbsp;value<br>
+provided&nbsp;to&nbsp;the&nbsp;<a href="#Is">Is</a>&nbsp;instance&nbsp;when&nbsp;it's&nbsp;constructed.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Is">Is</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Is-__init__"><strong>__init__</strong></a>(self, value)</dt></dl>
+
+<dl><dt><a name="Is-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Is-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Is-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Is-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Is-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Is-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Is-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="IsExactly">class <strong>IsExactly</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Same&nbsp;as&nbsp;<a href="#Is">Is</a>,&nbsp;but&nbsp;<a href="#IsExactly">IsExactly</a>&nbsp;uses&nbsp;Python's&nbsp;is&nbsp;operator&nbsp;instead&nbsp;of&nbsp;Python's&nbsp;==<br>
+operator&nbsp;to&nbsp;perform&nbsp;the&nbsp;equality&nbsp;check.&nbsp;This&nbsp;should&nbsp;be&nbsp;used&nbsp;for&nbsp;True,<br>
+False,&nbsp;None,&nbsp;and&nbsp;other&nbsp;such&nbsp;values.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#IsExactly">IsExactly</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="IsExactly-__init__"><strong>__init__</strong></a>(self, value)</dt></dl>
+
+<dl><dt><a name="IsExactly-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="IsExactly-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="IsExactly-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="IsExactly-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="IsExactly-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="IsExactly-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="IsExactly-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Literal">class <strong>Literal</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;outputs&nbsp;a&nbsp;specified&nbsp;piece&nbsp;of&nbsp;literal&nbsp;text.&nbsp;It&nbsp;doesn't<br>
+consume&nbsp;any&nbsp;of&nbsp;the&nbsp;input.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Literal">Literal</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Literal-__init__"><strong>__init__</strong></a>(self, text)</dt></dl>
+
+<dl><dt><a name="Literal-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Literal-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Literal-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Literal-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Literal-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Literal-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Literal-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Repr">class <strong>Repr</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Same&nbsp;to&nbsp;<a href="#String">String</a>(),&nbsp;but&nbsp;this&nbsp;formatter&nbsp;uses&nbsp;repr()&nbsp;instead&nbsp;of&nbsp;str()&nbsp;to&nbsp;do&nbsp;the<br>
+actual&nbsp;formatting.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Repr">Repr</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Repr-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Repr-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Repr-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Repr-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Repr-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Repr-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Repr-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Result">class <strong>Result</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;result.&nbsp;Instances&nbsp;of&nbsp;this&nbsp;class&nbsp;are&nbsp;returned&nbsp;from<br>
+<a href="#Formatter">Formatter</a>.format.<br>
+&nbsp;<br>
+Two&nbsp;fields&nbsp;are&nbsp;present:&nbsp;text&nbsp;and&nbsp;remainder.&nbsp;If&nbsp;this&nbsp;result&nbsp;represents<br>
+failure&nbsp;of&nbsp;a&nbsp;formatter,&nbsp;text&nbsp;will&nbsp;be&nbsp;None&nbsp;and&nbsp;remainder&nbsp;will&nbsp;be&nbsp;unspecified.<br>
+If&nbsp;this&nbsp;result&nbsp;represents&nbsp;success,&nbsp;text&nbsp;will&nbsp;be&nbsp;the&nbsp;text&nbsp;produced&nbsp;by&nbsp;the<br>
+formatter,&nbsp;and&nbsp;remainder&nbsp;will&nbsp;be&nbsp;the&nbsp;portion&nbsp;of&nbsp;the&nbsp;input&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;that&nbsp;the<br>
+parser&nbsp;did&nbsp;not&nbsp;consume.<br>
+&nbsp;<br>
+<a href="#Result">Result</a>&nbsp;objects&nbsp;have&nbsp;a&nbsp;boolean&nbsp;truth&nbsp;value&nbsp;corresponding&nbsp;to&nbsp;whether&nbsp;or&nbsp;not<br>
+they&nbsp;succeeded.&nbsp;For&nbsp;example,&nbsp;this&nbsp;could&nbsp;be&nbsp;used&nbsp;to&nbsp;print&nbsp;whether&nbsp;some<br>
+particular&nbsp;result&nbsp;succeeded:<br>
+&nbsp;<br>
+if&nbsp;some_result:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#Result">Result</a>&nbsp;succeeded"<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"<a href="#Result">Result</a>&nbsp;failed"<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Result-__init__"><strong>__init__</strong></a>(self, text, remainder)</dt></dl>
+
+<dl><dt><a name="Result-__nonzero__"><strong>__nonzero__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Result-__repr__"><strong>__repr__</strong></a> = <a href="#Result-__str__">__str__</a>(self)</dt></dl>
+
+<dl><dt><a name="Result-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="String">class <strong>String</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;formats&nbsp;whatever&nbsp;data&nbsp;it's&nbsp;provided&nbsp;as&nbsp;input&nbsp;using<br>
+Python's&nbsp;str()&nbsp;function.&nbsp;This&nbsp;is&nbsp;typically&nbsp;the&nbsp;formatter&nbsp;that&nbsp;you'll&nbsp;use<br>
+to&nbsp;format&nbsp;numbers&nbsp;and&nbsp;other&nbsp;things&nbsp;like&nbsp;that.&nbsp;The&nbsp;remainder&nbsp;is&nbsp;always&nbsp;None.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#String">String</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="String-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="String-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="String-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="String-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="String-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="String-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="String-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Tail">class <strong>Tail</strong></a>(<a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Same&nbsp;as&nbsp;<a href="#Head">Head</a>,&nbsp;but&nbsp;this&nbsp;operates&nbsp;on&nbsp;and&nbsp;removes&nbsp;the&nbsp;last&nbsp;item&nbsp;in&nbsp;the&nbsp;list<br>
+instead&nbsp;of&nbsp;the&nbsp;first&nbsp;item.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Tail">Tail</a></dd>
+<dd><a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="parcon.pargen.html#_ListExtremity">_ListExtremity</a>:<br>
+<dl><dt><a name="Tail-__init__"><strong>__init__</strong></a>(self, formatter)</dt></dl>
+
+<dl><dt><a name="Tail-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Tail-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Tail-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Tail-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Tail-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Tail-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Tail-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Then">class <strong>Then</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;applies&nbsp;two&nbsp;formatters&nbsp;one&nbsp;after&nbsp;the&nbsp;other,&nbsp;concatenating<br>
+their&nbsp;results&nbsp;and&nbsp;returning&nbsp;them.&nbsp;The&nbsp;remainder&nbsp;of&nbsp;the&nbsp;first&nbsp;formatter&nbsp;will<br>
+be&nbsp;passed&nbsp;to&nbsp;the&nbsp;second&nbsp;formatter&nbsp;as&nbsp;its&nbsp;value,&nbsp;and&nbsp;the&nbsp;remainder&nbsp;of&nbsp;<a href="#Then">Then</a><br>
+will&nbsp;be&nbsp;the&nbsp;remainder&nbsp;of&nbsp;the&nbsp;second&nbsp;formatter.<br>
+&nbsp;<br>
+If&nbsp;either&nbsp;formatter&nbsp;fails,&nbsp;<a href="#Then">Then</a>&nbsp;also&nbsp;fails.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Then">Then</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Then-__init__"><strong>__init__</strong></a>(self, first, second)</dt></dl>
+
+<dl><dt><a name="Then-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Then-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Then-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Then-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Then-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Then-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Then-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Type">class <strong>Type</strong></a>(<a href="parcon.pargen.html#Formatter">Formatter</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;formatter&nbsp;that&nbsp;produces&nbsp;the&nbsp;empty&nbsp;string&nbsp;and&nbsp;consumes&nbsp;no&nbsp;input.&nbsp;However,<br>
+it&nbsp;only&nbsp;succeeds&nbsp;if&nbsp;the&nbsp;value&nbsp;passed&nbsp;to&nbsp;it&nbsp;matches&nbsp;at&nbsp;least&nbsp;one&nbsp;of&nbsp;the<br>
+specified&nbsp;static&nbsp;types.&nbsp;Each&nbsp;of&nbsp;those&nbsp;types&nbsp;can&nbsp;be&nbsp;a&nbsp;Python&nbsp;class&nbsp;or&nbsp;a<br>
+static&nbsp;type&nbsp;as&nbsp;defined&nbsp;by&nbsp;parcon.static.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="parcon.pargen.html#Type">Type</a></dd>
+<dd><a href="parcon.pargen.html#Formatter">Formatter</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Type-__init__"><strong>__init__</strong></a>(self, *static_types)</dt></dl>
+
+<dl><dt><a name="Type-format"><strong>format</strong></a>(self, input)</dt></dl>
+
+<hr>
+Methods inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><a name="Type-__add__"><strong>__add__</strong></a> = op_add(first, second)</dt></dl>
+
+<dl><dt><a name="Type-__and__"><strong>__and__</strong></a> = op_and(first, second)</dt></dl>
+
+<dl><dt><a name="Type-__or__"><strong>__or__</strong></a> = op_or(first, second)</dt></dl>
+
+<dl><dt><a name="Type-__radd__"><strong>__radd__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Type-__rand__"><strong>__rand__</strong></a> = new_function(x, y)</dt></dl>
+
+<dl><dt><a name="Type-__ror__"><strong>__ror__</strong></a> = new_function(x, y)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="parcon.pargen.html#Formatter">Formatter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-failure"><strong>failure</strong></a>()</dt><dd><tt>Method&nbsp;called&nbsp;by&nbsp;formatters&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;<a href="#Result">Result</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;indicating<br>
+failure.&nbsp;Formatters&nbsp;typically&nbsp;fail&nbsp;when&nbsp;their&nbsp;input&nbsp;was&nbsp;not&nbsp;in&nbsp;the&nbsp;format<br>
+that&nbsp;they&nbsp;expected&nbsp;it&nbsp;to&nbsp;be,&nbsp;or&nbsp;for&nbsp;other&nbsp;reasons.&nbsp;<a href="#Head">Head</a>,&nbsp;for&nbsp;example,&nbsp;fails<br>
+if&nbsp;the&nbsp;provided&nbsp;value&nbsp;is&nbsp;not&nbsp;a&nbsp;sequence,&nbsp;or&nbsp;if&nbsp;the&nbsp;sequence&nbsp;provided&nbsp;is<br>
+empty.</tt></dd></dl>
+ <dl><dt><a name="-match"><strong>match</strong></a>(text, remainder)</dt><dd><tt>Method&nbsp;called&nbsp;by&nbsp;formatters&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;<a href="#Result">Result</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;indicating<br>
+success.&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;the&nbsp;formatter&nbsp;produced;&nbsp;this&nbsp;can&nbsp;be&nbsp;the<br>
+empty&nbsp;string,&nbsp;but&nbsp;it&nbsp;must&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;some&nbsp;sort.&nbsp;remainder&nbsp;is&nbsp;the<br>
+portion&nbsp;of&nbsp;the&nbsp;input&nbsp;value&nbsp;that&nbsp;the&nbsp;formatter&nbsp;did&nbsp;not&nbsp;consume;&nbsp;parser&nbsp;such<br>
+as&nbsp;<a href="#Then">Then</a>,&nbsp;for&nbsp;example,&nbsp;pass&nbsp;the&nbsp;remainder&nbsp;of&nbsp;their&nbsp;first&nbsp;parser&nbsp;as&nbsp;the&nbsp;value<br>
+to&nbsp;their&nbsp;second&nbsp;parser.</tt></dd></dl>
+ <dl><dt><a name="-op_add"><strong>op_add</strong></a>(first, second)</dt></dl>
+ <dl><dt><a name="-op_and"><strong>op_and</strong></a>(first, second)</dt></dl>
+ <dl><dt><a name="-op_or"><strong>op_or</strong></a>(first, second)</dt></dl>
+ <dl><dt><a name="-promote"><strong>promote</strong></a>(value)</dt></dl>
+ <dl><dt><a name="-reversed"><strong>reversed</strong></a>(function)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>sequence_or_dict_type</strong> = Or(Sequence(), Type(&lt;type 'dict'&gt;))<br>
+<strong>sequence_type</strong> = Sequence()</td></tr></table>
+</body></html>

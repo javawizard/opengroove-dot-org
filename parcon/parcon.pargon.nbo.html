@@ -1,0 +1,47 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module parcon.pargon.nbo</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+// START JCP ADD
+  if(window.location.href.indexOf("http://www.opengroove.org/") == 0) {
+// END JCP ADD
+  _gaq.push(['_setAccount', 'UA-6079740-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// START JCP ADD
+}
+// END JCP ADD
+
+</script>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="parcon.html"><font color="#ffffff">parcon</font></a>.<a href="parcon.pargon.html"><font color="#ffffff">pargon</font></a>.nbo</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jcp/github/parcon/parcon/pargon/nbo.py">/home/jcp/github/parcon/parcon/pargon/nbo.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;will&nbsp;have&nbsp;parsers&nbsp;for&nbsp;parsing&nbsp;binary&nbsp;protocols&nbsp;in&nbsp;it.&nbsp;Parcon&nbsp;can<br>
+already&nbsp;parse&nbsp;binary&nbsp;data;&nbsp;this&nbsp;module&nbsp;will&nbsp;provide&nbsp;some&nbsp;Parcon&nbsp;parsers<br>
+specifically&nbsp;oriented&nbsp;toward&nbsp;that&nbsp;purpose.&nbsp;Its&nbsp;most&nbsp;important&nbsp;feature&nbsp;will&nbsp;be<br>
+a&nbsp;set&nbsp;of&nbsp;parsers&nbsp;to&nbsp;parse&nbsp;integers&nbsp;and&nbsp;other&nbsp;data&nbsp;in&nbsp;network&nbsp;byte&nbsp;order,&nbsp;hence<br>
+this&nbsp;module's&nbsp;name&nbsp;(NBO&nbsp;=&nbsp;Network&nbsp;Byte&nbsp;Order).&nbsp;It&nbsp;will&nbsp;have&nbsp;parsers&nbsp;for&nbsp;parsing<br>
+other&nbsp;binary&nbsp;things&nbsp;too,&nbsp;though,&nbsp;such&nbsp;as&nbsp;length-specified&nbsp;strings&nbsp;or&nbsp;packets&nbsp;in<br>
+protocols&nbsp;that&nbsp;have&nbsp;a&nbsp;defined&nbsp;length.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;will&nbsp;also&nbsp;contain&nbsp;formatters&nbsp;for&nbsp;all&nbsp;of&nbsp;the&nbsp;binary&nbsp;types&nbsp;that&nbsp;it<br>
+can&nbsp;parse.&nbsp;In&nbsp;fact,&nbsp;I'm&nbsp;considering&nbsp;having&nbsp;all&nbsp;of&nbsp;the&nbsp;parsers&nbsp;be&nbsp;subclasses&nbsp;of<br>
+parcon.pargon.ParserFormatter.&nbsp;The&nbsp;only&nbsp;difficulty&nbsp;is&nbsp;that&nbsp;it&nbsp;would&nbsp;make<br>
+assembling&nbsp;formatters&nbsp;difficult&nbsp;since&nbsp;ParserFormatters&nbsp;act&nbsp;like&nbsp;parsers&nbsp;when<br>
+used&nbsp;as&nbsp;arguments&nbsp;to&nbsp;operators.&nbsp;So&nbsp;this&nbsp;needs&nbsp;some&nbsp;thought.<br>
+&nbsp;<br>
+(if&nbsp;you&nbsp;can't&nbsp;tell,&nbsp;the&nbsp;nbo&nbsp;module&nbsp;is&nbsp;still&nbsp;in&nbsp;planning&nbsp;:-)&nbsp;)</tt></p>
+
+</body></html>

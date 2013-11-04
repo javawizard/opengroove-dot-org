@@ -1,0 +1,134 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module parcon.railroad.raildraw</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+// START JCP ADD
+  if(window.location.href.indexOf("http://www.opengroove.org/") == 0) {
+// END JCP ADD
+  _gaq.push(['_setAccount', 'UA-6079740-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// START JCP ADD
+}
+// END JCP ADD
+
+</script>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="parcon.html"><font color="#ffffff">parcon</font></a>.<a href="parcon.railroad.html"><font color="#ffffff">railroad</font></a>.raildraw</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jcp/github/parcon/parcon/railroad/raildraw.py">/home/jcp/github/parcon/parcon/railroad/raildraw.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;provides&nbsp;support&nbsp;for&nbsp;drawing&nbsp;railroad&nbsp;diagrams&nbsp;created&nbsp;by<br>
+parcon.railroad&nbsp;(which&nbsp;usually&nbsp;creates&nbsp;them&nbsp;from&nbsp;Parcon&nbsp;parsers)&nbsp;into&nbsp;image<br>
+files&nbsp;or&nbsp;other&nbsp;locations.<br>
+&nbsp;<br>
+It's&nbsp;possible&nbsp;to&nbsp;use&nbsp;this&nbsp;module&nbsp;and&nbsp;parcon.railroad&nbsp;as&nbsp;standalone&nbsp;modules&nbsp;to<br>
+create&nbsp;syntax&nbsp;diagrams&nbsp;for&nbsp;things&nbsp;unrelated&nbsp;to&nbsp;Parcon.&nbsp;I'll&nbsp;write&nbsp;up<br>
+documentation&nbsp;on&nbsp;how&nbsp;to&nbsp;use&nbsp;this&nbsp;module&nbsp;separate&nbsp;from&nbsp;Parcon&nbsp;at&nbsp;some&nbsp;point.<br>
+&nbsp;<br>
+A&nbsp;simple&nbsp;example&nbsp;of&nbsp;how&nbsp;to&nbsp;use&nbsp;this&nbsp;module&nbsp;is&nbsp;present&nbsp;in&nbsp;the&nbsp;module<br>
+documentation&nbsp;of&nbsp;parcon.railroad.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;requires&nbsp;Cairo&nbsp;and&nbsp;PyCairo&nbsp;in&nbsp;order&nbsp;to&nbsp;function.&nbsp;These&nbsp;must&nbsp;be<br>
+installed&nbsp;separately&nbsp;from&nbsp;Parcon;&nbsp;both&nbsp;Cairo&nbsp;and&nbsp;PyCairo&nbsp;are&nbsp;available&nbsp;for<br>
+Windows,&nbsp;Linux,&nbsp;and&nbsp;Mac.&nbsp;A&nbsp;Google&nbsp;search&nbsp;should&nbsp;turn&nbsp;up&nbsp;information&nbsp;on&nbsp;where&nbsp;to<br>
+download&nbsp;and&nbsp;install&nbsp;both.&nbsp;(If&nbsp;it&nbsp;doesn't,&nbsp;go&nbsp;to&nbsp;pypi.python.org/pypi/parcon<br>
+and&nbsp;send&nbsp;an&nbsp;email&nbsp;to&nbsp;the&nbsp;email&nbsp;address&nbsp;you&nbsp;find&nbsp;there.)<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;also&nbsp;requires&nbsp;Pango&nbsp;and&nbsp;PyGTK&nbsp;(for&nbsp;the&nbsp;Pango&nbsp;bindings).&nbsp;A&nbsp;similar<br>
+Google&nbsp;search&nbsp;should&nbsp;turn&nbsp;up&nbsp;information&nbsp;on&nbsp;how&nbsp;to&nbsp;install&nbsp;these.<br>
+&nbsp;<br>
+If&nbsp;you're&nbsp;on&nbsp;Ubuntu,&nbsp;all&nbsp;of&nbsp;the&nbsp;above&nbsp;dependencies&nbsp;can&nbsp;be&nbsp;installed&nbsp;via<br>
+apt-get;&nbsp;I'll&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;specific&nbsp;packages&nbsp;to&nbsp;install&nbsp;up&nbsp;here&nbsp;soon.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cairo.html">cairo</a><br>
+<a href="parcon.options.html">parcon.options</a><br>
+</td><td width="25%" valign=top><a href="pango.html">pango</a><br>
+<a href="pangocairo.html">pangocairo</a><br>
+</td><td width="25%" valign=top><a href="parcon.railroad.html">parcon.railroad</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-create_options"><strong>create_options</strong></a>(map)</dt></dl>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Bullet"><strong>draw_Bullet</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Loop"><strong>draw_Loop</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Nothing"><strong>draw_Nothing</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Or"><strong>draw_Or</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Then"><strong>draw_Then</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_Token"><strong>draw_Token</strong></a>(image, x, y, construct, options, forward)</dt></dl>
+ <dl><dt><a name="-draw_arrow"><strong>draw_arrow</strong></a>(image, x, y, options, forward)</dt><dd><tt>Draws&nbsp;an&nbsp;arrow&nbsp;at&nbsp;the&nbsp;specified&nbsp;position.</tt></dd></dl>
+ <dl><dt><a name="-draw_arrow_or_line"><strong>draw_arrow_or_line</strong></a>(image, x, y, arrow_width, arrow_height, options, forward, arrow)</dt></dl>
+ <dl><dt><a name="-draw_line"><strong>draw_line</strong></a>(image, x1, y1, x2, y2)</dt></dl>
+ <dl><dt><a name="-draw_text"><strong>draw_text</strong></a>(context, x, y, font, text)</dt></dl>
+ <dl><dt><a name="-draw_to_context"><strong>draw_to_context</strong></a>(context, diagram, options, filename, forward<font color="#909090">=True</font>, x<font color="#909090">=8</font>, y<font color="#909090">=8</font>)</dt><dd><tt>Same&nbsp;as&nbsp;draw_to_png,&nbsp;but&nbsp;draws&nbsp;the&nbsp;specified&nbsp;railroad&nbsp;diagram&nbsp;to&nbsp;a&nbsp;context,<br>
+which&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;cairo.Context,&nbsp;instead&nbsp;of&nbsp;to&nbsp;a&nbsp;PNG&nbsp;file.<br>
+draw_to_png&nbsp;actually&nbsp;delegates&nbsp;to&nbsp;this&nbsp;function&nbsp;to&nbsp;do&nbsp;the&nbsp;actual&nbsp;drawing.<br>
+&nbsp;<br>
+x&nbsp;and&nbsp;y&nbsp;are&nbsp;the&nbsp;position&nbsp;at&nbsp;which&nbsp;to&nbsp;draw&nbsp;the&nbsp;specified&nbsp;diagram.</tt></dd></dl>
+ <dl><dt><a name="-draw_to_png"><strong>draw_to_png</strong></a>(diagram, options, filename, forward<font color="#909090">=True</font>)</dt><dd><tt>Draws&nbsp;the&nbsp;specified&nbsp;railroad&nbsp;diagram,&nbsp;which&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of<br>
+parcon.railroad.Component&nbsp;or&nbsp;one&nbsp;of&nbsp;its&nbsp;subclasses,&nbsp;or&nbsp;a&nbsp;dictionary,&nbsp;into<br>
+the&nbsp;PNG&nbsp;file&nbsp;at&nbsp;the&nbsp;specified&nbsp;file&nbsp;name.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;specified&nbsp;diagram&nbsp;is&nbsp;a&nbsp;dict,&nbsp;each&nbsp;of&nbsp;the&nbsp;diagrams&nbsp;contained&nbsp;as&nbsp;its<br>
+values&nbsp;will&nbsp;be&nbsp;drawn&nbsp;into&nbsp;the&nbsp;file,&nbsp;top&nbsp;to&nbsp;bottom,&nbsp;with&nbsp;the&nbsp;corresponding<br>
+keys&nbsp;(which&nbsp;should&nbsp;be&nbsp;strings)&nbsp;used&nbsp;as&nbsp;titles&nbsp;before&nbsp;each&nbsp;diagram.<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;either&nbsp;manually&nbsp;create&nbsp;instances&nbsp;of&nbsp;any&nbsp;of<br>
+parcon.railroad.Component's&nbsp;subclasses&nbsp;to&nbsp;pass&nbsp;to&nbsp;this&nbsp;method,&nbsp;or&nbsp;you&nbsp;can<br>
+convert&nbsp;a&nbsp;Parcon&nbsp;parser&nbsp;to&nbsp;a&nbsp;Component&nbsp;by&nbsp;calling&nbsp;its&nbsp;create_railroad<br>
+method.<br>
+&nbsp;<br>
+options&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;options&nbsp;to&nbsp;use.&nbsp;For&nbsp;now,&nbsp;just&nbsp;use&nbsp;the&nbsp;empty<br>
+dict;&nbsp;I'll&nbsp;get&nbsp;around&nbsp;to&nbsp;documenting&nbsp;the&nbsp;options&nbsp;that&nbsp;you&nbsp;can&nbsp;use&nbsp;here&nbsp;at<br>
+some&nbsp;point.</tt></dd></dl>
+ <dl><dt><a name="-get_font_for_token"><strong>get_font_for_token</strong></a>(options, token)</dt></dl>
+ <dl><dt><a name="-radians"><strong>radians</strong></a>(...)</dt><dd><tt><a href="#-radians">radians</a>(x)<br>
+&nbsp;<br>
+Convert&nbsp;angle&nbsp;x&nbsp;from&nbsp;degrees&nbsp;to&nbsp;radians.</tt></dd></dl>
+ <dl><dt><a name="-size_of"><strong>size_of</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Bullet"><strong>size_of_Bullet</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Loop"><strong>size_of_Loop</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Nothing"><strong>size_of_Nothing</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Or"><strong>size_of_Or</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Then"><strong>size_of_Then</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_Token"><strong>size_of_Token</strong></a>(image, construct, options)</dt></dl>
+ <dl><dt><a name="-size_of_arrow"><strong>size_of_arrow</strong></a>(options)</dt><dd><tt>Returns&nbsp;the&nbsp;size&nbsp;of&nbsp;an&nbsp;arrow,&nbsp;in&nbsp;the&nbsp;same&nbsp;format&nbsp;as&nbsp;all&nbsp;of&nbsp;the&nbsp;other&nbsp;size<br>
+functions,&nbsp;namely&nbsp;(width,&nbsp;height,&nbsp;line_position).</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>bold_font</strong> = &lt;PangoFontDescription&gt;<br>
+<strong>bold_italic_font</strong> = &lt;PangoFontDescription&gt;<br>
+<strong>default_line_size</strong> = 2<br>
+<strong>division</strong> = _Feature((2, 2, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 8192)<br>
+<strong>draw_functions</strong> = {&lt;class 'parcon.railroad.Nothing'&gt;: &lt;function draw_Nothing&gt;, &lt;class 'parcon.railroad.Then'&gt;: &lt;function draw_Then&gt;, &lt;class 'parcon.railroad.Or'&gt;: &lt;function draw_Or&gt;, &lt;class 'parcon.railroad.Token'&gt;: &lt;function draw_Token&gt;, &lt;class 'parcon.railroad.Loop'&gt;: &lt;function draw_Loop&gt;, &lt;class 'parcon.railroad.Bullet'&gt;: &lt;function draw_Bullet&gt;}<br>
+<strong>italic_font</strong> = &lt;PangoFontDescription&gt;<br>
+<strong>plain_font</strong> = &lt;PangoFontDescription&gt;<br>
+<strong>size_functions</strong> = {&lt;class 'parcon.railroad.Nothing'&gt;: &lt;function size_of_Nothing&gt;, &lt;class 'parcon.railroad.Then'&gt;: &lt;function size_of_Then&gt;, &lt;class 'parcon.railroad.Or'&gt;: &lt;function size_of_Or&gt;, &lt;class 'parcon.railroad.Token'&gt;: &lt;function size_of_Token&gt;, &lt;class 'parcon.railroad.Loop'&gt;: &lt;function size_of_Loop&gt;, &lt;class 'parcon.railroad.Bullet'&gt;: &lt;function size_of_Bullet&gt;}<br>
+<strong>title_font</strong> = &lt;PangoFontDescription&gt;</td></tr></table>
+</body></html>
