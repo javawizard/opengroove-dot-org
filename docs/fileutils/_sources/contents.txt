@@ -1,0 +1,2 @@
+.. toctree::
+   modules/fileutils.rst

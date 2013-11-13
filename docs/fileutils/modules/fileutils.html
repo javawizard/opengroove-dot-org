@@ -1,0 +1,865 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fileutils — An object-oriented file access library for Python. &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../contents.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../contents.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fileutils">
+<span id="fileutils-an-object-oriented-file-access-library-for-python"></span><h1><a class="reference internal" href="#module-fileutils" title="fileutils: An object-oriented file access library for Python."><tt class="xref py py-mod docutils literal"><span class="pre">fileutils</span></tt></a> &#8212; An object-oriented file access library for Python.<a class="headerlink" href="#module-fileutils" title="Permalink to this headline">¶</a></h1>
+<p>Fileutils is an object-oriented file access library. It provides a consolidated
+filesystem interface that offers, among others, the following:</p>
+<ul>
+<li><p class="first">A context manager for temporarily switching to a different working
+directory. Patterns like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">old_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+    <span class="o">...</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">old_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>can be replaced with the much simpler:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">File</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_working</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>which is also much more difficult to get wrong.</p>
+</li>
+<li><p class="first">Properties and methods... TBD</p>
+</li>
+<li><p class="first">Functions for working with extended attributes... TBD</p>
+</li>
+</ul>
+<p>More module documentation to come soon. For now, take a look at the File class
+to see what it does.</p>
+<p>Issues should be filed at <a class="reference external" href="http://github.com/javawizard/fileutils/issues">http://github.com/javawizard/fileutils/issues</a>.</p>
+<div class="section" id="class-file">
+<h2>Class File<a class="headerlink" href="#class-file" title="Permalink to this headline">¶</a></h2>
+<p>An object representing a file or folder. File objects are intended to be as
+opaque as possible; one should rarely, if ever, need to know about the
+pathname of a File object, or that a File even has a pathname associated
+with it.</p>
+<p>The file or folder referred to by a File object need not exist. One can
+test whether a File object represents a file that does exist using the
+exists property.</p>
+<p>File objects cannot be changed to refer to a different file after they are
+created.</p>
+<dl class="class">
+<dt id="fileutils.File">
+<em class="property">class </em><tt class="descclassname">fileutils.</tt><tt class="descname">File</tt><big>(</big><em>self</em>, <em>*path_components</em><big>)</big><a class="headerlink" href="#fileutils.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new file from the specified path components. Each component
+represents the name of a folder or a file. These are internally joined
+as if by os.path.join(<a href="#id1"><span class="problematic" id="id2">*</span></a>path_components).</p>
+<p>It&#8217;s also possible, although not recommended, to pass a full pathname
+(in the operating system&#8217;s native format) into File. On Windows, one
+could therefore do File(r&#8221;C:somefile&#8221;), and File(&#8220;/some/file&#8221;) on
+Linux and other Unix operating systems.</p>
+<p>You can also call File(File(...)). This is equivalent to File(...) and
+exists to make it easier for functions to accept either a pathname or
+a File object.</p>
+<p>Passing no arguments (i.e. File()) results in a file that refers to the
+working directory as of the time the File instance was constructed.</p>
+<p>Pathnames are internally stored in absolute form; as a result, changing
+the working directory after creating a File instance will not change
+the file referred to.</p>
+<dl class="method">
+<dt id="fileutils.File.__cmp__">
+<tt class="descname">__cmp__</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.File.__cmp__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.__div__">
+<tt class="descname">__div__</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.__div__" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.File.child">
+<tt class="descname">child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a File object representing the child of this file with the
+specified name. If multiple names are present, they will be joined
+together. If no names are present, self will be returned.</p>
+<p>If any names are absolute, all names before them (and self) will be
+discarded. Relative names (like &#8221;..&#8221;) are also allowed. If you want a
+method that guarantees that the result is a child of self, use
+self.safe_child(...).</p>
+<p>This method is analogous to os.path.join(self.path, <a href="#id3"><span class="problematic" id="id4">*</span></a>names).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.__hash__">
+<tt class="descname">__hash__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.__len__">
+<tt class="descname">__len__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__len__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.__nonzero__">
+<tt class="descname">__nonzero__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__nonzero__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True. File objects are always true values; to test for their
+existence, use self.exists instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.__repr__">
+<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__repr__" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.File.__str__">
+<tt class="descname">__str__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__str__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.ancestor_of">
+<tt class="descname">ancestor_of</tt><big>(</big><em>self</em>, <em>other</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.File.ancestor_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if this file is an ancestor of the specified file. A file
+is an ancestor of another file if that other file&#8217;s parent is this
+file, or its parent&#8217;s parent is this file, and so on.</p>
+<p>If including_self is True, the file is considered to be an ancestor of
+itself, i.e. True will be returned in the case that self == other.
+Otherwise, only the file&#8217;s immediate parent, and its parent&#8217;s parent,
+and so on are considered to be ancestors.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.ancestors">
+<tt class="descname">ancestors</tt><a class="headerlink" href="#fileutils.File.ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all of the ancestors of this file, with self.parent first.</p>
+<p>This property simply returns self.get_ancestors(). Have a look at that
+method if you need to do more complex things like include self as one
+of the returned ancestors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.append">
+<tt class="descname">append</tt><big>(</big><em>self</em>, <em>data</em>, <em>binary=True</em><big>)</big><a class="headerlink" href="#fileutils.File.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append the specified data to the end of this file.</p>
+<p>If binary is True (the default), the file will be appended to
+byte-for-byte. If it&#8217;s False, the file will be appended to in text
+mode.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.as_working">
+<tt class="descname">as_working</tt><a class="headerlink" href="#fileutils.File.as_working" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that returns a context manager. This context manager sets
+the working directory to self upon being entered and restores it to
+what it previously was upon being exited. One can use this to replace
+something like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">old_dir</span> <span class="o">=</span> <span class="n">File</span><span class="p">()</span>
+<span class="n">new_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="o">...</span><span class="n">stuff</span><span class="o">...</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">old_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>with the much nicer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">new_dir</span><span class="o">.</span><span class="n">as_working</span><span class="p">:</span>
+    <span class="o">...</span><span class="n">stuff</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>and get exactly the same effect.</p>
+<p>The context manager&#8217;s __enter__ returns self (this file), so you can
+also use an &#8220;as&#8221; clause on the with statement to get access to the
+file in case you haven&#8217;t got it stored in a variable anywhere.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.cd">
+<tt class="descname">cd</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.cd" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for self.change_to().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.change_to">
+<tt class="descname">change_to</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.change_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the current working directory to self.</p>
+<p>Since File instances internally store paths in absolute form, other
+File instances will continue to work just fine after this is called.</p>
+<p>If you need to restore the working directory at any point, you might
+want to consider using self.as_working instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.check_file">
+<tt class="descname">check_file</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.check_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see whether this File refers to a file. If it doesn&#8217;t, an
+exception will be thrown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.check_folder">
+<tt class="descname">check_folder</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.check_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see whether this File refers to a folder. If it doesn&#8217;t, an
+exception will be thrown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.check_xattr">
+<tt class="descname">check_xattr</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.File.check_xattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as get_xattr, but throws a KeyError if the specified extended
+attribute does not exist instead of returning a default value.</p>
+<p>The same compatibility warnings present on list_xattrs apply here.</p>
+<p>Note that an IOError will be thrown if extended attributes aren&#8217;t
+supported instead of KeyError.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.child_names">
+<tt class="descname">child_names</tt><a class="headerlink" href="#fileutils.File.child_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the names of all of the children of this file, as a list of
+strings. If this file is not a folder, the value of this property is
+None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.children">
+<tt class="descname">children</tt><a class="headerlink" href="#fileutils.File.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all of the children of this file, as a list of File objects.
+If this file is not a folder, the value of this property is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.copy_into">
+<tt class="descname">copy_into</tt><big>(</big><em>self</em>, <em>other</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#fileutils.File.copy_into" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies this file to an identically named file inside the specified
+folder. This is just shorthand for self.copy_to(other.child(self.name))
+which, from experience, seems to be by far the most common use case for
+the copy_to function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.copy_to">
+<tt class="descname">copy_to</tt><big>(</big><em>self</em>, <em>other</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#fileutils.File.copy_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies the contents of this file to the specified File object or
+pathname. An exception will be thrown if the specified file already
+exists and overwrite is False.</p>
+<p>This does not currently work for folders; I hope to add this ability
+in the near future.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.create_folder">
+<tt class="descname">create_folder</tt><big>(</big><em>self</em>, <em>ignore_existing=False</em>, <em>recursive=False</em><big>)</big><a class="headerlink" href="#fileutils.File.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the folder referred to by this File object. If it already
+exists but is not a folder, an exception will be thrown. If it already
+exists and is a folder, an exception will be thrown if ignore_existing
+is False (the default); if ignore_existing is True, no exception will
+be thrown.</p>
+<p>If the to-be-created folder&#8217;s parent does not exist and recursive is
+False, an exception will be thrown. If recursive is True, the folder&#8217;s
+parent, its parent&#8217;s parent, and so on will be created automatically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.delete">
+<tt class="descname">delete</tt><big>(</big><em>self</em>, <em>contents=False</em>, <em>ignore_missing=False</em><big>)</big><a class="headerlink" href="#fileutils.File.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes this file or folder, recursively deleting children if
+necessary.</p>
+<p>The contents parameter has no effect, and is present for backward
+compatibility.</p>
+<p>If the file does not exist and ignore_missing is False, an exception
+will be thrown. If the file does not exist but ignore_missing is True,
+this function simply does nothing.</p>
+<p>Note that symbolic links are never recursed into, and are instead
+themselves removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.delete_folder">
+<tt class="descname">delete_folder</tt><big>(</big><em>self</em>, <em>contents=False</em><big>)</big><a class="headerlink" href="#fileutils.File.delete_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>This has been merged into the delete method and as such should no
+longer be used. It has the exact same effect as delete.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.delete_on_exit">
+<tt class="descname">delete_on_exit</tt><a class="headerlink" href="#fileutils.File.delete_on_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean indicating whether or not this file (which may be a file or a
+folder) should be deleted on interpreter shutdown. This is False by
+default, but may be set to True to request that a particular file be
+deleted on exit, and potentially set back to False to cancel such a
+request.</p>
+<p>Note that such files are not absolutely guaranteed to be deleted on
+exit. Deletion is handled via an atexit hook, so files will not be
+deleted if, for example, the interpreter crashes or os._exit() is
+called.</p>
+<p>The value of this property is shared among all File instances pointing
+to a given path. For example:</p>
+<blockquote>
+<div>File(&#8220;test&#8221;).delete_on_exit = True # Instance 1
+print File(&#8220;test&#8221;).delete_on_exit # Instance 2, prints &#8220;True&#8221;</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.delete_xattr">
+<tt class="descname">delete_xattr</tt><big>(</big><em>self</em>, <em>name</em>, <em>silent=True</em><big>)</big><a class="headerlink" href="#fileutils.File.delete_xattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the extended attribute with the specified name from this file.
+If the attribute does not exist and silent is true, nothing will
+happen. If the attribute does not exist and silent is false, an
+exception will be thrown.</p>
+<p>The same compatibility warnings present on list_xattrs apply here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.dereference">
+<tt class="descname">dereference</tt><big>(</big><em>self</em>, <em>recursive=False</em><big>)</big><a class="headerlink" href="#fileutils.File.dereference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dereference the symbolic link represented by this file and return a
+File object pointing to the symbolic link&#8217;s referent.</p>
+<p>If recursive is False, a File object pointing directly to the referent
+will be returned. If recursive is True, the referent itself will be
+recursively dereferenced, and the returned File will be guaranteed not
+to be a link.</p>
+<p>If this file is not a symbolic link, self will be returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.descendant_of">
+<tt class="descname">descendant_of</tt><big>(</big><em>self</em>, <em>other</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.File.descendant_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if this file is a descendant of the specified file. This
+is equivalent to File(other).ancestor_of(self, including_self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.download_from">
+<tt class="descname">download_from</tt><big>(</big><em>self</em>, <em>url</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#fileutils.File.download_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads the specified URL and saves it to self. If self already
+exists and overwrite is False, an exception will be thrown; otherwise,
+self will be overwritten.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.exists">
+<tt class="descname">exists</tt><a class="headerlink" href="#fileutils.File.exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this file/folder exists, False if it doesn&#8217;t. This will be True
+even for broken symbolic links; use self.valid if you want an
+alternative that returns False for broken symbolic links.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.get_ancestors">
+<tt class="descname">get_ancestors</tt><big>(</big><em>self</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.File.get_ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all of the ancestors of this file, with self.parent
+first. If including_self is True, self will be first, self.parent will
+be second, and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.get_path">
+<tt class="descname">get_path</tt><big>(</big><em>self</em>, <em>relative_to=None</em>, <em>separator=None</em><big>)</big><a class="headerlink" href="#fileutils.File.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the path to the file represented by this File object.</p>
+<p>If relative_to is specified, the returned path will be a relative path,
+the path of this file relative to the specified one. Otherwise, the
+returned path will be absolute.</p>
+<p>If separator (which must be a string) is specified, it will be used as
+the separator to place between path components in the returned path.
+Otherwise, os.path.sep will be used as the separator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.get_path_components">
+<tt class="descname">get_path_components</tt><big>(</big><em>self</em>, <em>relative_to=None</em><big>)</big><a class="headerlink" href="#fileutils.File.get_path_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the components in this file&#8217;s path, including (on
+POSIX-compliant systems) an empty leading component for absolute paths.</p>
+<p>If relative_to is specified, the returned set of components will
+represent a relative path, the path of this file relative to the
+specified one. Otherwise, the returned components will represent an
+absolute path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.get_xattr">
+<tt class="descname">get_xattr</tt><big>(</big><em>self</em>, <em>name</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#fileutils.File.get_xattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the extended attribute with the specified name
+on this file, as a string, or returns the value of default (which
+defaults to None) if no such extended attribute exists.</p>
+<p>The same compatibility warnings present on list_xattrs apply here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.glob">
+<tt class="descname">glob</tt><big>(</big><em>self</em>, <em>glob</em><big>)</big><a class="headerlink" href="#fileutils.File.glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands the specified path relative to self and returns a list of all
+matching files, as File objects. This is a thin wrapper around a call
+to Python&#8217;s glob.glob function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.has_xattr">
+<tt class="descname">has_xattr</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.File.has_xattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this file has an extended attribute with the specified
+name, or False if it doesn&#8217;t.</p>
+<p>The same compatibility warnings present on list_xattrs apply here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.hash">
+<tt class="descname">hash</tt><big>(</big><em>self</em>, <em>algorithm=&lt;built-in function openssl_md5&gt;</em>, <em>return_hex=True</em><big>)</big><a class="headerlink" href="#fileutils.File.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the hash of this file and return it, as a hexidecimal string.</p>
+<p>The default algorithm is md5. An alternate constructor from hashlib
+can be passed as the algorithm parameter; file.hash(hashlib.sha1)
+would, for example, compute the SHA-1 hash instead.</p>
+<p>If return_hex is False (it defaults to True), the hash object itself
+will be returned instead of the return value of its hexdigest() method.
+One can use this to access the binary hash instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.is_broken">
+<tt class="descname">is_broken</tt><a class="headerlink" href="#fileutils.File.is_broken" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a symbolic link that is broken, False if it isn&#8217;t.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.is_directory">
+<tt class="descname">is_directory</tt><a class="headerlink" href="#fileutils.File.is_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as self.is_folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.is_file">
+<tt class="descname">is_file</tt><a class="headerlink" href="#fileutils.File.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a file, False if it isn&#8217;t. If the file/folder
+doesn&#8217;t actually exist yet, this will be False.</p>
+<p>If this file is a symbolic link that points to a file, this will be
+True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.is_folder">
+<tt class="descname">is_folder</tt><a class="headerlink" href="#fileutils.File.is_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a folder, False if it isn&#8217;t. If the file/folder
+doesn&#8217;t actually exist yet, this will be False.</p>
+<p>If this file is a symbolic link that points to a folder, this will be
+True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.is_link">
+<tt class="descname">is_link</tt><a class="headerlink" href="#fileutils.File.is_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a symbolic link, False if it isn&#8217;t. This will be
+True even for broken symbolic links.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.link_target">
+<tt class="descname">link_target</tt><a class="headerlink" href="#fileutils.File.link_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the target to which this file, which is expected to be a
+symbolic link, points, as a string. If this file is not a symbolic
+link, None is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.link_to">
+<tt class="descname">link_to</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.File.link_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates this file as a symbolic link pointing to other, which can be
+a pathname or a File object. Note that if it&#8217;s a pathname, a symbolic
+link will be created with the exact path specified; it will therefore
+be absolute if the path is absolute or relative (to the link itself) if
+the path is relative. If a File object, however, is used, the symbolic
+link will always be absolute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.list">
+<tt class="descname">list</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete method that simply returns self.children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.list_names">
+<tt class="descname">list_names</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.list_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete method that simply returns self.child_names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.list_xattrs">
+<tt class="descname">list_xattrs</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.list_xattrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the names of all of the extended attributes present
+on this file.</p>
+<p>This is only supported on Linux and Max OS X right now. I hope to add
+Windows support in the future.</p>
+<p>Note that some Linux filesystems must be mounted with a particular
+option to enable extended attribute support. Ext2/3/4, for example,
+must be mounted with the user_xattr mount option set. (I heard
+somewhere that user_xattr might become a default option in the near
+future, but such a default is certainly not widely deployed yet.)</p>
+<p>Also note that some filesystems (such as ext2/3/4) require the
+attribute name to have a particular format (in the case of ext2/3/4,
+&#8220;prefix.name&#8221;, where &#8220;prefix&#8221; is one of &#8220;system&#8221;, &#8220;trusted&#8221;,
+&#8220;security&#8221;, and &#8220;user&#8221;). An &#8220;Operation not supported&#8221; error will be
+produced if an invalid format is used.</p>
+<p>Setting extended attributes on symlinks will result in undefined and
+platform-specific behavior. Don&#8217;t do it unless you know what you&#8217;re
+doing.</p>
+<p>Extended attribute support currently requires the PyPI module &#8220;xattr&#8221;
+to be installed. An exception will be thrown if it is not available.
+You can usually install it by running &#8220;sudo pip install xattr&#8221;.</p>
+<p>NOTE: For now, if xattr support is not enabled, this will just return
+the empty list. Try using set_xattr if you want to get an exception if
+extended attributes aren&#8217;t enabled. I&#8217;ll probably add a method for
+checking if extended attributes are enabled on the file in question
+later on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.makedirs">
+<tt class="descname">makedirs</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.File.makedirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete alias for self.create_folder(ignore_existing=silent,
+recursive=True) present for backward compatibility reasons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.mkdir">
+<tt class="descname">mkdir</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.File.mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete alias for self.create_folder(ignore_existing=silent)
+present for backward compatibility reasons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.mkdirs">
+<tt class="descname">mkdirs</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.File.mkdirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete alias for self.create_folder(ignore_existing=silent,
+recursive=True) present for backward compatibility reasons.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.name">
+<tt class="descname">name</tt><a class="headerlink" href="#fileutils.File.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of this file. For example, File(&#8220;a&#8221;, &#8220;b&#8221;, &#8220;c&#8221;).name will be
+&#8220;c&#8221;.</p>
+<p>On Unix-based operating systems, File(&#8220;/&#8221;).name will be the empty
+string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.open">
+<tt class="descname">open</tt><big>(</big><em>self</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#fileutils.File.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the file referred to by this File object and returns a Python
+file instance. <a href="#id5"><span class="problematic" id="id6">*</span></a>args and <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs are passed through to Python&#8217;s open
+function as if by open(self.path, <a href="#id9"><span class="problematic" id="id10">*</span></a>args, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.parent">
+<tt class="descname">parent</tt><a class="headerlink" href="#fileutils.File.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a File representing the parent of this file. If this file has
+no parent (for example, if it&#8217;s &#8220;/&#8221; on Unix-based operating systems or
+a drive letter on Windows), None will be returned.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.path">
+<tt class="descname">path</tt><a class="headerlink" href="#fileutils.File.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>The absolute path to the file represented by this File object, in a
+format native to the operating system in use. This pathname can then be
+used with Python&#8217;s traditional file-related utilities.</p>
+<p>This property simply returns self.get_path(). See the documentation for
+that method for more complex ways of creating paths (including
+obtaining relative paths).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.path_components">
+<tt class="descname">path_components</tt><a class="headerlink" href="#fileutils.File.path_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that simply returns self.get_path_components().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.read">
+<tt class="descname">read</tt><big>(</big><em>self</em>, <em>binary=True</em><big>)</big><a class="headerlink" href="#fileutils.File.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the contents of this file and return them as a string. This is
+usually a bad idea if the file in question is large, as the entire
+contents of the file will be loaded into memory.</p>
+<p>If binary is True (the default), the file will be read byte-for-byte.
+If it&#8217;s False, the file will be read in text mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.read_blocks">
+<tt class="descname">read_blocks</tt><big>(</big><em>self</em>, <em>block_size=16384</em>, <em>binary=True</em><big>)</big><a class="headerlink" href="#fileutils.File.read_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator that yields successive blocks of data from this file. Each
+block will be no larger than block_size bytes, which defaults to 16384.
+This is useful when reading/processing files larger than would
+otherwise fit into memory.</p>
+<p>One could implement, for example, a copy function thus:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">target</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target_stream</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">read_blocks</span><span class="p">():</span>
+        <span class="n">target_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.recurse">
+<tt class="descname">recurse</tt><big>(</big><em>self</em>, <em>filter=None</em>, <em>include_self=True</em>, <em>recurse_skipped=True</em><big>)</big><a class="headerlink" href="#fileutils.File.recurse" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator that recursively yields all child File objects of this file.
+Files and directories (and the files and directories contained within
+them, and so on) are all included.</p>
+<p>A filter function accepting one argument can be specified. It will be
+called for each file and folder. It can return one of True, False,
+SKIP, YIELD, or RECURSE, with the behavior of each outlined in the
+following table:</p>
+<div class="highlight-python"><pre>                      Don't yield   Do yield
+                    +-------------+----------+
+Don't recurse into  | SKIP        | YIELD    |
+                    +-------------+----------+
+Do recurse into     | RECURSE     | True     |
+                    +-------------+----------+
+
+False behaves the same as RECURSE if recurse_skipped is True, or
+SKIP otherwise.</pre>
+</div>
+<p>If include_self is True (the default), this file (a.k.a. self) will be
+yielded as well (if it matches the specified filter function). If it&#8217;s
+False, only this file&#8217;s children (and their children, and so on) will
+be yielded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.relative_path">
+<tt class="descname">relative_path</tt><big>(</big><em>self</em>, <em>relative_to=None</em><big>)</big><a class="headerlink" href="#fileutils.File.relative_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>An obsolete alias for self.get_path(relative_to=...), except that, if
+relative_to is None, the working directory will be used instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.rename_to">
+<tt class="descname">rename_to</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.File.rename_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename this file or folder to the specified name, which can be a File
+object or a pathname.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.safe_child">
+<tt class="descname">safe_child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.safe_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as self.child(<a href="#id13"><span class="problematic" id="id14">*</span></a>names), but checks that the resulting file is a
+descendant of self. If it&#8217;s not, an exception will be thrown. This
+allows unsanitized paths to be used without fear that things like &#8221;..&#8221;
+will be used to escape the confines of self.</p>
+<p>The pathname may contain occurrences of &#8221;..&#8221; so long as they do not
+escape self. For example, &#8220;a/b/../c&#8221; is perfectly fine, but &#8220;a/../..&#8221;
+is not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.set_xattr">
+<tt class="descname">set_xattr</tt><big>(</big><em>self</em>, <em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#fileutils.File.set_xattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets an extended attribute with the specified name and value on this
+file.</p>
+<p>The same compatibility warnings present on list_xattrs apply here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.sibling">
+<tt class="descname">sibling</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.File.sibling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a File object representing the sibling of this file with the
+specified name. This is equivalent to self.parent.child(name).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.size">
+<tt class="descname">size</tt><a class="headerlink" href="#fileutils.File.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The size, in bytes, of this file. This is the number of bytes that the
+file contains; the number of actual bytes of disk space it consumes is
+usually larger.</p>
+<p>If this file is actually a folder, the sizes of its child files and
+folders will be recursively summed up and returned. This can take quite
+some time for large folders.</p>
+<p>This is the same as len(self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.unzip_into">
+<tt class="descname">unzip_into</tt><big>(</big><em>self</em>, <em>folder</em><big>)</big><a class="headerlink" href="#fileutils.File.unzip_into" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unzips the zip file referred to by self into the specified folder,
+which will be automatically created (as if by File(folder).mkdirs())
+if it does not yet exist.</p>
+<p>NOTE: This is an unsafe operation! The same warning present on Python&#8217;s
+zipfile.ZipFile.extractall applies here, namely that a maliciously
+crafted zip file could cause absolute filesystem paths to be
+overwritten. I hope to hand-roll my own extraction code in the future
+that will explicitly filter out absolute paths.</p>
+<p>The return value of this function is File(folder).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.File.valid">
+<tt class="descname">valid</tt><a class="headerlink" href="#fileutils.File.valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this file/folder exists, False if it doesn&#8217;t. This will be
+False for broken symbolic links; use self.exists if you want an
+alternative that returns True for broken symbolic links.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.write">
+<tt class="descname">write</tt><big>(</big><em>self</em>, <em>data</em>, <em>binary=True</em><big>)</big><a class="headerlink" href="#fileutils.File.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite this file with the specified data. After this is called,
+self.size will be equal to len(data), and self.read() will be equal to
+data. If you want to append data instead, use self.append().</p>
+<p>If binary is True (the default), the file will be written
+byte-for-byte. If it&#8217;s False, the file will be written in text mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.zip_into">
+<tt class="descname">zip_into</tt><big>(</big><em>self</em>, <em>filename</em>, <em>contents=True</em><big>)</big><a class="headerlink" href="#fileutils.File.zip_into" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a zip archive of this folder and writes it to the specified
+filename, which can be either a pathname or a File object.</p>
+<p>If contents is True (the default), the files (and folders, and so on
+recursively) contained within this folder will be written directly to
+the zip file. If it&#8217;s False, the folder will be written itself. The
+difference is that, given a folder foo which looks like this:</p>
+<div class="highlight-python"><pre>foo/
+    bar
+    baz/
+        qux</pre>
+</div>
+<p>Specifying contents=False will result in a zip file whose contents look
+something like:</p>
+<div class="highlight-python"><pre>zipfile.zip/
+    foo/
+        bar
+        baz/
+            qux</pre>
+</div>
+<p>Whereas specifying contents=True will result in this:</p>
+<div class="highlight-python"><pre>zipfile.zip/
+    bar
+    baz/
+        qux</pre>
+</div>
+<p>NOTE: This has only been tested on Linux. I still need to test it on
+Windows to make sure pathnames are being handled correctly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fileutils.create_temporary_folder">
+<tt class="descclassname">fileutils.</tt><tt class="descname">create_temporary_folder</tt><big>(</big><em>suffix=''</em>, <em>prefix='tmp'</em>, <em>parent=None</em>, <em>delete_on_exit=False</em><big>)</big><a class="headerlink" href="#fileutils.create_temporary_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a folder (with tmpfile.mkdtemp) with the specified prefix, suffix,
+and parent folder (or the current platform&#8217;s default temporary directory if
+no parent is specified).</p>
+<p>If delete_on_exit is True, the returned file&#8217;s delete_on_exit property will
+be set to True just before returning it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fileutils.file_or_none">
+<tt class="descclassname">fileutils.</tt><tt class="descname">file_or_none</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#fileutils.file_or_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns File(f), unless f is None, in which case None is returned.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils</span></tt> &#8212; An object-oriented file access library for Python.</a><ul>
+<li><a class="reference internal" href="#class-file">Class File</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../contents.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/fileutils.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../contents.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
