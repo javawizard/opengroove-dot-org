@@ -1,0 +1,635 @@
+
+
+===============================================================================
+:mod:`stm.datatypes` --- Some useful data types built on top of the STM system.
+===============================================================================
+
+.. module:: stm.datatypes
+   :synopsis: Some useful data types built on top of the STM system.
+
+This module provides several transactional data types built on top of the
+primitives provided by the STM module.
+
+-----------------------
+Class BroadcastEndpoint
+-----------------------
+
+A broadcast endpoint from which items can be read.
+
+This class should not be directly instantiated; instead, a BroadcastQueue
+instance's new_endpoint() method should be called to obtain an endpoint
+that reads from the queue in question.
+
+*Method resolution order:* :obj:`~stm.datatypes.TObject`
+
+.. class:: BroadcastEndpoint(self, var)
+
+
+
+   .. method:: __copy__(self)
+
+      An alias for self.duplicate that allows shallow copying of endpoints
+      with Python's copy module.
+
+   .. method:: duplicate(self)
+
+      Creates and returns a new endpoint containing exactly the same items as
+      this endpoint. Items inserted into the BroadcastQueue from which this
+      endpoint was created will be available on both this and the newly
+      created endpoint.
+
+   .. method:: get(self, block=True, timeout=None)
+
+      Removes and returns the next available item from this endpoint.
+
+      If block is False and there aren't any items currently available on
+      this endpoint, Empty will be raised. If block is True, this function
+      retries. If timeout is specified and there still aren't any items
+      available on this endpoint after that many seconds, Timeout will be
+      raised.
+
+   .. attribute:: is_empty
+
+      True if this endpoint has no items available (i.e. a call to get()
+      would retry), False otherwise.
+
+   .. method:: peek(self, block=False, timeout=None)
+
+      Returns the next available item from this endpoint without removing it.
+
+      The block and timeout parameters have the same effect as they do when
+      passed to self.get(), but block defaults to False (which seems to be
+      the more common use case when calling peek()).
+
+   .. method:: replace(self, value)
+
+      Pushes the specified value back onto this endpoint, such that the next
+      call to get() will return the specified value.
+
+      This is used internally to implement peek() and is_empty: an item is
+      retrieved from the endpoint and then immediately pushed back onto the
+      endpoint with replace(), thus leaving the endpoint unmodified. It can
+      also be used externally as needed.
+
+      This can be called multiple times to push multiple items onto an
+      endpoint in LIFO order.
+
+--------------------
+Class BroadcastQueue
+--------------------
+
+A single-producer, multiple-consumer queue that can have multiple endpoints
+from which items can be consumed.
+
+Endpoints are created by calling new_endpoint(). Each endpoint initially
+starts out empty; items become available as soon as the creating queue's
+put() function is called.
+
+Items inserted into the queue with put() become available on all endpoints
+to consume. This allows BroadcastQueues to be used to broadcast values to
+several different consumers.
+
+When an endpoint is no longer needed, it can be simply discarded. Endpoints
+hold a reference to the queue they were created from, not the other way
+around, so they will be immediately garbage collected and any items unread
+by the endpoint but not by any other endpoint immediately reclaimed.
+
+An interesting side effect of this is that adding items to a queue that has
+never had any endpoints created from it, or one that has had all of its
+endpoints discarded, silently discards the items added to it, and is thus
+a no-op.
+
+*Method resolution order:* :obj:`~stm.datatypes.TObject`
+
+.. class:: BroadcastQueue(self)
+
+   Creates a new, empty broadcast queue.
+
+   .. method:: new_endpoint(self)
+
+      Creates a new BroadcastEndpoint that receives values added to this
+      queue. The endpoint initially starts out empty; items will appear on it
+      as soon as put() is called next.
+
+   .. method:: put(self, value)
+
+      Inserts an item into this queue. The item will then become available on
+      all endpoints created from it.
+
+-----------
+Class Empty
+-----------
+
+Exception thrown from BroadcastEndpoint.get() when block=False is passed
+in and no items are currently available.
+
+*Method resolution order:* :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: Empty
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+----------
+Class Full
+----------
+
+
+
+*Method resolution order:* :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: Full
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+-----------
+Class TDict
+-----------
+
+UPDATE: This now uses 2-3 finger trees. Update accordingly.
+
+A transactional dictionary.
+
+Internally, transactional dicts are maintained with a single TVar holding a
+copy-on-write binary tree annotated with dict keys. Insertion (and
+appending), removal, and lookup are therefore all O(log n) operations.
+len() is O(1), as is iter(), iterkeys(), iteritems(), and itervalues().
+
+One nice property of using a copy-on-write binary tree is iteration: the
+iterator returned from iter(tdict) is a snapshot of the dict's keys at that
+point in time. The dict can therefore be safely modified during iteration,
+without affecting the keys produced by the iteration. The same is, of
+course, true of iterkeys, iteritems, and itervalues.
+
+All of TDict's functions must be called within an STM transaction, with the
+exception of __str__/__repr__, which, for the sake of convenience,
+wrap themselves in a call to stm.atomically() internally. 
+
+*Method resolution order:* :obj:`~_abcoll.MutableMapping`, :obj:`~_abcoll.Mapping`, :obj:`~_abcoll.Sized`, :obj:`~_abcoll.Iterable`, :obj:`~_abcoll.Container`
+
+.. class:: TDict(self, initial_values=None)
+
+
+
+   .. method:: __delitem__(self, key)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableMapping.__delitem__` *in class* :obj:`~_abcoll.MutableMapping`
+
+   .. method:: __getitem__(self, key)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.__getitem__` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: __iter__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Iterable.__iter__` *in class* :obj:`~_abcoll.Iterable`
+
+   .. method:: __len__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Sized.__len__` *in class* :obj:`~_abcoll.Sized`
+
+   .. method:: __repr__(self)
+               __str__(self)
+
+
+
+   .. method:: __setitem__(self, key, value)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableMapping.__setitem__` *in class* :obj:`~_abcoll.MutableMapping`
+
+   .. method:: items(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.items` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: iteritems(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.iteritems` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: iterkeys(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.iterkeys` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: itervalues(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.itervalues` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: keys(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.keys` *in class* :obj:`~_abcoll.Mapping`
+
+   .. method:: values(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Mapping.values` *in class* :obj:`~_abcoll.Mapping`
+
+-----------
+Class TList
+-----------
+
+A transactional list.
+
+Internally, transactional lists are maintained with a single TVar holding a
+reference to a copy-on-write functional 2-3 finger tree (see the
+ttftree module) using ttftree.MEASURE_ITEM_COUNT as its measure.
+They thus give rise to some rather good performance characteristics:
+
+    +------------------+--------------------------------------------------+
+    | Time complexity: | Operations that run using this time complexity:  |
+    +==================+==================================================+
+    | amortized O(1)   | Inserting, removing, or looking up an item at    |
+    |                  | either end of the list, e.g.:                    |
+    |                  |                                                  |
+    |                  |  * self.append(some_value)                       |
+    |                  |  * self.pop()                                    |
+    |                  |  * self.insert(0, some_value)                    |
+    |                  |  * some_value = list[0]                          |
+    |                  |  * some_value = list[-1]                         |
+    +------------------+--------------------------------------------------+
+    | O(1)             | len(self)                                        |
+    |                  |                                                  |
+    |                  | iter(self) (but note that calling the returned   |
+    |                  | iterator's next() method is amortized O(1))      |
+    +------------------+--------------------------------------------------+
+    | O(log n)         | Inserting, removing, or looking up an item by an |
+    |                  | arbitrary index, e.g.:                           |
+    |                  |                                                  |
+    |                  |  * insert(n, some_value)                         |
+    |                  |  * some_value = list[n]                          |
+    |                  |  * list[n] = some_value                          |
+    |                  |  * del list[n], etc.                             |
+    +------------------+--------------------------------------------------+
+    | O(log min(m, n)) | Concatenating two lists, e.g.:                   |
+    | where m and n    |                                                  |
+    | are the sizes of |  * list1 + list2                                 |
+    | the two lists    |  * list1.extend(list2)                           |
+    | involved         |                                                  |
+    +------------------+--------------------------------------------------+
+    | O(log r) where r | Slicing a list, e.g.:                            |
+    | is the size of   |                                                  |
+    | the returned     |  * list[m:n]                                     |
+    | list             |                                                  |
+    +------------------+--------------------------------------------------+
+
+One nice property of using a copy-on-write tree is iteration: the iterator
+returned from iter(tlist) is a snapshot of the list at that point in time.
+The list can therefore be safely modified during iteration without
+affecting the items produced by the iteration.
+
+All of TList's functions must be called within an STM transaction, with the
+exception of __str__/__repr__, which, for the sake of convenience,
+wrap themselves in a call to stm.atomically() internally.
+
+*Method resolution order:* :obj:`~_abcoll.MutableSequence`, :obj:`~_abcoll.Sequence`, :obj:`~_abcoll.Sized`, :obj:`~_abcoll.Iterable`, :obj:`~_abcoll.Container`
+
+.. class:: TList(self, initial_values=[])
+
+
+
+   .. method:: __add__(self, other)
+
+
+
+   .. method:: __delitem__(self, index)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSequence.__delitem__` *in class* :obj:`~_abcoll.MutableSequence`
+
+   .. method:: __getitem__(self, index)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Sequence.__getitem__` *in class* :obj:`~_abcoll.Sequence`
+
+   .. method:: __iter__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Sequence.__iter__` *in class* :obj:`~_abcoll.Sequence`
+
+   .. method:: __len__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Sized.__len__` *in class* :obj:`~_abcoll.Sized`
+
+   .. method:: __radd__(self, other)
+
+
+
+   .. method:: __repr__(self)
+               __str__(self)
+
+
+
+   .. method:: __setitem__(self, index, value)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSequence.__setitem__` *in class* :obj:`~_abcoll.MutableSequence`
+
+   .. method:: extend(self, values)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSequence.extend` *in class* :obj:`~_abcoll.MutableSequence`
+
+   .. method:: insert(self, index, value)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSequence.insert` *in class* :obj:`~_abcoll.MutableSequence`
+
+---------------------
+Class TMutableWeakRef
+---------------------
+
+(This class is experimental.)
+
+A transactional mutable weak reference.
+
+This class is a hybrid of stm.TWeakRef and stm.TVar: it holds a weak
+reference to its value, but permits its value to be modified as desired.
+
+A function to be called when the value referred to by this TMutableWeakRef
+is garbage collected may be specified. This callback will only be called
+when the TMutableWeakRef's current value is garbage collected; it will not
+be called on garbage collection of any of its former values.
+
+*Method resolution order:* :obj:`~stm.datatypes.TObject`
+
+.. class:: TMutableWeakRef(self, value=None, callback=None)
+
+   Create a TMutableWeakRef with the specified initial value, which
+   defaults to None.
+
+   .. method:: __call__(self)
+
+
+
+   .. method:: get(self)
+
+
+
+   .. method:: set(self, value)
+
+
+
+-------------
+Class TObject
+-------------
+
+An abstract class that causes all of its subclass's attributes to be backed
+by a TDict. This results in the subclass's attributes being transactional,
+so that they can be modified during a transaction without having to
+explicitly wrap all of them with TVars.
+
+.. class:: TObject(self)
+
+
+
+   .. method:: __delattr__(self, name)
+
+
+
+   .. method:: __dir__(self)
+
+
+
+   .. method:: __getattr__(self, name)
+
+
+
+   .. method:: __setattr__(self, name, value)
+
+
+
+----------
+Class TSet
+----------
+
+A transactional mutable set.
+
+Right now, this actually just uses an underlying Python set which it copies
+on every write, so it's woefully inefficient. I'll be changing it to use
+the AVL trees that TList and TDict use soon, but I need to figure out how
+to properly implement weak sets in terms of them first. (I could always
+just have weak nodes pointing to dereferenced objects collected only during
+iteration, but then the iterators can't be completely isolated from the set
+itself, so that needs some thought.)
+
+*Method resolution order:* :obj:`~_abcoll.MutableSet`, :obj:`~_abcoll.Set`, :obj:`~_abcoll.Sized`, :obj:`~_abcoll.Iterable`, :obj:`~_abcoll.Container`
+
+.. class:: TSet(self, initial_items=set([]), backing_type=<type 'set'>)
+
+
+
+   .. method:: __contains__(self, item)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Container.__contains__` *in class* :obj:`~_abcoll.Container`
+
+   .. method:: __iter__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Iterable.__iter__` *in class* :obj:`~_abcoll.Iterable`
+
+   .. method:: __len__(self)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.Sized.__len__` *in class* :obj:`~_abcoll.Sized`
+
+   .. method:: add(self, item)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSet.add` *in class* :obj:`~_abcoll.MutableSet`
+
+   .. method:: discard(self, item)
+
+
+
+      |  *Overrides* :obj:`~_abcoll.MutableSet.discard` *in class* :obj:`~_abcoll.MutableSet`
+
+--------------------
+Class TValueIterator
+--------------------
+
+An iterator that transactionally produces values from a given ttftree.Tree.
+
+This class serves as a transactionally-safe alternative to (and has the
+same performance characteristics as) ttftree.value_iterator. Instances
+of TValueIterator can be shared among transactions, and calls to next()
+within a given transaction are guaranteed to produce consecutive elements
+from the tree. 
+
+.. class:: TValueIterator(self, tree, function=None)
+
+   Create a new TValueIterator that will yield values from the specified
+   ttftree.Tree.
+
+   A one-argument translation function can be passed in; this will be
+   called with every item obtained from the tree just before it is to be
+   returned from next(), and the function's return value yielded instead
+   of the original value from the tree. One could use this to, for
+   example, create an iterator that yields the second item of every tuple
+   stored within a particular tree thus::
+       
+       some_tree = ...
+       iterator = TValueIterator(some_tree, lambda v: v[1])
+
+   and indeed, this is precisely how TDict's iterkeys and itervalues
+   functions work.
+
+   .. method:: __iter__(self)
+
+
+
+   .. method:: __next__(self)
+               next(self)
+
+
+
+--------------------
+Class _BroadcastItem
+--------------------
+
+_BroadcastItem(value, next)
+
+*Method resolution order:* :obj:`~__builtin__.tuple`
+
+.. class:: _BroadcastItem
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: __dict__
+
+      Return a new OrderedDict which maps field names to their values
+
+   .. method:: __getnewargs__(self)
+
+      Return self as a plain tuple.  Used by copy and pickle.
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__getnewargs__` *in class* :obj:`~__builtin__.tuple`
+
+   .. method:: __getstate__(self)
+
+      Exclude the OrderedDict from pickling
+
+   .. method:: __repr__(self)
+
+      Return a nicely formatted representation string
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__repr__` *in class* :obj:`~__builtin__.tuple`
+
+   .. attribute:: next
+
+      Alias for field number 1
+
+   .. attribute:: value
+
+      Alias for field number 0
+
+---------------------
+Class _DictAnnotation
+---------------------
+
+_DictAnnotation(index, key)
+
+*Method resolution order:* :obj:`~__builtin__.tuple`
+
+.. class:: _DictAnnotation
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: __dict__
+
+      Return a new OrderedDict which maps field names to their values
+
+   .. method:: __getnewargs__(self)
+
+      Return self as a plain tuple.  Used by copy and pickle.
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__getnewargs__` *in class* :obj:`~__builtin__.tuple`
+
+   .. method:: __getstate__(self)
+
+      Exclude the OrderedDict from pickling
+
+   .. method:: __repr__(self)
+
+      Return a nicely formatted representation string
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__repr__` *in class* :obj:`~__builtin__.tuple`
+
+   .. attribute:: index
+
+      Alias for field number 0
+
+      |  *Overrides* :obj:`~__builtin__.tuple.index` *in class* :obj:`~__builtin__.tuple`
+
+   .. attribute:: key
+
+      Alias for field number 1
+
+----------------
+Class _DictEntry
+----------------
+
+_DictEntry(key, value)
+
+*Method resolution order:* :obj:`~__builtin__.tuple`
+
+.. class:: _DictEntry
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: __dict__
+
+      Return a new OrderedDict which maps field names to their values
+
+   .. method:: __getnewargs__(self)
+
+      Return self as a plain tuple.  Used by copy and pickle.
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__getnewargs__` *in class* :obj:`~__builtin__.tuple`
+
+   .. method:: __getstate__(self)
+
+      Exclude the OrderedDict from pickling
+
+   .. method:: __repr__(self)
+
+      Return a nicely formatted representation string
+
+      |  *Overrides* :obj:`~__builtin__.tuple.__repr__` *in class* :obj:`~__builtin__.tuple`
+
+   .. attribute:: key
+
+      Alias for field number 0
+
+   .. attribute:: value
+
+      Alias for field number 1

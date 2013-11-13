@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stm — A pure-Python software transactional memory system. &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="next" title="stm.datatypes — Some useful data types built on top of the STM system." href="stm.datatypes.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../contents.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.datatypes.html" title="stm.datatypes — Some useful data types built on top of the STM system."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../contents.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-stm">
+<span id="stm-a-pure-python-software-transactional-memory-system"></span><h1><a class="reference internal" href="#module-stm" title="stm: A pure-Python software transactional memory system."><tt class="xref py py-mod docutils literal"><span class="pre">stm</span></tt></a> &#8212; A pure-Python software transactional memory system.<a class="headerlink" href="#module-stm" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a software transactional memory system for Python. It
+provides full support for isolated transactions, blocking, timed blocking, and
+transactional invariants.</p>
+<p>Have a look at the documentation for the atomically() function and the TVar
+class. Those form the core building blocks of the STM system.</p>
+<div class="section" id="class-tvar">
+<h2>Class TVar<a class="headerlink" href="#class-tvar" title="Permalink to this headline">¶</a></h2>
+<p>A transactional variable.</p>
+<p>TVars are the main primitives used within the STM system. They hold a
+reference to a single value. They can only be read or written from within a
+call to atomically().</p>
+<p>More complex datatypes (such as TList, TDict, and TObject) are available in
+stm.datatypes.</p>
+<dl class="class">
+<dt id="stm.TVar">
+<em class="property">class </em><tt class="descclassname">stm.</tt><tt class="descname">TVar</tt><big>(</big><em>self</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#stm.TVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a TVar with the specified initial value.</p>
+<dl class="method">
+<dt id="stm.TVar.get">
+<tt class="descname">get</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.TVar.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current value of this TVar.</p>
+<p>This can only be called from within a call to atomically(). An
+exception will be thrown if this method is called elsewhere.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stm.TVar.set">
+<tt class="descname">set</tt><big>(</big><em>self</em>, <em>value</em><big>)</big><a class="headerlink" href="#stm.TVar.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of this TVar to the specified value.</p>
+<p>This can only be called from within a call to atomically(). An
+exception will be thrown if this method is called elsewhere.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stm.TVar.value">
+<tt class="descname">value</tt><a class="headerlink" href="#stm.TVar.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property wrapper around self.get and self.set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-tweakref">
+<h2>Class TWeakRef<a class="headerlink" href="#class-tweakref" title="Permalink to this headline">¶</a></h2>
+<p>A transactional weak reference with a simple guarantee: the state of a
+given weak reference (i.e. whether or not it&#8217;s been garbage collected yet)
+remains the same over the course of a given transaction. More specifically,
+if a TWeakRef&#8217;s referent is garbage collected in the middle of a
+transaction that previously read the reference as alive, the transaction
+will be immediately restarted.</p>
+<p>A callback function may be specified when creating a TWeakRef; this
+function will be called in its own transaction when the value referred to
+by the TWeakRef is garbage collected, if the TWeakRef itself is still
+alive. Note that the callback function will only be called if the
+transaction in which this TWeakRef is created commits successfully.</p>
+<p>TWeakRefs are fully compatible with the retry() function; that is, a
+function such as the following works as expected, and blocks until the
+TWeakRef&#8217;s referent has been garbage collected:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">block_until_garbage_collected</span><span class="p">(</span><span class="n">some_weak_ref</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">some_weak_ref</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>TWeakRefs are not mutable. If mutable weak references are desired, see
+stm.datatypes.TMutableWeakRef.</p>
+<dl class="class">
+<dt id="stm.TWeakRef">
+<em class="property">class </em><tt class="descclassname">stm.</tt><tt class="descname">TWeakRef</tt><big>(</big><em>self</em>, <em>value</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#stm.TWeakRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new weak reference pointing to the specified value.</p>
+<p>Unlike ordinary Python weak references, instances of this class can
+hold &#8220;weak references to None&#8221;; such references always appear alive (as
+one might expect; by virtue of None&#8217;s status as a builtin, it is never
+garbage collected), and the passed-in callback will never be invoked.
+This allows classes like TMutableWeakRef to permit their value to be
+set to None as needed.</p>
+<dl class="method">
+<dt id="stm.TWeakRef.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.TWeakRef.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for self.get() provided for API compatibility with Python&#8217;s
+weakref.ref class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stm.TWeakRef.get">
+<tt class="descname">get</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.TWeakRef.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value that this weak reference refers to, or None if its
+value has been garbage collected.</p>
+<p>This will always return the same value over the course of a given
+transaction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stm.TWeakRef.value">
+<tt class="descname">value</tt><a class="headerlink" href="#stm.TWeakRef.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property wrapper around self.get.</p>
+<p>Note that this is a read-only property.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="stm.atomically">
+<tt class="descclassname">stm.</tt><tt class="descname">atomically</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.atomically" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the specified function in an STM transaction.</p>
+<p>Changes made to TVars from within a transaction will not be visible to
+other transactions until the transaction commits, and changes from other
+transactions started after this one started will not be seen by this one.
+The net effect is one of wrapping every transaction with a global lock, but
+without the loss of parallelism that would result.</p>
+<p>If the specified function throws an exception, the exception will be
+propagated out, and all of the changes made to TVars during the course of
+the transaction will be reverted.</p>
+<p>atomically() fully supports nested transactions. If a nested transaction
+throws an exception, the changes it made are reverted, and the exception
+propagated out of the call to atomically().</p>
+<p>The return value of atomically() is the return value of the function that
+was passed to it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.invariant">
+<tt class="descclassname">stm.</tt><tt class="descname">invariant</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.invariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>(This function is highly experimental and is not yet complete: invariants
+cannot be proposed in a nested transaction yet.)</p>
+<p>Provides support for transactional invariants.</p>
+<p>This function is called to propose a new invariant. The passed-in function
+must succeed now, at the end of the current transaction, and at the end of
+every subsequent transaction. If it fails at the end of any transaction,
+that transaction will be immediately aborted, and the exception raised by
+the invariant propagated.</p>
+<p>To succeed, a function must return either None or True. It can indicate
+failure either by returning False or by raising an exception. This allows
+both invariants that signal failure by raising an exception and invariants
+that signal success/failure by returning the value of a simple boolean
+expression.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.or_else">
+<tt class="descclassname">stm.</tt><tt class="descname">or_else</tt><big>(</big><em>*functions</em><big>)</big><a class="headerlink" href="#stm.or_else" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run (and return the value produced by) the first function passed into this
+function that does not retry (see the documentation of the retry()
+function), or retry if all of the passed-in functions retry (or if no
+arguments are passed in). See the documentation for retry() for more
+information.</p>
+<p>This function could be considered the STM equivalent of Unix&#8217;s select()
+system call. One could, for example, read an item from the first of two
+queues, q1 and q2, to actually produce an item with something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">q2</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or_else can also be used to make non-blocking variants of blocking
+functions. For example, given one of our queues above, we can get the first
+value available from the queue or, if it does not currently have any values
+available, return None with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that each function passed in is automatically run in its own nested
+transaction so that the effects of those that end up retrying are reverted
+and only the effects of the function that succeeds are persisted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.previously">
+<tt class="descclassname">stm.</tt><tt class="descname">previously</tt><big>(</big><em>function</em>, <em>toplevel=False</em><big>)</big><a class="headerlink" href="#stm.previously" title="Permalink to this definition">¶</a></dt>
+<dd><p>(This function is highly experimental. Use at your own risk.)</p>
+<p>Return the value that the specified function would have returned had it
+been run in a transaction just prior to the current one.</p>
+<p>If toplevel is False, the specified function will be run as if it were just
+before the start of the innermost nested transaction, if any. If toplevel
+is True, the specified function will be run as if it were just before the
+start of the outermost transaction.</p>
+<p>This function can be used to propose invariants that reason about changes
+made over the course of a transaction, like the following invariant that
+prevents a particular variable from ever being decremented:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@invariant</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
+    <span class="n">old_value</span> <span class="o">=</span> <span class="n">previously</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+    <span class="n">new_value</span> <span class="o">=</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">new_value</span> <span class="o">&lt;</span> <span class="n">old_value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;This var cannot be decremented&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.retry">
+<tt class="descclassname">stm.</tt><tt class="descname">retry</tt><big>(</big><em>resume_after=None</em>, <em>resume_at=None</em><big>)</big><a class="headerlink" href="#stm.retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides support for transactions that block.</p>
+<p>This function, when called, indicates to the STM system that the caller has
+detected state with which it isn&#8217;t yet ready to continue (for example, a
+queue from which an item is to be read is actually empty). The current
+transaction will be immediately aborted and automatically restarted once
+at least one of the TVars it read has been modified.</p>
+<p>This can be used to make, for example, a blocking queue from a list with a
+function like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">pop_or_block</span><span class="p">(</span><span class="n">some_list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">some_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">some_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Functions making use of retry() can be multiplexed, a la Unix&#8217;s select
+system call, with the or_else function. See its documentation for more
+information.</p>
+<p>Either resume_at or resume_after may be specified, and serve to indicate a
+timeout after which the call to retry() will give up and just return
+instead of retrying. resume_after indicates a number of seconds from when
+this transaction was first attempted at which to time out, and resume_at
+indicates a wall clock time (a la time.time()) at which to time out.</p>
+<p>Timeouts are highly experimental and a feature shared with only one other
+STM system that I know of (scala-stm), so I&#8217;d greatly appreciate feedback
+on this feature.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">stm</span></tt> &#8212; A pure-Python software transactional memory system.</a><ul>
+<li><a class="reference internal" href="#class-tvar">Class TVar</a></li>
+<li><a class="reference internal" href="#class-tweakref">Class TWeakRef</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../contents.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="stm.datatypes.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">stm.datatypes</span></tt> &#8212; Some useful data types built on top of the STM system.</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/stm.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.datatypes.html" title="stm.datatypes — Some useful data types built on top of the STM system."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../contents.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

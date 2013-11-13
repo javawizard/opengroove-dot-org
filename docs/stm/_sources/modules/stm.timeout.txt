@@ -1,0 +1,85 @@
+
+
+=================================================================================
+:mod:`stm.timeout` --- Obsolete module providing timeout support for transactions
+=================================================================================
+
+.. module:: stm.timeout
+   :synopsis: Obsolete module providing timeout support for transactions
+
+NOTE: This module is now mostly obsolete with the introduction of first-class
+timeouts to stm.retry(). It offers an alternative mechanism for effecting
+timeouts that, while not requiring any additional support in the core STM
+system, does not compose nearly as well as the mechanism now built into
+stm.retry(). It will likely be going away soon.
+
+-------------
+Class Timeout
+-------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: Timeout
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+---------
+Functions
+---------
+
+
+
+.. function:: make_delay(seconds)
+
+   Creates and returns a TVar whose initial value is False. After the
+   specified number of seconds (which can be fractional), the var's value will
+   be set to True.
+
+   This can be used to implement timeouts in transactions. For example, one
+   could wait for an item to become available on a queue, timing out after,
+   say, ten seconds, with the following::
+
+       var = make_delay(10)
+       def get_item():
+           try:
+               return some_queue.get(block=False)
+           except Empty:
+               if var.get():
+                   raise Timeout # Or some other exception
+               else:
+                   retry()
+       item = atomically(get_item)
+
+   Note that this function must be called outside of a transaction (indeed, it
+   will throw an exception if called from within one). The reasons for this
+   are somewhat involved, and I'll hopefully write more here about them soon.
+
+.. function:: make_timeout(stop_time)
+
+   A variant of make_delay that sets the returned TVar to True when
+   time.time() becomes greater than stop_time.
+
+.. function:: wait_for_true(var)
+
+   Waits for the specified var to become True (or any true value), retrying if
+   it's False (or any non-true value).
+
+.. function:: wait_then_raise(var, exception_type=<class 'stm.timeout.Timeout'>)
+
+   Like wait_for_true(var), but raise a new instance of the specified
+   exception type once the specified var becomes True. This is used primarily
+   by with_delay to handle raising Timeout if the transaction doesn't retry
+   soon enough.
+
+.. function:: with_delay(seconds, function)
+
+   Alternative to stm.atomically that runs a transaction, throwing Timeout if
+   it retries and does not resume and run to completion before the specified
+   number of seconds are up.
+
+.. function:: with_timeout(stop_time, function)
+
+   A variant of with_delay that accepts its timeout as a number of seconds
+   since the epoch at which the transaction should raise Timeout. 
