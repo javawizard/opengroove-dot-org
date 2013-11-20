@@ -8,27 +8,15 @@
    :synopsis: An object-oriented file access library for Python.
 
 Fileutils is an object-oriented file access library. It provides a consolidated
-filesystem interface that offers, among others, the following:
+filesystem interface that offers, among other things, the following:
 
-* A context manager for temporarily switching to a different working
-  directory. Patterns like the following::
-       
-       old_path = os.getcwd()
-       try:
-           os.chdir(new_path)
-           ...
-       finally:
-           os.chdir(old_path)
-   
-  can be replaced with the much simpler::
-
-       with File(new_path).as_working:
-           ...
-   
-  which is also much more difficult to get wrong.
-   
-* Properties and methods... TBD
-* Functions for working with extended attributes... TBD
+* A context manager (:obj:`~File.as_working`) for temporarily
+  switching to a different working directory
+* Several useful properties and methods with no Python standard library
+  equivalent, such as :obj:`~File.ancestors`, :obj:`~File.hash`, and
+  :obj:`~File.delete_on_exit`
+* Functions for working with extended filesystem attributes
+  (:obj:`~File.list_xattrs` among others)
 
 More module documentation to come soon. For now, take a look at the File class
 to see what it does.
@@ -77,20 +65,6 @@ created.
 
 
 
-   .. method:: __div__(self, *names)
-               child(self, *names)
-
-      Returns a File object representing the child of this file with the
-      specified name. If multiple names are present, they will be joined
-      together. If no names are present, self will be returned.
-
-      If any names are absolute, all names before them (and self) will be
-      discarded. Relative names (like "..") are also allowed. If you want a
-      method that guarantees that the result is a child of self, use
-      self.safe_child(...).
-
-      This method is analogous to os.path.join(self.path, *names).
-
    .. method:: __hash__(self)
 
 
@@ -104,8 +78,8 @@ created.
       Returns True. File objects are always true values; to test for their
       existence, use self.exists instead.
 
-   .. method:: __repr__(self)
-               __str__(self)
+   .. method:: __str__(self)
+               __repr__(self)
 
 
 
@@ -124,7 +98,8 @@ created.
 
       A list of all of the ancestors of this file, with self.parent first.
 
-      This property simply returns self.get_ancestors(). Have a look at that
+      This property simply returns
+      :obj:`self.get_ancestors() <get_ancestors>`. Have a look at that
       method if you need to do more complex things like include self as one
       of the returned ancestors.
 
@@ -161,11 +136,8 @@ created.
       also use an "as" clause on the with statement to get access to the
       file in case you haven't got it stored in a variable anywhere.
 
-   .. method:: cd(self)
-
-      An alias for self.change_to().
-
    .. method:: change_to(self)
+               cd(self)
 
       Sets the current working directory to self.
 
@@ -173,7 +145,7 @@ created.
       File instances will continue to work just fine after this is called.
 
       If you need to restore the working directory at any point, you might
-      want to consider using self.as_working instead.
+      want to consider using :obj:`self.as_working <as_working>` instead.
 
    .. method:: check_file(self)
 
@@ -194,6 +166,21 @@ created.
 
       Note that an IOError will be thrown if extended attributes aren't
       supported instead of KeyError.
+
+   .. method:: child(self, *names)
+               __div__(self, *names)
+
+      Returns a File object representing the child of this file with the
+      specified name. If multiple names are present, they will be joined
+      together. If no names are present, self will be returned.
+
+      If any names are absolute, all names before them (and self) will be
+      discarded. Relative names (like "..") are also allowed. If you want a
+      method that guarantees that the result is a child of self, use
+      self.safe_child(...).
+
+      This method is analogous to
+      :obj:`os.path.join(self.path, *names) <os.path.join>`.
 
    .. attribute:: child_names
 
@@ -219,8 +206,9 @@ created.
       pathname. An exception will be thrown if the specified file already
       exists and overwrite is False.
 
-      This does not currently work for folders; I hope to add this ability
-      in the near future.
+      This `does not currently work for folders
+      <https://github.com/javawizard/fileutils/issues/1>`_; 
+      I hope to add this ability in the near future.
 
    .. method:: create_folder(self, ignore_existing=False, recursive=False)
 
@@ -263,12 +251,12 @@ created.
       request.
 
       Note that such files are not absolutely guaranteed to be deleted on
-      exit. Deletion is handled via an atexit hook, so files will not be
+      exit. Deletion is handled via an :obj:`atexit` hook, so files will not be
       deleted if, for example, the interpreter crashes or os._exit() is
       called.
 
       The value of this property is shared among all File instances pointing
-      to a given path. For example:
+      to a given path. For example::
 
           File("test").delete_on_exit = True # Instance 1
           print File("test").delete_on_exit # Instance 2, prints "True"
@@ -418,11 +406,12 @@ created.
 
    .. method:: list(self)
 
-      An obsolete method that simply returns self.children.
+      An obsolete method that simply returns :obj:`self.children <children>`.
 
    .. method:: list_names(self)
 
-      An obsolete method that simply returns self.child_names.
+      An obsolete method that simply returns
+      :obj:`self.child_names <child_names>`.
 
    .. method:: list_xattrs(self)
 
@@ -505,7 +494,8 @@ created.
 
    .. attribute:: path_components
 
-      A property that simply returns self.get_path_components().
+      A property that simply returns
+      :obj:`self.get_path_components() <get_path_components>`.
 
    .. method:: read(self, binary=True)
 

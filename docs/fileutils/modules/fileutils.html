@@ -53,29 +53,15 @@
   <div class="section" id="module-fileutils">
 <span id="fileutils-an-object-oriented-file-access-library-for-python"></span><h1><a class="reference internal" href="#module-fileutils" title="fileutils: An object-oriented file access library for Python."><tt class="xref py py-mod docutils literal"><span class="pre">fileutils</span></tt></a> &#8212; An object-oriented file access library for Python.<a class="headerlink" href="#module-fileutils" title="Permalink to this headline">¶</a></h1>
 <p>Fileutils is an object-oriented file access library. It provides a consolidated
-filesystem interface that offers, among others, the following:</p>
-<ul>
-<li><p class="first">A context manager for temporarily switching to a different working
-directory. Patterns like the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">old_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
-    <span class="o">...</span>
-<span class="k">finally</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">old_path</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>can be replaced with the much simpler:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">File</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_working</span><span class="p">:</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-<p>which is also much more difficult to get wrong.</p>
-</li>
-<li><p class="first">Properties and methods... TBD</p>
-</li>
-<li><p class="first">Functions for working with extended attributes... TBD</p>
-</li>
+filesystem interface that offers, among other things, the following:</p>
+<ul class="simple">
+<li>A context manager (<a class="reference internal" href="#fileutils.File.as_working" title="fileutils.File.as_working"><tt class="xref py py-obj docutils literal"><span class="pre">as_working</span></tt></a>) for temporarily
+switching to a different working directory</li>
+<li>Several useful properties and methods with no Python standard library
+equivalent, such as <a class="reference internal" href="#fileutils.File.ancestors" title="fileutils.File.ancestors"><tt class="xref py py-obj docutils literal"><span class="pre">ancestors</span></tt></a>, <a class="reference internal" href="#fileutils.File.hash" title="fileutils.File.hash"><tt class="xref py py-obj docutils literal"><span class="pre">hash</span></tt></a>, and
+<a class="reference internal" href="#fileutils.File.delete_on_exit" title="fileutils.File.delete_on_exit"><tt class="xref py py-obj docutils literal"><span class="pre">delete_on_exit</span></tt></a></li>
+<li>Functions for working with extended filesystem attributes
+(<a class="reference internal" href="#fileutils.File.list_xattrs" title="fileutils.File.list_xattrs"><tt class="xref py py-obj docutils literal"><span class="pre">list_xattrs</span></tt></a> among others)</li>
 </ul>
 <p>More module documentation to come soon. For now, take a look at the File class
 to see what it does.</p>
@@ -115,21 +101,6 @@ the file referred to.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="fileutils.File.__div__">
-<tt class="descname">__div__</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.__div__" title="Permalink to this definition">¶</a></dt>
-<dt id="fileutils.File.child">
-<tt class="descname">child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a File object representing the child of this file with the
-specified name. If multiple names are present, they will be joined
-together. If no names are present, self will be returned.</p>
-<p>If any names are absolute, all names before them (and self) will be
-discarded. Relative names (like &#8221;..&#8221;) are also allowed. If you want a
-method that guarantees that the result is a child of self, use
-self.safe_child(...).</p>
-<p>This method is analogous to os.path.join(self.path, <a href="#id3"><span class="problematic" id="id4">*</span></a>names).</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="fileutils.File.__hash__">
 <tt class="descname">__hash__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__hash__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -147,10 +118,10 @@ existence, use self.exists instead.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="fileutils.File.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__repr__" title="Permalink to this definition">¶</a></dt>
 <dt id="fileutils.File.__str__">
 <tt class="descname">__str__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__str__" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.File.__repr__">
+<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -169,7 +140,8 @@ and so on are considered to be ancestors.</p>
 <dt id="fileutils.File.ancestors">
 <tt class="descname">ancestors</tt><a class="headerlink" href="#fileutils.File.ancestors" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all of the ancestors of this file, with self.parent first.</p>
-<p>This property simply returns self.get_ancestors(). Have a look at that
+<p>This property simply returns
+<a class="reference internal" href="#fileutils.File.get_ancestors" title="fileutils.File.get_ancestors"><tt class="xref py py-obj docutils literal"><span class="pre">self.get_ancestors()</span></tt></a>. Have a look at that
 method if you need to do more complex things like include self as one
 of the returned ancestors.</p>
 </dd></dl>
@@ -210,19 +182,15 @@ file in case you haven&#8217;t got it stored in a variable anywhere.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="fileutils.File.cd">
-<tt class="descname">cd</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.cd" title="Permalink to this definition">¶</a></dt>
-<dd><p>An alias for self.change_to().</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="fileutils.File.change_to">
 <tt class="descname">change_to</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.change_to" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.File.cd">
+<tt class="descname">cd</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.cd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the current working directory to self.</p>
 <p>Since File instances internally store paths in absolute form, other
 File instances will continue to work just fine after this is called.</p>
 <p>If you need to restore the working directory at any point, you might
-want to consider using self.as_working instead.</p>
+want to consider using <a class="reference internal" href="#fileutils.File.as_working" title="fileutils.File.as_working"><tt class="xref py py-obj docutils literal"><span class="pre">self.as_working</span></tt></a> instead.</p>
 </dd></dl>
 
 <dl class="method">
@@ -247,6 +215,22 @@ attribute does not exist instead of returning a default value.</p>
 <p>The same compatibility warnings present on list_xattrs apply here.</p>
 <p>Note that an IOError will be thrown if extended attributes aren&#8217;t
 supported instead of KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.File.child">
+<tt class="descname">child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.child" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.File.__div__">
+<tt class="descname">__div__</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.__div__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a File object representing the child of this file with the
+specified name. If multiple names are present, they will be joined
+together. If no names are present, self will be returned.</p>
+<p>If any names are absolute, all names before them (and self) will be
+discarded. Relative names (like &#8221;..&#8221;) are also allowed. If you want a
+method that guarantees that the result is a child of self, use
+self.safe_child(...).</p>
+<p>This method is analogous to
+<a class="reference external" href="http://docs.python.org/2.7/library/os.path.html#os.path.join" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">os.path.join(self.path,</span> <span class="pre">*names)</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -279,8 +263,8 @@ the copy_to function.</p>
 <dd><p>Copies the contents of this file to the specified File object or
 pathname. An exception will be thrown if the specified file already
 exists and overwrite is False.</p>
-<p>This does not currently work for folders; I hope to add this ability
-in the near future.</p>
+<p>This <a class="reference external" href="https://github.com/javawizard/fileutils/issues/1">does not currently work for folders</a>;
+I hope to add this ability in the near future.</p>
 </dd></dl>
 
 <dl class="method">
@@ -326,14 +310,15 @@ default, but may be set to True to request that a particular file be
 deleted on exit, and potentially set back to False to cancel such a
 request.</p>
 <p>Note that such files are not absolutely guaranteed to be deleted on
-exit. Deletion is handled via an atexit hook, so files will not be
+exit. Deletion is handled via an <a class="reference external" href="http://docs.python.org/2.7/library/atexit.html#atexit" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">atexit</span></tt></a> hook, so files will not be
 deleted if, for example, the interpreter crashes or os._exit() is
 called.</p>
 <p>The value of this property is shared among all File instances pointing
 to a given path. For example:</p>
-<blockquote>
-<div>File(&#8220;test&#8221;).delete_on_exit = True # Instance 1
-print File(&#8220;test&#8221;).delete_on_exit # Instance 2, prints &#8220;True&#8221;</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete_on_exit</span> <span class="o">=</span> <span class="bp">True</span> <span class="c"># Instance 1</span>
+<span class="k">print</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete_on_exit</span> <span class="c"># Instance 2, prints &quot;True&quot;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -508,13 +493,14 @@ link will always be absolute.</p>
 <dl class="method">
 <dt id="fileutils.File.list">
 <tt class="descname">list</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>An obsolete method that simply returns self.children.</p>
+<dd><p>An obsolete method that simply returns <a class="reference internal" href="#fileutils.File.children" title="fileutils.File.children"><tt class="xref py py-obj docutils literal"><span class="pre">self.children</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fileutils.File.list_names">
 <tt class="descname">list_names</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.File.list_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>An obsolete method that simply returns self.child_names.</p>
+<dd><p>An obsolete method that simply returns
+<a class="reference internal" href="#fileutils.File.child_names" title="fileutils.File.child_names"><tt class="xref py py-obj docutils literal"><span class="pre">self.child_names</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -581,8 +567,8 @@ string.</p>
 <dt id="fileutils.File.open">
 <tt class="descname">open</tt><big>(</big><em>self</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#fileutils.File.open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the file referred to by this File object and returns a Python
-file instance. <a href="#id5"><span class="problematic" id="id6">*</span></a>args and <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs are passed through to Python&#8217;s open
-function as if by open(self.path, <a href="#id9"><span class="problematic" id="id10">*</span></a>args, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs).</p>
+file instance. <a href="#id3"><span class="problematic" id="id4">*</span></a>args and <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs are passed through to Python&#8217;s open
+function as if by open(self.path, <a href="#id7"><span class="problematic" id="id8">*</span></a>args, <a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -607,7 +593,8 @@ obtaining relative paths).</p>
 <dl class="attribute">
 <dt id="fileutils.File.path_components">
 <tt class="descname">path_components</tt><a class="headerlink" href="#fileutils.File.path_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>A property that simply returns self.get_path_components().</p>
+<dd><p>A property that simply returns
+<a class="reference internal" href="#fileutils.File.get_path_components" title="fileutils.File.get_path_components"><tt class="xref py py-obj docutils literal"><span class="pre">self.get_path_components()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -678,7 +665,7 @@ object or a pathname.</p>
 <dl class="method">
 <dt id="fileutils.File.safe_child">
 <tt class="descname">safe_child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.File.safe_child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as self.child(<a href="#id13"><span class="problematic" id="id14">*</span></a>names), but checks that the resulting file is a
+<dd><p>Same as self.child(<a href="#id11"><span class="problematic" id="id12">*</span></a>names), but checks that the resulting file is a
 descendant of self. If it&#8217;s not, an exception will be thrown. This
 allows unsanitized paths to be used without fear that things like &#8221;..&#8221;
 will be used to escape the confines of self.</p>
