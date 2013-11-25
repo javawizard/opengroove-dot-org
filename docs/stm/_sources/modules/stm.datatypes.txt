@@ -194,16 +194,16 @@ wrap themselves in a call to stm.atomically() internally.
 
       |  *Overrides* :obj:`~_abcoll.Sized.__len__` *in class* :obj:`~_abcoll.Sized`
 
-   .. method:: __repr__(self)
-               __str__(self)
-
-
-
    .. method:: __setitem__(self, key, value)
 
 
 
       |  *Overrides* :obj:`~_abcoll.MutableMapping.__setitem__` *in class* :obj:`~_abcoll.MutableMapping`
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
 
    .. method:: items(self)
 
@@ -336,16 +336,16 @@ wrap themselves in a call to stm.atomically() internally.
 
 
 
-   .. method:: __repr__(self)
-               __str__(self)
-
-
-
    .. method:: __setitem__(self, index, value)
 
 
 
       |  *Overrides* :obj:`~_abcoll.MutableSequence.__setitem__` *in class* :obj:`~_abcoll.MutableSequence`
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
 
    .. method:: extend(self, values)
 

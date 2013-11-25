@@ -207,7 +207,7 @@ created.
       exists and overwrite is False.
 
       This `does not currently work for folders
-      <https://github.com/javawizard/fileutils/issues/1>`_; 
+      <https://github.com/javawizard/fileutils/issues/1>`_;
       I hope to add this ability in the near future.
 
    .. method:: create_folder(self, ignore_existing=False, recursive=False)

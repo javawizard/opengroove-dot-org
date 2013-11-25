@@ -1,0 +1,654 @@
+
+
+======================
+:mod:`fileutils2` --- 
+======================
+
+.. module:: fileutils2
+   :synopsis: 
+
+
+
+-------------------
+Class ChildrenMixin
+-------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils2.Listable`, :obj:`~fileutils2.Readable`
+
+.. class:: ChildrenMixin
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: children
+
+      A list of all of the children of this file, as a list of File objects.
+      If this file is not a folder, the value of this property is None.
+
+      |  *Overrides* :obj:`~fileutils2.Listable.children` *in class* :obj:`~fileutils2.Listable`
+
+----------
+Class File
+----------
+
+
+
+*Method resolution order:* :obj:`~fileutils2.Hierarchy`, :obj:`~fileutils2.ChildrenMixin`, :obj:`~fileutils2.Listable`, :obj:`~fileutils2.Readable`, :obj:`~fileutils2.Sizable`, :obj:`~fileutils2.WorkingDirectory`, :obj:`~fileutils2.Writable`
+
+.. class:: File(self, *path_components)
+
+   Creates a new file from the specified path components. Each component
+   represents the name of a folder or a file. These are internally joined
+   as if by os.path.join(*path_components).
+
+   It's also possible, although not recommended, to pass a full pathname
+   (in the operating system's native format) into File. On Windows, one
+   could therefore do File(r"C:\some\file"), and File("/some/file") on
+   Linux and other Unix operating systems.
+
+   You can also call File(File(...)). This is equivalent to File(...) and
+   exists to make it easier for functions to accept either a pathname or
+   a File object.
+
+   Passing no arguments (i.e. File()) results in a file that refers to the
+   working directory as of the time the File instance was constructed.
+
+   Pathnames are internally stored in absolute form; as a result, changing
+   the working directory after creating a File instance will not change
+   the file referred to.
+
+   .. method:: __cmp__(self, other)
+
+
+
+   .. method:: __hash__(self)
+
+
+
+   .. method:: __nonzero__(self)
+
+      Returns True. File objects are always true values; to test for their
+      existence, use self.exists instead.
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   .. method:: change_to(self)
+
+      Sets the current working directory to self.
+
+      Since File instances internally store paths in absolute form, other
+      File instances will continue to work just fine after this is called.
+
+      If you need to restore the working directory at any point, you might
+      want to consider using :obj:`self.as_working <as_working>` instead.
+
+      |  *Overrides* :obj:`~fileutils2.WorkingDirectory.change_to` *in class* :obj:`~fileutils2.WorkingDirectory`
+
+   .. method:: child(self, *names)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.child` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: child_names
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Listable.child_names` *in class* :obj:`~fileutils2.Listable`
+
+   .. method:: create_folder(self, ignore_existing=False, recursive=False)
+
+      Creates the folder referred to by this File object. If it already
+      exists but is not a folder, an exception will be thrown. If it already
+      exists and is a folder, an exception will be thrown if ignore_existing
+      is False (the default); if ignore_existing is True, no exception will
+      be thrown.
+
+      If the to-be-created folder's parent does not exist and recursive is
+      False, an exception will be thrown. If recursive is True, the folder's
+      parent, its parent's parent, and so on will be created automatically.
+
+      |  *Overrides* :obj:`~fileutils2.Writable.create_folder` *in class* :obj:`~fileutils2.Writable`
+
+   .. method:: delete(self, contents=False, ignore_missing=False)
+
+      Deletes this file or folder, recursively deleting children if
+      necessary.
+
+      The contents parameter has no effect, and is present for backward
+      compatibility.
+
+      If the file does not exist and ignore_missing is False, an exception
+      will be thrown. If the file does not exist but ignore_missing is True,
+      this function simply does nothing.
+
+      Note that symbolic links are never recursed into, and are instead
+      themselves removed.
+
+      |  *Overrides* :obj:`~fileutils2.Writable.delete` *in class* :obj:`~fileutils2.Writable`
+
+   .. method:: get_path_components(self, relative_to=None)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.get_path_components` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: link_target
+
+      Returns the target to which this file, which is expected to be a
+      symbolic link, points, as a string. If this file is not a symbolic
+      link, None is returned.
+
+      |  *Overrides* :obj:`~fileutils2.Readable.link_target` *in class* :obj:`~fileutils2.Readable`
+
+   .. method:: link_to(self, other)
+
+      Creates this file as a symbolic link pointing to other, which can be
+      a pathname or a File object. Note that if it's a pathname, a symbolic
+      link will be created with the exact path specified; it will therefore
+      be absolute if the path is absolute or relative (to the link itself) if
+      the path is relative. If a File object, however, is used, the symbolic
+      link will always be absolute.
+
+      |  *Overrides* :obj:`~fileutils2.Writable.link_to` *in class* :obj:`~fileutils2.Writable`
+
+   .. method:: open_for_reading(self)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.open_for_reading` *in class* :obj:`~fileutils2.Readable`
+
+   .. method:: open_for_writing(self, append=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Writable.open_for_writing` *in class* :obj:`~fileutils2.Writable`
+
+   .. attribute:: parent
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.parent` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: size
+
+      The size, in bytes, of this file. This is the number of bytes that the
+      file contains; the number of actual bytes of disk space it consumes is
+      usually larger.
+
+      If this file is actually a folder, the sizes of its child files and
+      folders will be recursively summed up and returned. This can take quite
+      some time for large folders.
+
+      |  *Overrides* :obj:`~fileutils2.Sizable.size` *in class* :obj:`~fileutils2.Sizable`
+
+   .. attribute:: type
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.type` *in class* :obj:`~fileutils2.Readable`
+
+---------------
+Class Hierarchy
+---------------
+
+
+
+.. class:: Hierarchy
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: ancestor_of(self, other, including_self=False)
+
+      Returns true if this file is an ancestor of the specified file. A file
+      is an ancestor of another file if that other file's parent is this
+      file, or its parent's parent is this file, and so on.
+
+      If including_self is True, the file is considered to be an ancestor of
+      itself, i.e. True will be returned in the case that self == other.
+      Otherwise, only the file's immediate parent, and its parent's parent,
+      and so on are considered to be ancestors.
+
+   .. attribute:: ancestors
+
+      A list of all of the ancestors of this file, with self.parent first.
+
+      This property simply returns
+      :obj:`self.get_ancestors() <get_ancestors>`. Have a look at that
+      method if you need to do more complex things like include self as one
+      of the returned ancestors.
+
+   .. method:: child(self, *names)
+
+
+
+   .. method:: descendant_of(self, other, including_self=False)
+
+      Returns true if this file is a descendant of the specified file. This
+      is equivalent to File(other).ancestor_of(self, including_self).
+
+   .. method:: get_ancestors(self, including_self=False)
+
+      Returns a list of all of the ancestors of this file, with self.parent
+      first. If including_self is True, self will be first, self.parent will
+      be second, and so on.
+
+   .. method:: get_path(self, relative_to=None, separator=None)
+
+      Gets the path to the file represented by this File object.
+
+      If relative_to is specified, the returned path will be a relative path,
+      the path of this file relative to the specified one. Otherwise, the
+      returned path will be absolute.
+
+      If separator (which must be a string) is specified, it will be used as
+      the separator to place between path components in the returned path.
+      Otherwise, os.path.sep will be used as the separator. 
+
+   .. method:: get_path_components(self, relative_to=None)
+
+
+
+   .. attribute:: name
+
+      The name of this file. For example, File("a", "b", "c").name will be
+      "c".
+
+      On Unix-based operating systems, File("/").name will be the empty
+      string.
+
+   .. attribute:: parent
+
+
+
+   .. attribute:: path
+
+      The absolute path to the file represented by this File object, in a
+      format native to the operating system in use. This pathname can then be
+      used with Python's traditional file-related utilities.
+
+      This property simply returns self.get_path(). See the documentation for
+      that method for more complex ways of creating paths (including
+      obtaining relative paths).
+
+   .. attribute:: path_components
+
+      A property that simply returns
+      :obj:`self.get_path_components() <get_path_components>`.
+
+   .. method:: same_as(self, other)
+
+
+
+   .. method:: sibling(self, *names)
+
+
+
+--------------
+Class Listable
+--------------
+
+
+
+*Method resolution order:* :obj:`~fileutils2.Readable`
+
+.. class:: Listable
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: child_names
+
+
+
+   .. attribute:: children
+
+
+
+--------------
+Class Readable
+--------------
+
+
+
+.. class:: Readable
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: check_file(self)
+
+      Checks to see whether this File refers to a file. If it doesn't, an
+      exception will be thrown.
+
+   .. method:: check_folder(self)
+
+      Checks to see whether this File refers to a folder. If it doesn't, an
+      exception will be thrown.
+
+   .. method:: copy_into(self, other, overwrite=False)
+
+      Copies this file to an identically named file inside the specified
+      folder. This is just shorthand for self.copy_to(other.child(self.name))
+      which, from experience, seems to be by far the most common use case for
+      the copy_to function.
+
+   .. method:: copy_to(self, other, overwrite=False)
+
+      Copies the contents of this file to the specified File object or
+      pathname. An exception will be thrown if the specified file already
+      exists and overwrite is False.
+
+      This `does not currently work for folders
+      <https://github.com/javawizard/fileutils/issues/1>`_;
+      I hope to add this ability in the near future.
+
+   .. method:: dereference(self, recursive=False)
+
+      Dereference the symbolic link represented by this file and return a
+      File object pointing to the symbolic link's referent.
+
+      If recursive is False, a File object pointing directly to the referent
+      will be returned. If recursive is True, the referent itself will be
+      recursively dereferenced, and the returned File will be guaranteed not
+      to be a link.
+
+      If this file is not a symbolic link, self will be returned.
+
+   .. attribute:: exists
+
+
+
+   .. method:: hash(self, algorithm=<built-in function openssl_md5>, return_hex=True)
+
+      Compute the hash of this file and return it, as a hexidecimal string.
+
+      The default algorithm is md5. An alternate constructor from hashlib
+      can be passed as the algorithm parameter; file.hash(hashlib.sha1)
+      would, for example, compute the SHA-1 hash instead.
+
+      If return_hex is False (it defaults to True), the hash object itself
+      will be returned instead of the return value of its hexdigest() method.
+      One can use this to access the binary hash instead.
+
+   .. attribute:: is_broken
+
+
+
+   .. attribute:: is_directory
+
+
+
+   .. attribute:: is_file
+
+
+
+   .. attribute:: is_folder
+
+
+
+   .. attribute:: is_link
+
+
+
+   .. attribute:: link_target
+
+
+
+   .. method:: open_for_reading(self)
+
+
+
+   .. method:: read(self)
+
+      Read the contents of this file and return them as a string. This is
+      usually a bad idea if the file in question is large, as the entire
+      contents of the file will be loaded into memory.
+
+   .. method:: read_blocks(self, block_size=None)
+
+      A generator that yields successive blocks of data from this file. Each
+      block will be no larger than block_size bytes, which defaults to 16384.
+      This is useful when reading/processing files larger than would
+      otherwise fit into memory.
+
+      One could implement, for example, a copy function thus::
+
+          with target.open("wb") as target_stream:
+              for block in source.read_blocks():
+                  target_stream.write(block)
+
+   .. attribute:: type
+
+      The type of this file. This can be one of FILE, FOLDER, or LINK (I
+      don't yet have constants for block/character special devices; those
+      will come soon.) If the file does not exist, this should be None.
+
+   .. attribute:: valid
+
+
+
+-------------
+Class SSHFile
+-------------
+
+
+
+*Method resolution order:* :obj:`~fileutils2.ChildrenMixin`, :obj:`~fileutils2.Listable`, :obj:`~fileutils2.Readable`, :obj:`~fileutils2.Hierarchy`
+
+.. class:: SSHFile(self, client, path)
+
+
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   .. method:: child(self, *names)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.child` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: child_names
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Listable.child_names` *in class* :obj:`~fileutils2.Listable`
+
+   .. method:: get_path_components(self, relative_to=None)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.get_path_components` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: link_target
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.link_target` *in class* :obj:`~fileutils2.Readable`
+
+   .. method:: open_for_reading(self)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.open_for_reading` *in class* :obj:`~fileutils2.Readable`
+
+   .. attribute:: parent
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.parent` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: type
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.type` *in class* :obj:`~fileutils2.Readable`
+
+-------------
+Class Sizable
+-------------
+
+
+
+.. class:: Sizable
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: size
+
+
+
+---------
+Class URL
+---------
+
+
+
+*Method resolution order:* :obj:`~fileutils2.Readable`, :obj:`~fileutils2.Hierarchy`
+
+.. class:: URL(self, url)
+
+
+
+   .. method:: __cmp__(self, other)
+
+
+
+   .. method:: __hash__(self)
+
+
+
+   .. method:: __nonzero__(self)
+
+
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   .. method:: child(self, *names)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.child` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. method:: get_path_components(self, relative_to=None)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.get_path_components` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. method:: open_for_reading(self)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.open_for_reading` *in class* :obj:`~fileutils2.Readable`
+
+   .. attribute:: parent
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.parent` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. method:: same_as(self, other)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Hierarchy.same_as` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: url
+
+
+
+----------------------
+Class WorkingDirectory
+----------------------
+
+
+
+.. class:: WorkingDirectory
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: as_working
+
+      A property that returns a context manager. This context manager sets
+      the working directory to self upon being entered and restores it to
+      what it previously was upon being exited. One can use this to replace
+      something like::
+
+          old_dir = File()
+          new_dir.cd()
+          try:
+              ...stuff...
+          finally:
+              old_dir.cd()
+
+      with the much nicer::
+
+          with new_dir.as_working:
+              ...stuff...
+
+      and get exactly the same effect.
+
+      The context manager's __enter__ returns self (this file), so you can
+      also use an "as" clause on the with statement to get access to the
+      file in case you haven't got it stored in a variable anywhere.
+
+   .. method:: cd(self)
+
+
+
+   .. method:: change_to(self)
+
+
+
+--------------
+Class Writable
+--------------
+
+
+
+.. class:: Writable
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: create_folder(self, ignore_existing=False, recursive=False)
+
+
+
+   .. method:: delete(self, ignore_missing=False)
+
+
+
+   .. method:: link_to(self, target)
+
+
+
+   .. method:: open_for_writing(self, append=False)
+
+
+
+   .. method:: write(self, data, binary=True)
+
+      Overwrite this file with the specified data. After this is called,
+      self.size will be equal to len(data), and self.read() will be equal to
+      data. If you want to append data instead, use self.append().
+
+      If binary is True (the default), the file will be written
+      byte-for-byte. If it's False, the file will be written in text mode. 
+
+---------
+Functions
+---------
+
+
+
+.. function:: ssh_connect(host, username)
+
