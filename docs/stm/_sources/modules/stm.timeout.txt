@@ -25,6 +25,10 @@ Class Timeout
 
    x.__init__(...) initializes x; see help(type(x)) for signature
 
+   *Members inherited from class* :obj:`~exceptions.Exception`\ *:* :obj:`~exceptions.Exception.__init__`, :obj:`~exceptions.Exception.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__reduce__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__str__`, :obj:`~exceptions.BaseException.__unicode__`
+
 ---------
 Functions
 ---------

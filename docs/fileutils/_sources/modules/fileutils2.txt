@@ -28,6 +28,10 @@ Class ChildrenMixin
 
       |  *Overrides* :obj:`~fileutils2.Listable.children` *in class* :obj:`~fileutils2.Listable`
 
+   *Members inherited from class* :obj:`~fileutils2.Listable`\ *:* :obj:`~fileutils2.Listable.__metaclass__`, :obj:`~fileutils2.Listable.child_names`
+
+   *Members inherited from class* :obj:`~fileutils2.Readable`\ *:* :obj:`~fileutils2.Readable.check_file`, :obj:`~fileutils2.Readable.check_folder`, :obj:`~fileutils2.Readable.copy_into`, :obj:`~fileutils2.Readable.copy_to`, :obj:`~fileutils2.Readable.dereference`, :obj:`~fileutils2.Readable.exists`, :obj:`~fileutils2.Readable.hash`, :obj:`~fileutils2.Readable.is_broken`, :obj:`~fileutils2.Readable.is_directory`, :obj:`~fileutils2.Readable.is_file`, :obj:`~fileutils2.Readable.is_folder`, :obj:`~fileutils2.Readable.is_link`, :obj:`~fileutils2.Readable.link_target`, :obj:`~fileutils2.Readable.open_for_reading`, :obj:`~fileutils2.Readable.read`, :obj:`~fileutils2.Readable.read_blocks`, :obj:`~fileutils2.Readable.type`, :obj:`~fileutils2.Readable.valid`
+
 ----------
 Class File
 ----------
@@ -192,6 +196,16 @@ Class File
 
       |  *Overrides* :obj:`~fileutils2.Readable.type` *in class* :obj:`~fileutils2.Readable`
 
+   *Members inherited from class* :obj:`~fileutils2.Hierarchy`\ *:* :obj:`~fileutils2.Hierarchy.__metaclass__`, :obj:`~fileutils2.Hierarchy.ancestor_of`, :obj:`~fileutils2.Hierarchy.ancestors`, :obj:`~fileutils2.Hierarchy.descendant_of`, :obj:`~fileutils2.Hierarchy.get_ancestors`, :obj:`~fileutils2.Hierarchy.get_path`, :obj:`~fileutils2.Hierarchy.name`, :obj:`~fileutils2.Hierarchy.path`, :obj:`~fileutils2.Hierarchy.path_components`, :obj:`~fileutils2.Hierarchy.same_as`, :obj:`~fileutils2.Hierarchy.sibling`
+
+   *Members inherited from class* :obj:`~fileutils2.ChildrenMixin`\ *:* :obj:`~fileutils2.ChildrenMixin.children`
+
+   *Members inherited from class* :obj:`~fileutils2.Readable`\ *:* :obj:`~fileutils2.Readable.check_file`, :obj:`~fileutils2.Readable.check_folder`, :obj:`~fileutils2.Readable.copy_into`, :obj:`~fileutils2.Readable.copy_to`, :obj:`~fileutils2.Readable.dereference`, :obj:`~fileutils2.Readable.exists`, :obj:`~fileutils2.Readable.hash`, :obj:`~fileutils2.Readable.is_broken`, :obj:`~fileutils2.Readable.is_directory`, :obj:`~fileutils2.Readable.is_file`, :obj:`~fileutils2.Readable.is_folder`, :obj:`~fileutils2.Readable.is_link`, :obj:`~fileutils2.Readable.read`, :obj:`~fileutils2.Readable.read_blocks`, :obj:`~fileutils2.Readable.valid`
+
+   *Members inherited from class* :obj:`~fileutils2.WorkingDirectory`\ *:* :obj:`~fileutils2.WorkingDirectory.as_working`, :obj:`~fileutils2.WorkingDirectory.cd`
+
+   *Members inherited from class* :obj:`~fileutils2.Writable`\ *:* :obj:`~fileutils2.Writable.write`
+
 ---------------
 Class Hierarchy
 ---------------
@@ -224,7 +238,17 @@ Class Hierarchy
 
    .. method:: child(self, *names)
 
+      Returns a file object representing the child of this file with the
+      specified name. If multiple names are present, they will be joined
+      together. If no names are present, self will be returned.
 
+      If any names are absolute, all names before them (and self) will be
+      discarded. Relative names (like "..") are also allowed. If you want a
+      method that guarantees that the result is a child of self, use
+      self.safe_child(...).
+
+      This method is analogous to
+      :obj:`os.path.join(self.path, *names) <os.path.join>`.
 
    .. method:: descendant_of(self, other, including_self=False)
 
@@ -251,7 +275,13 @@ Class Hierarchy
 
    .. method:: get_path_components(self, relative_to=None)
 
+      Returns a list of the components in this file's path, including (on
+      POSIX-compliant systems) an empty leading component for absolute paths.
 
+      If relative_to is specified, the returned set of components will
+      represent a relative path, the path of this file relative to the
+      specified one. Otherwise, the returned components will represent an
+      absolute path.
 
    .. attribute:: name
 
@@ -263,7 +293,9 @@ Class Hierarchy
 
    .. attribute:: parent
 
-
+      Returns a file representing the parent of this file. If this file has
+      no parent (for example, if it's "/" on Unix-based operating systems or
+      a drive letter on Windows), None will be returned.
 
    .. attribute:: path
 
@@ -307,6 +339,8 @@ Class Listable
    .. attribute:: children
 
 
+
+   *Members inherited from class* :obj:`~fileutils2.Readable`\ *:* :obj:`~fileutils2.Readable.check_file`, :obj:`~fileutils2.Readable.check_folder`, :obj:`~fileutils2.Readable.copy_into`, :obj:`~fileutils2.Readable.copy_to`, :obj:`~fileutils2.Readable.dereference`, :obj:`~fileutils2.Readable.exists`, :obj:`~fileutils2.Readable.hash`, :obj:`~fileutils2.Readable.is_broken`, :obj:`~fileutils2.Readable.is_directory`, :obj:`~fileutils2.Readable.is_file`, :obj:`~fileutils2.Readable.is_folder`, :obj:`~fileutils2.Readable.is_link`, :obj:`~fileutils2.Readable.link_target`, :obj:`~fileutils2.Readable.open_for_reading`, :obj:`~fileutils2.Readable.read`, :obj:`~fileutils2.Readable.read_blocks`, :obj:`~fileutils2.Readable.type`, :obj:`~fileutils2.Readable.valid`
 
 --------------
 Class Readable
@@ -436,7 +470,7 @@ Class SSHFile
 
 
 
-*Method resolution order:* :obj:`~fileutils2.ChildrenMixin`, :obj:`~fileutils2.Listable`, :obj:`~fileutils2.Readable`, :obj:`~fileutils2.Hierarchy`
+*Method resolution order:* :obj:`~fileutils2.ChildrenMixin`, :obj:`~fileutils2.Listable`, :obj:`~fileutils2.Readable`, :obj:`~fileutils2.Hierarchy`, :obj:`~fileutils2.Writable`
 
 .. class:: SSHFile(self, client, path)
 
@@ -459,6 +493,18 @@ Class SSHFile
 
       |  *Overrides* :obj:`~fileutils2.Listable.child_names` *in class* :obj:`~fileutils2.Listable`
 
+   .. method:: create_folder(self, ignore_existing=False, recursive=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Writable.create_folder` *in class* :obj:`~fileutils2.Writable`
+
+   .. method:: delete(self, ignore_missing=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Writable.delete` *in class* :obj:`~fileutils2.Writable`
+
    .. method:: get_path_components(self, relative_to=None)
 
 
@@ -471,11 +517,23 @@ Class SSHFile
 
       |  *Overrides* :obj:`~fileutils2.Readable.link_target` *in class* :obj:`~fileutils2.Readable`
 
+   .. method:: link_to(self, other)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Writable.link_to` *in class* :obj:`~fileutils2.Writable`
+
    .. method:: open_for_reading(self)
 
 
 
       |  *Overrides* :obj:`~fileutils2.Readable.open_for_reading` *in class* :obj:`~fileutils2.Readable`
+
+   .. method:: open_for_writing(self, append=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Writable.open_for_writing` *in class* :obj:`~fileutils2.Writable`
 
    .. attribute:: parent
 
@@ -488,6 +546,16 @@ Class SSHFile
 
 
       |  *Overrides* :obj:`~fileutils2.Readable.type` *in class* :obj:`~fileutils2.Readable`
+
+   *Members inherited from class* :obj:`~fileutils2.ChildrenMixin`\ *:* :obj:`~fileutils2.ChildrenMixin.children`
+
+   *Members inherited from class* :obj:`~fileutils2.Listable`\ *:* :obj:`~fileutils2.Listable.__metaclass__`
+
+   *Members inherited from class* :obj:`~fileutils2.Readable`\ *:* :obj:`~fileutils2.Readable.check_file`, :obj:`~fileutils2.Readable.check_folder`, :obj:`~fileutils2.Readable.copy_into`, :obj:`~fileutils2.Readable.copy_to`, :obj:`~fileutils2.Readable.dereference`, :obj:`~fileutils2.Readable.exists`, :obj:`~fileutils2.Readable.hash`, :obj:`~fileutils2.Readable.is_broken`, :obj:`~fileutils2.Readable.is_directory`, :obj:`~fileutils2.Readable.is_file`, :obj:`~fileutils2.Readable.is_folder`, :obj:`~fileutils2.Readable.is_link`, :obj:`~fileutils2.Readable.read`, :obj:`~fileutils2.Readable.read_blocks`, :obj:`~fileutils2.Readable.valid`
+
+   *Members inherited from class* :obj:`~fileutils2.Hierarchy`\ *:* :obj:`~fileutils2.Hierarchy.ancestor_of`, :obj:`~fileutils2.Hierarchy.ancestors`, :obj:`~fileutils2.Hierarchy.descendant_of`, :obj:`~fileutils2.Hierarchy.get_ancestors`, :obj:`~fileutils2.Hierarchy.get_path`, :obj:`~fileutils2.Hierarchy.name`, :obj:`~fileutils2.Hierarchy.path`, :obj:`~fileutils2.Hierarchy.path_components`, :obj:`~fileutils2.Hierarchy.same_as`, :obj:`~fileutils2.Hierarchy.sibling`
+
+   *Members inherited from class* :obj:`~fileutils2.Writable`\ *:* :obj:`~fileutils2.Writable.write`
 
 -------------
 Class Sizable
@@ -538,11 +606,23 @@ Class URL
 
       |  *Overrides* :obj:`~fileutils2.Hierarchy.child` *in class* :obj:`~fileutils2.Hierarchy`
 
+   .. method:: dereference(self, recursive=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.dereference` *in class* :obj:`~fileutils2.Readable`
+
    .. method:: get_path_components(self, relative_to=None)
 
 
 
       |  *Overrides* :obj:`~fileutils2.Hierarchy.get_path_components` *in class* :obj:`~fileutils2.Hierarchy`
+
+   .. attribute:: link_target
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.link_target` *in class* :obj:`~fileutils2.Readable`
 
    .. method:: open_for_reading(self)
 
@@ -562,9 +642,19 @@ Class URL
 
       |  *Overrides* :obj:`~fileutils2.Hierarchy.same_as` *in class* :obj:`~fileutils2.Hierarchy`
 
+   .. attribute:: type
+
+
+
+      |  *Overrides* :obj:`~fileutils2.Readable.type` *in class* :obj:`~fileutils2.Readable`
+
    .. attribute:: url
 
 
+
+   *Members inherited from class* :obj:`~fileutils2.Readable`\ *:* :obj:`~fileutils2.Readable.__metaclass__`, :obj:`~fileutils2.Readable.check_file`, :obj:`~fileutils2.Readable.check_folder`, :obj:`~fileutils2.Readable.copy_into`, :obj:`~fileutils2.Readable.copy_to`, :obj:`~fileutils2.Readable.exists`, :obj:`~fileutils2.Readable.hash`, :obj:`~fileutils2.Readable.is_broken`, :obj:`~fileutils2.Readable.is_directory`, :obj:`~fileutils2.Readable.is_file`, :obj:`~fileutils2.Readable.is_folder`, :obj:`~fileutils2.Readable.is_link`, :obj:`~fileutils2.Readable.read`, :obj:`~fileutils2.Readable.read_blocks`, :obj:`~fileutils2.Readable.valid`
+
+   *Members inherited from class* :obj:`~fileutils2.Hierarchy`\ *:* :obj:`~fileutils2.Hierarchy.ancestor_of`, :obj:`~fileutils2.Hierarchy.ancestors`, :obj:`~fileutils2.Hierarchy.descendant_of`, :obj:`~fileutils2.Hierarchy.get_ancestors`, :obj:`~fileutils2.Hierarchy.get_path`, :obj:`~fileutils2.Hierarchy.name`, :obj:`~fileutils2.Hierarchy.path`, :obj:`~fileutils2.Hierarchy.path_components`, :obj:`~fileutils2.Hierarchy.sibling`
 
 ----------------------
 Class WorkingDirectory

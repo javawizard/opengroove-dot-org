@@ -74,6 +74,8 @@ that reads from the queue in question.
       This can be called multiple times to push multiple items onto an
       endpoint in LIFO order.
 
+   *Members inherited from class* :obj:`~stm.datatypes.TObject`\ *:* :obj:`~stm.datatypes.TObject.__delattr__`, :obj:`~stm.datatypes.TObject.__dir__`, :obj:`~stm.datatypes.TObject.__getattr__`, :obj:`~stm.datatypes.TObject.__setattr__`
+
 --------------------
 Class BroadcastQueue
 --------------------
@@ -116,6 +118,8 @@ a no-op.
       Inserts an item into this queue. The item will then become available on
       all endpoints created from it.
 
+   *Members inherited from class* :obj:`~stm.datatypes.TObject`\ *:* :obj:`~stm.datatypes.TObject.__delattr__`, :obj:`~stm.datatypes.TObject.__dir__`, :obj:`~stm.datatypes.TObject.__getattr__`, :obj:`~stm.datatypes.TObject.__setattr__`
+
 -----------
 Class Empty
 -----------
@@ -129,6 +133,10 @@ in and no items are currently available.
 
    x.__init__(...) initializes x; see help(type(x)) for signature
 
+   *Members inherited from class* :obj:`~exceptions.Exception`\ *:* :obj:`~exceptions.Exception.__init__`, :obj:`~exceptions.Exception.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__reduce__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__str__`, :obj:`~exceptions.BaseException.__unicode__`
+
 ----------
 Class Full
 ----------
@@ -140,6 +148,10 @@ Class Full
 .. class:: Full
 
    x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.Exception`\ *:* :obj:`~exceptions.Exception.__init__`, :obj:`~exceptions.Exception.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__reduce__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__str__`, :obj:`~exceptions.BaseException.__unicode__`
 
 -----------
 Class TDict
@@ -240,6 +252,12 @@ wrap themselves in a call to stm.atomically() internally.
 
 
       |  *Overrides* :obj:`~_abcoll.Mapping.values` *in class* :obj:`~_abcoll.Mapping`
+
+   *Members inherited from class* :obj:`~_abcoll.MutableMapping`\ *:* :obj:`~_abcoll.MutableMapping.clear`, :obj:`~_abcoll.MutableMapping.pop`, :obj:`~_abcoll.MutableMapping.popitem`, :obj:`~_abcoll.MutableMapping.setdefault`, :obj:`~_abcoll.MutableMapping.update`
+
+   *Members inherited from class* :obj:`~_abcoll.Mapping`\ *:* :obj:`~_abcoll.Mapping.__contains__`, :obj:`~_abcoll.Mapping.__eq__`, :obj:`~_abcoll.Mapping.__ne__`, :obj:`~_abcoll.Mapping.get`
+
+   *Members inherited from class* :obj:`~_abcoll.Sized`\ *:* :obj:`~_abcoll.Sized.__metaclass__`
 
 -----------
 Class TList
@@ -359,6 +377,12 @@ wrap themselves in a call to stm.atomically() internally.
 
       |  *Overrides* :obj:`~_abcoll.MutableSequence.insert` *in class* :obj:`~_abcoll.MutableSequence`
 
+   *Members inherited from class* :obj:`~_abcoll.MutableSequence`\ *:* :obj:`~_abcoll.MutableSequence.__iadd__`, :obj:`~_abcoll.MutableSequence.append`, :obj:`~_abcoll.MutableSequence.pop`, :obj:`~_abcoll.MutableSequence.remove`, :obj:`~_abcoll.MutableSequence.reverse`
+
+   *Members inherited from class* :obj:`~_abcoll.Sequence`\ *:* :obj:`~_abcoll.Sequence.__contains__`, :obj:`~_abcoll.Sequence.__reversed__`, :obj:`~_abcoll.Sequence.count`, :obj:`~_abcoll.Sequence.index`
+
+   *Members inherited from class* :obj:`~_abcoll.Sized`\ *:* :obj:`~_abcoll.Sized.__metaclass__`
+
 ---------------------
 Class TMutableWeakRef
 ---------------------
@@ -393,6 +417,8 @@ be called on garbage collection of any of its former values.
    .. method:: set(self, value)
 
 
+
+   *Members inherited from class* :obj:`~stm.datatypes.TObject`\ *:* :obj:`~stm.datatypes.TObject.__delattr__`, :obj:`~stm.datatypes.TObject.__dir__`, :obj:`~stm.datatypes.TObject.__getattr__`, :obj:`~stm.datatypes.TObject.__setattr__`
 
 -------------
 Class TObject
@@ -473,6 +499,12 @@ itself, so that needs some thought.)
 
       |  *Overrides* :obj:`~_abcoll.MutableSet.discard` *in class* :obj:`~_abcoll.MutableSet`
 
+   *Members inherited from class* :obj:`~_abcoll.MutableSet`\ *:* :obj:`~_abcoll.MutableSet.__iand__`, :obj:`~_abcoll.MutableSet.__ior__`, :obj:`~_abcoll.MutableSet.__isub__`, :obj:`~_abcoll.MutableSet.__ixor__`, :obj:`~_abcoll.MutableSet.clear`, :obj:`~_abcoll.MutableSet.pop`, :obj:`~_abcoll.MutableSet.remove`
+
+   *Members inherited from class* :obj:`~_abcoll.Set`\ *:* :obj:`~_abcoll.Set.__and__`, :obj:`~_abcoll.Set.__eq__`, :obj:`~_abcoll.Set.__ge__`, :obj:`~_abcoll.Set.__gt__`, :obj:`~_abcoll.Set.__le__`, :obj:`~_abcoll.Set.__lt__`, :obj:`~_abcoll.Set.__ne__`, :obj:`~_abcoll.Set.__or__`, :obj:`~_abcoll.Set.__sub__`, :obj:`~_abcoll.Set.__xor__`, :obj:`~_abcoll.Set.isdisjoint`
+
+   *Members inherited from class* :obj:`~_abcoll.Sized`\ *:* :obj:`~_abcoll.Sized.__metaclass__`
+
 --------------------
 Class TValueIterator
 --------------------
@@ -552,6 +584,8 @@ _BroadcastItem(value, next)
 
       Alias for field number 0
 
+   *Members inherited from class* :obj:`~__builtin__.tuple`\ *:* :obj:`~__builtin__.tuple.__add__`, :obj:`~__builtin__.tuple.__contains__`, :obj:`~__builtin__.tuple.__eq__`, :obj:`~__builtin__.tuple.__ge__`, :obj:`~__builtin__.tuple.__getattribute__`, :obj:`~__builtin__.tuple.__getitem__`, :obj:`~__builtin__.tuple.__getslice__`, :obj:`~__builtin__.tuple.__gt__`, :obj:`~__builtin__.tuple.__hash__`, :obj:`~__builtin__.tuple.__iter__`, :obj:`~__builtin__.tuple.__le__`, :obj:`~__builtin__.tuple.__len__`, :obj:`~__builtin__.tuple.__lt__`, :obj:`~__builtin__.tuple.__mul__`, :obj:`~__builtin__.tuple.__ne__`, :obj:`~__builtin__.tuple.__rmul__`, :obj:`~__builtin__.tuple.__sizeof__`, :obj:`~__builtin__.tuple.count`, :obj:`~__builtin__.tuple.index`
+
 ---------------------
 Class _DictAnnotation
 ---------------------
@@ -594,6 +628,8 @@ _DictAnnotation(index, key)
 
       Alias for field number 1
 
+   *Members inherited from class* :obj:`~__builtin__.tuple`\ *:* :obj:`~__builtin__.tuple.__add__`, :obj:`~__builtin__.tuple.__contains__`, :obj:`~__builtin__.tuple.__eq__`, :obj:`~__builtin__.tuple.__ge__`, :obj:`~__builtin__.tuple.__getattribute__`, :obj:`~__builtin__.tuple.__getitem__`, :obj:`~__builtin__.tuple.__getslice__`, :obj:`~__builtin__.tuple.__gt__`, :obj:`~__builtin__.tuple.__hash__`, :obj:`~__builtin__.tuple.__iter__`, :obj:`~__builtin__.tuple.__le__`, :obj:`~__builtin__.tuple.__len__`, :obj:`~__builtin__.tuple.__lt__`, :obj:`~__builtin__.tuple.__mul__`, :obj:`~__builtin__.tuple.__ne__`, :obj:`~__builtin__.tuple.__rmul__`, :obj:`~__builtin__.tuple.__sizeof__`, :obj:`~__builtin__.tuple.count`
+
 ----------------
 Class _DictEntry
 ----------------
@@ -633,3 +669,5 @@ _DictEntry(key, value)
    .. attribute:: value
 
       Alias for field number 1
+
+   *Members inherited from class* :obj:`~__builtin__.tuple`\ *:* :obj:`~__builtin__.tuple.__add__`, :obj:`~__builtin__.tuple.__contains__`, :obj:`~__builtin__.tuple.__eq__`, :obj:`~__builtin__.tuple.__ge__`, :obj:`~__builtin__.tuple.__getattribute__`, :obj:`~__builtin__.tuple.__getitem__`, :obj:`~__builtin__.tuple.__getslice__`, :obj:`~__builtin__.tuple.__gt__`, :obj:`~__builtin__.tuple.__hash__`, :obj:`~__builtin__.tuple.__iter__`, :obj:`~__builtin__.tuple.__le__`, :obj:`~__builtin__.tuple.__len__`, :obj:`~__builtin__.tuple.__lt__`, :obj:`~__builtin__.tuple.__mul__`, :obj:`~__builtin__.tuple.__ne__`, :obj:`~__builtin__.tuple.__rmul__`, :obj:`~__builtin__.tuple.__sizeof__`, :obj:`~__builtin__.tuple.count`, :obj:`~__builtin__.tuple.index`
