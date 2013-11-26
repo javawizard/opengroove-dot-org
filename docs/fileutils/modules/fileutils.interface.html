@@ -1,0 +1,705 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fileutils.interface — Abstract classes. &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="next" title="fileutils.local —" href="fileutils.local.html" />
+    <link rel="prev" title="fileutils.constants —" href="fileutils.constants.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.local.html" title="fileutils.local —"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fileutils.interface">
+<span id="fileutils-interface-abstract-classes"></span><h1><a class="reference internal" href="#module-fileutils.interface" title="fileutils.interface: Abstract classes."><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.interface</span></tt></a> &#8212; Abstract classes.<a class="headerlink" href="#module-fileutils.interface" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="class-hierarchy">
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fileutils.interface.Hierarchy">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Hierarchy</tt><a class="headerlink" href="#fileutils.interface.Hierarchy" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.__div__">
+<tt class="descname">__div__</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.__div__" title="Permalink to this definition">¶</a></dt>
+<dd><p>An absolutely pointless and unnecessary alias for self.child(other)
+that exists solely because I was overly bored one night while working
+on fileutils.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.ancestor_of">
+<tt class="descname">ancestor_of</tt><big>(</big><em>self</em>, <em>other</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.ancestor_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if this file is an ancestor of the specified file. A file
+is an ancestor of another file if that other file&#8217;s parent is (as
+decided by <a class="reference internal" href="#fileutils.interface.Hierarchy.same_as" title="fileutils.interface.Hierarchy.same_as"><tt class="xref py py-obj docutils literal"><span class="pre">same_as</span></tt></a>) this file, or its parent&#8217;s parent is this
+file, and so on.</p>
+<p>If including_self is True, the file is considered to be an ancestor of
+itself, i.e. True will be returned in the case that self.same_as(other).
+Otherwise, only the file&#8217;s immediate parent, and its parent&#8217;s parent,
+and so on are considered to be ancestors.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Hierarchy.ancestors">
+<tt class="descname">ancestors</tt><a class="headerlink" href="#fileutils.interface.Hierarchy.ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all of the ancestors of this file, with self.parent first.</p>
+<p>This property simply returns
+<a class="reference internal" href="#fileutils.interface.Hierarchy.get_ancestors" title="fileutils.interface.Hierarchy.get_ancestors"><tt class="xref py py-obj docutils literal"><span class="pre">self.get_ancestors()</span></tt></a>. Have a look at that
+method if you need to do more complex things like include self as one
+of the returned ancestors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.child">
+<tt class="descname">child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a file object representing the child of this file with the
+specified name. If multiple names are present, they will be joined
+together. If no names are present, self will be returned.</p>
+<p>If any names are absolute, all names before them (and self) will be
+discarded. Relative names (like &#8221;..&#8221;) are also allowed. If you want a
+method that guarantees that the result is a child of self, use
+self.safe_child(...).</p>
+<p>This method is analogous to
+<a class="reference external" href="http://docs.python.org/2.7/library/os.path.html#os.path.join" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">os.path.join(self.path,</span> <span class="pre">*names)</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.descendant_of">
+<tt class="descname">descendant_of</tt><big>(</big><em>self</em>, <em>other</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.descendant_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if this file is a descendant of the specified file. This
+is equivalent to other.ancestor_of(self, including_self).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.get_ancestors">
+<tt class="descname">get_ancestors</tt><big>(</big><em>self</em>, <em>including_self=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.get_ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all of the ancestors of this file, with self.parent
+first. If including_self is True, self will be first, self.parent will
+be second, and so on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.get_path">
+<tt class="descname">get_path</tt><big>(</big><em>self</em>, <em>relative_to=None</em>, <em>separator=None</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the path to the file represented by this File object.</p>
+<p>If relative_to is specified, the returned path will be a relative path,
+the path of this file relative to the specified one. Otherwise, the
+returned path will be absolute.</p>
+<p>If separator (which must be a string) is specified, it will be used as
+the separator to place between path components in the returned path.
+Otherwise, os.path.sep will be used as the separator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.get_path_components">
+<tt class="descname">get_path_components</tt><big>(</big><em>self</em>, <em>relative_to=None</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.get_path_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the components in this file&#8217;s path, including (on
+POSIX-compliant systems) an empty leading component for absolute paths.</p>
+<p>If relative_to is specified, the returned set of components will
+represent a relative path, the path of this file relative to the
+specified one. Otherwise, the returned components will represent an
+absolute path.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Hierarchy.name">
+<tt class="descname">name</tt><a class="headerlink" href="#fileutils.interface.Hierarchy.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of this file. For example, File(&#8220;a&#8221;, &#8220;b&#8221;, &#8220;c&#8221;).name will be
+&#8220;c&#8221;.</p>
+<p>On Unix-based operating systems, File(&#8220;/&#8221;).name will be the empty
+string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Hierarchy.parent">
+<tt class="descname">parent</tt><a class="headerlink" href="#fileutils.interface.Hierarchy.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a file representing the parent of this file. If this file has
+no parent (for example, if it&#8217;s &#8220;/&#8221; on Unix-based operating systems or
+a drive letter on Windows), None will be returned.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Hierarchy.path">
+<tt class="descname">path</tt><a class="headerlink" href="#fileutils.interface.Hierarchy.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>The absolute path to the file represented by this file object, in a
+format native to the type of file in use. For instances of
+fileutils.local.File, this pathname can be used with Python&#8217;s
+traditional file-related utilities.</p>
+<p>This property simply returns self.get_path(). See the documentation for
+that method for more complex ways of creating paths (including
+obtaining relative paths).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Hierarchy.path_components">
+<tt class="descname">path_components</tt><a class="headerlink" href="#fileutils.interface.Hierarchy.path_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that simply returns
+<a class="reference internal" href="#fileutils.interface.Hierarchy.get_path_components" title="fileutils.interface.Hierarchy.get_path_components"><tt class="xref py py-obj docutils literal"><span class="pre">self.get_path_components()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.safe_child">
+<tt class="descname">safe_child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.safe_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as self.child(<a href="#id1"><span class="problematic" id="id2">*</span></a>names), but checks that the resulting file is a
+descendant of self. If it&#8217;s not, an exception will be thrown. This
+allows unsanitized paths to be used without fear that things like &#8221;..&#8221;
+will be used to escape the confines of self.</p>
+<p>The pathname may contain occurrences of &#8221;..&#8221; so long as they do not
+escape self. For example, &#8220;a/b/../c&#8221; is perfectly fine, but &#8220;a/../..&#8221;
+is not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.same_as">
+<tt class="descname">same_as</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.same_as" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this file represents the same file as the specified
+one, False otherwise.</p>
+<p>This is usually the same as self == other, but URL implements this
+differently: a URL with a trailing slash and a URL without are treated
+as the same by same_as but different by ==.</p>
+<p>The default implementation returns True if self.path_components ==
+other.path_components and type(self) == type(other), or False otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Hierarchy.sibling">
+<tt class="descname">sibling</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.interface.Hierarchy.sibling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a File object representing the sibling of this file with the
+specified name. This is equivalent to self.parent.child(name).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-listable">
+<h2>Class Listable<a class="headerlink" href="#class-listable" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.interface.Readable" title="fileutils.interface.Readable"><tt class="xref py py-obj docutils literal"><span class="pre">Readable</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.interface.Listable">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Listable</tt><a class="headerlink" href="#fileutils.interface.Listable" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.interface.Listable.child_names">
+<tt class="descname">child_names</tt><a class="headerlink" href="#fileutils.interface.Listable.child_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the names of all of the children of this file, as a list of
+strings. If this file is not a folder, the value of this property is
+None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Listable.children">
+<tt class="descname">children</tt><a class="headerlink" href="#fileutils.interface.Listable.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all of the children of this file, as a list of File objects.
+If this file is not a folder, the value of this property is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Listable.recurse">
+<tt class="descname">recurse</tt><big>(</big><em>self</em>, <em>filter=None</em>, <em>include_self=True</em>, <em>recurse_skipped=True</em><big>)</big><a class="headerlink" href="#fileutils.interface.Listable.recurse" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator that recursively yields all child File objects of this file.
+Files and directories (and the files and directories contained within
+them, and so on) are all included.</p>
+<p>A filter function accepting one argument can be specified. It will be
+called for each file and folder. It can return one of True, False,
+SKIP, YIELD, or RECURSE, with the behavior of each outlined in the
+following table:</p>
+<div class="highlight-python"><pre>                      Don't yield   Do yield
+                    +-------------+----------+
+Don't recurse into  | SKIP        | YIELD    |
+                    +-------------+----------+
+Do recurse into     | RECURSE     | True     |
+                    +-------------+----------+
+
+False behaves the same as RECURSE if recurse_skipped is True, or
+SKIP otherwise.</pre>
+</div>
+<p>If include_self is True (the default), this file (a.k.a. self) will be
+yielded as well (if it matches the specified filter function). If it&#8217;s
+False, only this file&#8217;s children (and their children, and so on) will
+be yielded.</p>
+</dd></dl>
+
+<p><em>Members inherited from class</em> <a class="reference internal" href="#fileutils.interface.Readable" title="fileutils.interface.Readable"><tt class="xref py py-obj docutils literal"><span class="pre">Readable</span></tt></a><em>:</em> <a class="reference internal" href="#fileutils.interface.Readable.check_file" title="fileutils.interface.Readable.check_file"><tt class="xref py py-obj docutils literal"><span class="pre">check_file</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.check_folder" title="fileutils.interface.Readable.check_folder"><tt class="xref py py-obj docutils literal"><span class="pre">check_folder</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.copy_into" title="fileutils.interface.Readable.copy_into"><tt class="xref py py-obj docutils literal"><span class="pre">copy_into</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.copy_to" title="fileutils.interface.Readable.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.dereference" title="fileutils.interface.Readable.dereference"><tt class="xref py py-obj docutils literal"><span class="pre">dereference</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.exists" title="fileutils.interface.Readable.exists"><tt class="xref py py-obj docutils literal"><span class="pre">exists</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.hash" title="fileutils.interface.Readable.hash"><tt class="xref py py-obj docutils literal"><span class="pre">hash</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_broken" title="fileutils.interface.Readable.is_broken"><tt class="xref py py-obj docutils literal"><span class="pre">is_broken</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_directory" title="fileutils.interface.Readable.is_directory"><tt class="xref py py-obj docutils literal"><span class="pre">is_directory</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_file" title="fileutils.interface.Readable.is_file"><tt class="xref py py-obj docutils literal"><span class="pre">is_file</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_folder" title="fileutils.interface.Readable.is_folder"><tt class="xref py py-obj docutils literal"><span class="pre">is_folder</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_link" title="fileutils.interface.Readable.is_link"><tt class="xref py py-obj docutils literal"><span class="pre">is_link</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.link_target" title="fileutils.interface.Readable.link_target"><tt class="xref py py-obj docutils literal"><span class="pre">link_target</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.open_for_reading" title="fileutils.interface.Readable.open_for_reading"><tt class="xref py py-obj docutils literal"><span class="pre">open_for_reading</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.read" title="fileutils.interface.Readable.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.read_blocks" title="fileutils.interface.Readable.read_blocks"><tt class="xref py py-obj docutils literal"><span class="pre">read_blocks</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.size" title="fileutils.interface.Readable.size"><tt class="xref py py-obj docutils literal"><span class="pre">size</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.type" title="fileutils.interface.Readable.type"><tt class="xref py py-obj docutils literal"><span class="pre">type</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.valid" title="fileutils.interface.Readable.valid"><tt class="xref py py-obj docutils literal"><span class="pre">valid</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-readwrite">
+<h2>Class ReadWrite<a class="headerlink" href="#class-readwrite" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.interface.Readable" title="fileutils.interface.Readable"><tt class="xref py py-obj docutils literal"><span class="pre">Readable</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable" title="fileutils.interface.Writable"><tt class="xref py py-obj docutils literal"><span class="pre">Writable</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.interface.ReadWrite">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">ReadWrite</tt><a class="headerlink" href="#fileutils.interface.ReadWrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.interface.ReadWrite.rename_to">
+<tt class="descname">rename_to</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.interface.ReadWrite.rename_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename this file or folder to the specified name, which should be
+another file object (but need not be of the same type as self).</p>
+<p>The default implementation simply does:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(which, as a note, doesn&#8217;t work for directories yet, so at present
+directories can&#8217;t be renamed across different subclasses). Subclasses
+are free to provide a more specialized implementation for renames to
+files of the same type; File and SSHFile, for example, make use of
+native functions to speed up such renames (and to allow them to work
+with directories at present).</p>
+</dd></dl>
+
+<p><em>Members inherited from class</em> <a class="reference internal" href="#fileutils.interface.Readable" title="fileutils.interface.Readable"><tt class="xref py py-obj docutils literal"><span class="pre">Readable</span></tt></a><em>:</em> <a class="reference internal" href="#fileutils.interface.Readable.check_file" title="fileutils.interface.Readable.check_file"><tt class="xref py py-obj docutils literal"><span class="pre">check_file</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.check_folder" title="fileutils.interface.Readable.check_folder"><tt class="xref py py-obj docutils literal"><span class="pre">check_folder</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.copy_into" title="fileutils.interface.Readable.copy_into"><tt class="xref py py-obj docutils literal"><span class="pre">copy_into</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.copy_to" title="fileutils.interface.Readable.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.dereference" title="fileutils.interface.Readable.dereference"><tt class="xref py py-obj docutils literal"><span class="pre">dereference</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.exists" title="fileutils.interface.Readable.exists"><tt class="xref py py-obj docutils literal"><span class="pre">exists</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.hash" title="fileutils.interface.Readable.hash"><tt class="xref py py-obj docutils literal"><span class="pre">hash</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_broken" title="fileutils.interface.Readable.is_broken"><tt class="xref py py-obj docutils literal"><span class="pre">is_broken</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_directory" title="fileutils.interface.Readable.is_directory"><tt class="xref py py-obj docutils literal"><span class="pre">is_directory</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_file" title="fileutils.interface.Readable.is_file"><tt class="xref py py-obj docutils literal"><span class="pre">is_file</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_folder" title="fileutils.interface.Readable.is_folder"><tt class="xref py py-obj docutils literal"><span class="pre">is_folder</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.is_link" title="fileutils.interface.Readable.is_link"><tt class="xref py py-obj docutils literal"><span class="pre">is_link</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.link_target" title="fileutils.interface.Readable.link_target"><tt class="xref py py-obj docutils literal"><span class="pre">link_target</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.open_for_reading" title="fileutils.interface.Readable.open_for_reading"><tt class="xref py py-obj docutils literal"><span class="pre">open_for_reading</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.read" title="fileutils.interface.Readable.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.read_blocks" title="fileutils.interface.Readable.read_blocks"><tt class="xref py py-obj docutils literal"><span class="pre">read_blocks</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.size" title="fileutils.interface.Readable.size"><tt class="xref py py-obj docutils literal"><span class="pre">size</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.type" title="fileutils.interface.Readable.type"><tt class="xref py py-obj docutils literal"><span class="pre">type</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Readable.valid" title="fileutils.interface.Readable.valid"><tt class="xref py py-obj docutils literal"><span class="pre">valid</span></tt></a></p>
+<p><em>Members inherited from class</em> <a class="reference internal" href="#fileutils.interface.Writable" title="fileutils.interface.Writable"><tt class="xref py py-obj docutils literal"><span class="pre">Writable</span></tt></a><em>:</em> <a class="reference internal" href="#fileutils.interface.Writable.append" title="fileutils.interface.Writable.append"><tt class="xref py py-obj docutils literal"><span class="pre">append</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.create_folder" title="fileutils.interface.Writable.create_folder"><tt class="xref py py-obj docutils literal"><span class="pre">create_folder</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.delete" title="fileutils.interface.Writable.delete"><tt class="xref py py-obj docutils literal"><span class="pre">delete</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.link_to" title="fileutils.interface.Writable.link_to"><tt class="xref py py-obj docutils literal"><span class="pre">link_to</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.makedirs" title="fileutils.interface.Writable.makedirs"><tt class="xref py py-obj docutils literal"><span class="pre">makedirs</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.mkdir" title="fileutils.interface.Writable.mkdir"><tt class="xref py py-obj docutils literal"><span class="pre">mkdir</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.mkdirs" title="fileutils.interface.Writable.mkdirs"><tt class="xref py py-obj docutils literal"><span class="pre">mkdirs</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.open_for_writing" title="fileutils.interface.Writable.open_for_writing"><tt class="xref py py-obj docutils literal"><span class="pre">open_for_writing</span></tt></a>, <a class="reference internal" href="#fileutils.interface.Writable.write" title="fileutils.interface.Writable.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-readable">
+<h2>Class Readable<a class="headerlink" href="#class-readable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fileutils.interface.Readable">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Readable</tt><a class="headerlink" href="#fileutils.interface.Readable" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.interface.Readable.check_file">
+<tt class="descname">check_file</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.check_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see whether this File refers to a file. If it doesn&#8217;t, an
+exception will be thrown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.check_folder">
+<tt class="descname">check_folder</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.check_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see whether this File refers to a folder. If it doesn&#8217;t, an
+exception will be thrown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.copy_into">
+<tt class="descname">copy_into</tt><big>(</big><em>self</em>, <em>other</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.copy_into" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies this file to an identically named file inside the specified
+folder. This is just shorthand for self.copy_to(other.child(self.name))
+which, from experience, seems to be by far the most common use case for
+the copy_to function.</p>
+<p>The newly-created file in the specified folder will be returned as per
+other.child(self.name).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.copy_to">
+<tt class="descname">copy_to</tt><big>(</big><em>self</em>, <em>other</em>, <em>overwrite=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.copy_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies the contents of this file to the specified File object or
+pathname. An exception will be thrown if the specified file already
+exists and overwrite is False.</p>
+<p>This <a class="reference external" href="https://github.com/javawizard/fileutils/issues/1">does not currently work for folders</a>;
+I hope to add this ability in the near future.</p>
+<p>This also does not currently preserve file attributes or permissions;
+such abilities will be added soon.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.dereference">
+<tt class="descname">dereference</tt><big>(</big><em>self</em>, <em>recursive=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.dereference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dereference the symbolic link represented by this file and return a
+File object pointing to the symbolic link&#8217;s referent.</p>
+<p>If recursive is False, a File object pointing directly to the referent
+will be returned. If recursive is True, the referent itself will be
+recursively dereferenced, and the returned File will be guaranteed not
+to be a link.</p>
+<p>If this file is not a symbolic link, self will be returned.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.exists">
+<tt class="descname">exists</tt><a class="headerlink" href="#fileutils.interface.Readable.exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this file/folder exists, False if it doesn&#8217;t. This will be True
+even for broken symbolic links; use self.valid if you want an
+alternative that returns False for broken symbolic links.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.hash">
+<tt class="descname">hash</tt><big>(</big><em>self</em>, <em>algorithm=&lt;built-in function openssl_md5&gt;</em>, <em>return_hex=True</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the hash of this file and return it, as a hexidecimal string.</p>
+<p>The default algorithm is md5. An alternate constructor from hashlib
+can be passed as the algorithm parameter; file.hash(hashlib.sha1)
+would, for example, compute the SHA-1 hash instead.</p>
+<p>If return_hex is False (it defaults to True), the hash object itself
+will be returned instead of the return value of its hexdigest() method.
+One can use this to access the binary hash instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.is_broken">
+<tt class="descname">is_broken</tt><a class="headerlink" href="#fileutils.interface.Readable.is_broken" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a symbolic link that is broken, False if it isn&#8217;t.
+A symbolic link that points to a broken symbolic link is itself
+considered to be broken.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.is_directory">
+<tt class="descname">is_directory</tt><a class="headerlink" href="#fileutils.interface.Readable.is_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as self.is_folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.is_file">
+<tt class="descname">is_file</tt><a class="headerlink" href="#fileutils.interface.Readable.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a file, False if it isn&#8217;t. If the file/folder
+doesn&#8217;t actually exist yet, this will be False.</p>
+<p>If this file is a symbolic link that points to a file, this will be
+True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.is_folder">
+<tt class="descname">is_folder</tt><a class="headerlink" href="#fileutils.interface.Readable.is_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a folder, False if it isn&#8217;t. If the file/folder
+doesn&#8217;t actually exist yet, this will be False.</p>
+<p>If this file is a symbolic link that points to a folder, this will be
+True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.is_link">
+<tt class="descname">is_link</tt><a class="headerlink" href="#fileutils.interface.Readable.is_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this File is a symbolic link, False if it isn&#8217;t. This will be
+True even for broken symbolic links.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.link_target">
+<tt class="descname">link_target</tt><a class="headerlink" href="#fileutils.interface.Readable.link_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the target to which this file, which is expected to be a
+symbolic link, points, as a string. If this file is not a symbolic
+link, None is returned.</p>
+<p>Subclasses (such as URL) without a well-defined notion of symbolic
+links are free to interpret this as they wish; URL, for example,
+presents as a link any URL which sends back an HTTP redirect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.open_for_reading">
+<tt class="descname">open_for_reading</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.open_for_reading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file for reading in binary mode and return a Python file-like
+object from which this file&#8217;s contents can be read.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.read">
+<tt class="descname">read</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the contents of this file and return them as a string. This is
+usually a bad idea if the file in question is large, as the entire
+contents of the file will be loaded into memory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Readable.read_blocks">
+<tt class="descname">read_blocks</tt><big>(</big><em>self</em>, <em>block_size=None</em><big>)</big><a class="headerlink" href="#fileutils.interface.Readable.read_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generator that yields successive blocks of data from this file. Each
+block will be no larger than block_size bytes, which defaults to 16384.
+This is useful when reading/processing files larger than would
+otherwise fit into memory.</p>
+<p>One could implement, for example, a copy function thus:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">target</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target_stream</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">read_blocks</span><span class="p">():</span>
+        <span class="n">target_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.size">
+<tt class="descname">size</tt><a class="headerlink" href="#fileutils.interface.Readable.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The size, in bytes, of this file. This is the number of bytes that the
+file contains; the number of actual bytes of disk space it consumes is
+usually larger.</p>
+<p>If this file is actually a folder, the sizes of its child files and
+folders will be recursively summed up and returned. This can take quite
+some time for large folders.</p>
+<p>This is the same as len(self).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.type">
+<tt class="descname">type</tt><a class="headerlink" href="#fileutils.interface.Readable.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of this file. This can be one of FILE, FOLDER, or LINK (I
+don&#8217;t yet have constants for block/character special devices; those
+will come soon.) If the file does not exist, this should be None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Readable.valid">
+<tt class="descname">valid</tt><a class="headerlink" href="#fileutils.interface.Readable.valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this file/folder exists, False if it doesn&#8217;t. This will be
+False for broken symbolic links; use self.exists if you want an
+alternative that returns True for broken symbolic links.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-workingdirectory">
+<h2>Class WorkingDirectory<a class="headerlink" href="#class-workingdirectory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fileutils.interface.WorkingDirectory">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">WorkingDirectory</tt><a class="headerlink" href="#fileutils.interface.WorkingDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.interface.WorkingDirectory.as_working">
+<tt class="descname">as_working</tt><a class="headerlink" href="#fileutils.interface.WorkingDirectory.as_working" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that returns a context manager. This context manager sets
+the working directory to self upon being entered and restores it to
+what it previously was upon being exited. One can use this to replace
+something like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">old_dir</span> <span class="o">=</span> <span class="n">File</span><span class="p">()</span>
+<span class="n">new_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="o">...</span><span class="n">stuff</span><span class="o">...</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">old_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>with the much nicer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">new_dir</span><span class="o">.</span><span class="n">as_working</span><span class="p">:</span>
+    <span class="o">...</span><span class="n">stuff</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>and get exactly the same effect.</p>
+<p>The context manager&#8217;s __enter__ returns self (this file), so you can
+also use an &#8220;as&#8221; clause on the with statement to get access to the
+file in case you haven&#8217;t got it stored in a variable anywhere.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.WorkingDirectory.cd">
+<tt class="descname">cd</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.WorkingDirectory.cd" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for <a class="reference internal" href="#fileutils.interface.WorkingDirectory.change_to" title="fileutils.interface.WorkingDirectory.change_to"><tt class="xref py py-obj docutils literal"><span class="pre">self.change_to()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.WorkingDirectory.change_to">
+<tt class="descname">change_to</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.WorkingDirectory.change_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the current working directory to self.</p>
+<p>Since File instances internally store paths in absolute form, other
+File instances will continue to work just fine after this is called.</p>
+<p>If you need to restore the working directory at any point, you might
+want to consider using <a class="reference internal" href="#fileutils.interface.WorkingDirectory.as_working" title="fileutils.interface.WorkingDirectory.as_working"><tt class="xref py py-obj docutils literal"><span class="pre">self.as_working</span></tt></a> instead.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-writable">
+<h2>Class Writable<a class="headerlink" href="#class-writable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fileutils.interface.Writable">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Writable</tt><a class="headerlink" href="#fileutils.interface.Writable" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.interface.Writable.append">
+<tt class="descname">append</tt><big>(</big><em>self</em>, <em>data</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append the specified data to the end of this file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.create_folder">
+<tt class="descname">create_folder</tt><big>(</big><em>self</em>, <em>ignore_existing=False</em>, <em>recursive=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the folder referred to by this File object. If it already
+exists but is not a folder, an exception will be thrown. If it already
+exists and is a folder, an exception will be thrown if ignore_existing
+is False (the default); if ignore_existing is True, no exception will
+be thrown.</p>
+<p>If the to-be-created folder&#8217;s parent does not exist and recursive is
+False, an exception will be thrown. If recursive is True, the folder&#8217;s
+parent, its parent&#8217;s parent, and so on will be created automatically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.delete">
+<tt class="descname">delete</tt><big>(</big><em>self</em>, <em>ignore_missing=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes this file or folder, recursively deleting children if
+necessary.</p>
+<p>The contents parameter has no effect, and is present for backward
+compatibility.</p>
+<p>If the file does not exist and ignore_missing is False, an exception
+will be thrown. If the file does not exist but ignore_missing is True,
+this function simply does nothing.</p>
+<p>Note that symbolic links are never recursed into, and are instead
+themselves removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.link_to">
+<tt class="descname">link_to</tt><big>(</big><em>self</em>, <em>target</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.link_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates this file as a symbolic link pointing to other, which can be
+a pathname or an object of the same type as self. Note that if it&#8217;s a
+pathname, a symbolic link will be created with the exact path
+specified; it will therefore be absolute if the path is absolute or
+relative (to the link itself) if the path is relative. If an object of
+the same type as self, however, is used, the symbolic link will always
+be absolute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.mkdir">
+<tt class="descname">mkdir</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for self.create_folder(ignore_existing=silent).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.mkdirs">
+<tt class="descname">mkdirs</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.mkdirs" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.interface.Writable.makedirs">
+<tt class="descname">makedirs</tt><big>(</big><em>self</em>, <em>silent=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.makedirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for self.create_folder(ignore_existing=silent, recursive=True).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.open_for_writing">
+<tt class="descname">open_for_writing</tt><big>(</big><em>self</em>, <em>append=False</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.open_for_writing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file for reading in binary mode and return a Python file-like
+object from which this file&#8217;s contents can be read.</p>
+<p>If append is False, the file&#8217;s contents will be erased and the returned
+stream positioned at the beginning of the (now empty) file. If append
+is True, the file&#8217;s contents will not be erased, and the returned
+stream will be positioned at the end of the file.</p>
+<p>Note that some implementations (currently only SMBFile) don&#8217;t have
+native support for writing files remotely; support in such
+implementations can be emulated by returning a wrapper around a
+temporary file that, when closed, uploads itself to the location of
+the file to be written. As a result, objects returned from
+open_for_writing should be closed before calling open_for_reading on
+the same file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.Writable.write">
+<tt class="descname">write</tt><big>(</big><em>self</em>, <em>data</em>, <em>binary=True</em><big>)</big><a class="headerlink" href="#fileutils.interface.Writable.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite this file with the specified data. After this is called,
+self.size will be equal to len(data), and self.read() will be equal to
+data. If you want to append data instead, use self.append().</p>
+<p>If binary is True (the default), the file will be written
+byte-for-byte. If it&#8217;s False, the file will be written in text mode.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.interface</span></tt> &#8212; Abstract classes.</a><ul>
+<li><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
+<li><a class="reference internal" href="#class-listable">Class Listable</a></li>
+<li><a class="reference internal" href="#class-readwrite">Class ReadWrite</a></li>
+<li><a class="reference internal" href="#class-readable">Class Readable</a></li>
+<li><a class="reference internal" href="#class-workingdirectory">Class WorkingDirectory</a></li>
+<li><a class="reference internal" href="#class-writable">Class Writable</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fileutils.constants.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">fileutils.constants</span></tt> &#8212;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fileutils.local.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">fileutils.local</span></tt> &#8212;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/fileutils.interface.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.local.html" title="fileutils.local —"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

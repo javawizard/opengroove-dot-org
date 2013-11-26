@@ -1,0 +1,101 @@
+
+
+=========================
+:mod:`fileutils.url` --- 
+=========================
+
+.. module:: fileutils.url
+   :synopsis: 
+
+
+
+---------
+Class URL
+---------
+
+A concrete file implementation exposing a file-like interface to URLs.
+
+*Method resolution order:* :obj:`~fileutils.interface.Readable`, :obj:`~fileutils.interface.Hierarchy`
+
+.. class:: URL(self, url)
+
+
+
+   .. method:: __cmp__(self, other)
+
+
+
+   .. method:: __hash__(self)
+
+
+
+   .. method:: __nonzero__(self)
+
+
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   .. method:: child(self, *names)
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.child` *in class* :obj:`~fileutils.interface.Hierarchy`
+
+   .. method:: dereference(self, recursive=False)
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Readable.dereference` *in class* :obj:`~fileutils.interface.Readable`
+
+   .. method:: get_path_components(self, relative_to=None)
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.get_path_components` *in class* :obj:`~fileutils.interface.Hierarchy`
+
+   .. attribute:: link_target
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Readable.link_target` *in class* :obj:`~fileutils.interface.Readable`
+
+   .. method:: open_for_reading(self)
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Readable.open_for_reading` *in class* :obj:`~fileutils.interface.Readable`
+
+   .. attribute:: parent
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.parent` *in class* :obj:`~fileutils.interface.Hierarchy`
+
+   .. method:: same_as(self, other)
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.same_as` *in class* :obj:`~fileutils.interface.Hierarchy`
+
+   .. attribute:: size
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Readable.size` *in class* :obj:`~fileutils.interface.Readable`
+
+   .. attribute:: type
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.Readable.type` *in class* :obj:`~fileutils.interface.Readable`
+
+   .. attribute:: url
+
+
+
+   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.__metaclass__`, :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.valid`
+
+   *Members inherited from class* :obj:`~fileutils.interface.Hierarchy`\ *:* :obj:`~fileutils.interface.Hierarchy.__div__`, :obj:`~fileutils.interface.Hierarchy.ancestor_of`, :obj:`~fileutils.interface.Hierarchy.ancestors`, :obj:`~fileutils.interface.Hierarchy.descendant_of`, :obj:`~fileutils.interface.Hierarchy.get_ancestors`, :obj:`~fileutils.interface.Hierarchy.get_path`, :obj:`~fileutils.interface.Hierarchy.name`, :obj:`~fileutils.interface.Hierarchy.path`, :obj:`~fileutils.interface.Hierarchy.path_components`, :obj:`~fileutils.interface.Hierarchy.safe_child`, :obj:`~fileutils.interface.Hierarchy.sibling`

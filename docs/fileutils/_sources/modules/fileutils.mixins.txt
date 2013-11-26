@@ -1,0 +1,33 @@
+
+
+============================
+:mod:`fileutils.mixins` --- 
+============================
+
+.. module:: fileutils.mixins
+   :synopsis: 
+
+
+
+-------------------
+Class ChildrenMixin
+-------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.interface.Listable`, :obj:`~fileutils.interface.Readable`
+
+.. class:: ChildrenMixin
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: children
+
+      A list of all of the children of this file, as a list of File objects.
+      If this file is not a folder, the value of this property is None.
+
+      |  *Overrides* :obj:`~fileutils.interface.Listable.children` *in class* :obj:`~fileutils.interface.Listable`
+
+   *Members inherited from class* :obj:`~fileutils.interface.Listable`\ *:* :obj:`~fileutils.interface.Listable.__metaclass__`, :obj:`~fileutils.interface.Listable.child_names`, :obj:`~fileutils.interface.Listable.recurse`
+
+   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.dereference`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.link_target`, :obj:`~fileutils.interface.Readable.open_for_reading`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.size`, :obj:`~fileutils.interface.Readable.type`, :obj:`~fileutils.interface.Readable.valid`
