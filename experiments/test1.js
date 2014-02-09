@@ -1,4 +1,54 @@
 
+var currentSpeed = 0;
+var currentRotation = 0;
+var fireSpeed = 50;
+var fireDistance = 100;
+
+window.addEventListener('keyup', function(event) {
+    if(event.keyCode == KEY_CODES.UP || event.keyCode == KEY_CODES.DOWN) {
+        currentSpeed = 0;
+    }
+    if(event.keyCode == KEY_CODES.LEFT || event.keyCode == KEY_CODES.RIGHT) {
+        currentRotation = 0;
+    }
+}, false);
+window.addEventListener('keydown', function(event) {
+    if(event.keyCode == KEY_CODES.UP) {
+        currentSpeed = 25;
+    }
+    if(event.keyCode == KEY_CODES.DOWN) {
+        currentSpeed = -25;
+    }
+    if(event.keyCode == KEY_CODES.LEFT) {
+        currentRotation = 0.7;
+    }
+    if(event.keyCode == KEY_CODES.RIGHT) {
+        currentRotation = -0.7;
+    }
+    if(event.keyCode == 32) {
+        var start = window.performance.now();
+        var stop = start + (fireDistance / fireSpeed * 1000);
+        var v = new THREE.Vector3(0, 0, -1);
+        v.applyEuler(camera.rotation);
+        var cameraRay = new THREE.Ray(camera.position.clone(), v);
+        var origin = cameraRay.at(5);
+        var termination = cameraRay.at(5 + fireDistance);
+        fire(origin, termination, start, stop);
+    }
+}, false);
+
+var KEY_CODES = {
+    LEFT: 37,
+    RIGHT: 39,
+    UP: 38,
+    DOWN: 40
+}
+
+
+
+
+
+
 Tank = function() {
     THREE.Object3D.call(this);
 }
@@ -14,7 +64,7 @@ var scene = new THREE.Scene()
 
 var width = window.innerWidth;
 var height = window.innerHeight;
-var horizontalFieldOfView = 75;
+var horizontalFieldOfView = 60;
 var verticalFieldOfView = horizontalFieldOfView / width * height;
 
 var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 1000);
@@ -32,12 +82,13 @@ floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
 boltTexture = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
+explodeTexturePrototype = new THREE.ImageUtils.loadTexture('data/explode1.png');
 
 function fire(origin, termination, start, stop) {
     var relativeTermination = new THREE.Vector3(termination.x - origin.x, termination.y - origin.y, termination.z - origin.z);
     var originToTermination = new THREE.Ray(origin, relativeTermination.normalize());
     var shotLength = origin.distanceTo(termination);
-    distancePerMs = shotLength / (stop - start);
+    var distancePerMs = shotLength / (stop - start);
     
     var boltMaterial = new THREE.SpriteMaterial({map: boltTexture});
     var boltSprite = new THREE.Sprite(boltMaterial);
@@ -56,6 +107,7 @@ function fire(origin, termination, start, stop) {
             scene.remove(boltSprite);
             scene.remove(boltLight);
             console.log("Shot stopped at " + boltSprite.position);
+            explode(termination);
             return;
         }
 //        console.log("Frame: " + theTime);
@@ -65,10 +117,42 @@ function fire(origin, termination, start, stop) {
     requestAnimationFrame(nextFrame);
 }
 
-var light = new THREE.PointLight(0xffffff, 1, 1000);
-light.position.x = 0;
-light.position.y = 100;
-light.position.z = 0;
+function explode(position) {
+    var texture = explodeTexturePrototype.clone();
+    texture.needsUpdate = true;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1/8, 1/8);
+    var material = new THREE.SpriteMaterial({map: texture});
+    var sprite = new THREE.Sprite(material);
+    sprite.scale.x = 3;
+    sprite.scale.y = 3;
+    sprite.position.copy(position);
+    scene.add(sprite);
+    console.log("start explosion");
+    var frame = 0;
+    function nextFrame() {
+        if(frame >= 64) {
+            console.log("stop explosion");
+            scene.remove(sprite);
+            return;
+        }
+        
+        var one = Math.floor(frame / 8);
+        var two = Math.floor(frame % 8);
+        
+        texture.offset.y = one / 8;
+        texture.offset.x = two / 8;
+        
+        frame += 1.5;
+        requestAnimationFrame(nextFrame);
+    }
+    requestAnimationFrame(nextFrame);
+}
+
+var light = new THREE.AmbientLight(0xf0f0f0);
+// light.position.x = 0;
+// light.position.y = 100;
+// light.position.z = 0;
 scene.add(light);
 
 var renderer = new THREE.WebGLRenderer();
@@ -76,9 +160,23 @@ renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
 
-fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-70, 1.57, -140), window.performance.now() + 1000, window.performance.now() + 5000);
+fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
 
-function drawOneFrame() {
+var lastDrawTime = window.performance.now();
+
+function drawOneFrame(currentTime) {
+    var delta = currentTime - lastDrawTime;
+    lastDrawTime = currentTime;
+    if(delta > 0) {  
+        // Rotate camera
+        camera.rotation.y += currentRotation / 1000 * delta;
+        // Create ray pointing in camera's direction
+        var v = new THREE.Vector3(0, 0, -1);
+        v.applyEuler(camera.rotation);
+        var cameraRay = new THREE.Ray(camera.position.clone(), v);
+        cameraRay.at(currentSpeed / 1000 * delta, camera.position);
+    }
+    
     requestAnimationFrame(drawOneFrame);
     renderer.render(scene, camera);
 //    light.position.y = Math.sin(Date.now() / 1000 * Math.PI * 2 / 4) * 50;
