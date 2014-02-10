@@ -67,7 +67,7 @@ var height = window.innerHeight;
 var horizontalFieldOfView = 60;
 var verticalFieldOfView = horizontalFieldOfView / width * height;
 
-var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 3000);
+var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 1000);
 camera.position.y = 1.57;
 camera.position.z = 25;
 scene.add(camera);
@@ -75,10 +75,10 @@ scene.add(camera);
 var floorTexture = new THREE.ImageUtils.loadTexture('data/std_ground.png');
 floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
 floorTexture.repeat.set(40, 40);
-var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide, emissive: 0xffffff, shininess: 0});
+var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
 var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -(Math.PI / 2);
+floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
 boltTexture = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
@@ -151,30 +151,18 @@ function explode(position) {
     requestAnimationFrame(nextFrame);
 }
 
-// var light = new THREE.AmbientLight(0xf0f0f0);
+var light = new THREE.AmbientLight(0xf0f0f0);
 // light.position.x = 0;
 // light.position.y = 100;
 // light.position.z = 0;
-// scene.add(light);
+scene.add(light);
 
-for(var n = 0; n <= 16; n++) {
-    var light2 = new THREE.PointLight(0xffffff, 3, 10);
-    light2.position = new THREE.Vector3((n * 10) - 80, 1.5, 0);
-    scene.add(light2);
-}
-
-// Background box
-var backgroundGeometry = new THREE.CubeGeometry(-1000, -1000, -1000);
-var backgroundMaterial = new THREE.MeshPhongMaterial({emissive: 0xaaccff});
-var backgroundMesh = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
-backgroundMesh.position.z = 0;
-scene.add(backgroundMesh);
-
-var renderer = new THREE.WebGLDeferredRenderer({width: width, height: height, scale: 1});
+var renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
 
-// fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
+fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
 
 var lastDrawTime = window.performance.now();
 
@@ -193,7 +181,6 @@ function drawOneFrame(currentTime) {
     
     requestAnimationFrame(drawOneFrame);
     renderer.render(scene, camera);
-    console.log("Just rendered.");
 //    light.position.y = Math.sin(Date.now() / 1000 * Math.PI * 2 / 4) * 50;
 //    box.rotation.y = Date.now() / 1000 * Math.PI * 2 / 9;
 }
