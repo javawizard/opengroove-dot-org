@@ -93,9 +93,9 @@ function fire(origin, termination, start, stop) {
     var boltMaterial = new THREE.SpriteMaterial({map: boltTexture});
     var boltSprite = new THREE.Sprite(boltMaterial);
     scene.add(boltSprite);
-    var boltLight = new THREE.PointLight(0xffffff, 1, 5);
-    boltLight.position = boltSprite.position;
-    scene.add(boltLight);
+//    var boltLight = new THREE.PointLight(0xffffff, 1, 5);
+//    boltLight.position = boltSprite.position;
+//    scene.add(boltLight);
     
     originToTermination.at((window.performance.now - start) * distancePerMs, boltSprite.position);
     console.log("Initiated shot");
@@ -106,7 +106,7 @@ function fire(origin, termination, start, stop) {
     function nextFrame(theTime) {
         if(theTime >= stop) {
             scene.remove(boltSprite);
-            scene.remove(boltLight);
+//            scene.remove(boltLight);
             console.log("Shot stopped at " + boltSprite.position);
             console.log("Scene.__lights on stop: " + scene.__lights);
             explode(termination);
