@@ -156,13 +156,18 @@ var light = new THREE.AmbientLight(0xf0f0f0);
 // light.position.y = 100;
 // light.position.z = 0;
 scene.add(light);
+for(var n = 0; n <= 16; n++) {
+    var light2 = new THREE.PointLight(0xffffff, 1, 5);
+    light2.position = new THREE.Vector3((n * 10) - 80, 2, 0);
+    scene.add(light2);
+}
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(0xaaccff, 1);
+var renderer = new THREE.WebGLDeferredRenderer({width: width, height: height});
+// renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
 
-fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
+// fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
 
 var lastDrawTime = window.performance.now();
 
