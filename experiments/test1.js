@@ -78,7 +78,7 @@ floorTexture.repeat.set(40, 40);
 var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
 var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = Math.PI / 2;
+floor.rotation.x = -(Math.PI / 2);
 scene.add(floor);
 
 boltTexture = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
@@ -162,7 +162,7 @@ for(var n = 0; n <= 16; n++) {
     scene.add(light2);
 }
 
-var renderer = new THREE.WebGLDeferredRenderer({width: width, height: height});
+var renderer = new THREE.WebGLDeferredRenderer({width: width, height: height, scale: 1});
 // renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
@@ -186,6 +186,7 @@ function drawOneFrame(currentTime) {
     
     requestAnimationFrame(drawOneFrame);
     renderer.render(scene, camera);
+    console.log("Just rendered.");
 //    light.position.y = Math.sin(Date.now() / 1000 * Math.PI * 2 / 4) * 50;
 //    box.rotation.y = Date.now() / 1000 * Math.PI * 2 / 9;
 }
