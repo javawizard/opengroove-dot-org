@@ -33,7 +33,17 @@ window.addEventListener('keydown', function(event) {
         var cameraRay = new THREE.Ray(camera.position.clone(), v);
         var origin = cameraRay.at(5);
         var termination = cameraRay.at(5 + fireDistance);
-        fire(origin, termination, start, stop);
+        fire(origin, termination, start, stop, boltTexturePrototype, 1);
+    }
+    if(event.keyCode == 13) {
+        var start = window.performance.now();
+        var stop = start + (fireDistance / fireSpeed * 1000);
+        var v = new THREE.Vector3(0, 0, -1);
+        v.applyEuler(camera.rotation);
+        var cameraRay = new THREE.Ray(camera.position.clone(), v);
+        var origin = cameraRay.at(5);
+        var termination = cameraRay.at(5 + fireDistance);
+        fire(origin, termination, start, stop, guidedBoltTexturePrototype, 4);
     }
 }, false);
 
@@ -81,14 +91,20 @@ var floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
-boltTexture = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
+guidedBoltTexturePrototype = new THREE.ImageUtils.loadTexture('data/missile.png');
+boltTexturePrototype = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
 explodeTexturePrototype = new THREE.ImageUtils.loadTexture('data/explode1.png');
 
-function fire(origin, termination, start, stop) {
+function fire(origin, termination, start, stop, texturePrototype, divs) {
     var relativeTermination = new THREE.Vector3(termination.x - origin.x, termination.y - origin.y, termination.z - origin.z);
     var originToTermination = new THREE.Ray(origin, relativeTermination.normalize());
     var shotLength = origin.distanceTo(termination);
     var distancePerMs = shotLength / (stop - start);
+    
+    var boltTexture = texturePrototype.clone();
+    boltTexture.needsUpdate = true;
+    boltTexture.wrapS = boltTexture.wrapT = THREE.RepeatWrapping;
+    boltTexture.repeat.set(1/divs, 1/divs);
     
     var boltMaterial = new THREE.SpriteMaterial({map: boltTexture});
     var boltSprite = new THREE.Sprite(boltMaterial);
@@ -103,6 +119,9 @@ function fire(origin, termination, start, stop) {
     console.log("Stop: " + stop);
     console.log("Shot at " + boltSprite.position);
     console.log("Scene.__lights on start: " + scene.__lights);
+    
+    var frame = 0;
+    
     function nextFrame(theTime) {
         if(theTime >= stop) {
             scene.remove(boltSprite);
@@ -114,6 +133,9 @@ function fire(origin, termination, start, stop) {
         }
 //        console.log("Frame: " + theTime);
         originToTermination.at((theTime - start) * distancePerMs, boltSprite.position);
+        boltTexture.offset.y = Math.floor(frame / divs) / divs;
+        boltTexture.offset.x = Math.floor(frame % divs) / divs;
+        frame += 1;
         requestAnimationFrame(nextFrame);
     }
     requestAnimationFrame(nextFrame);
@@ -162,7 +184,7 @@ renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
 
-fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
+// fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
 
 var lastDrawTime = window.performance.now();
 
