@@ -83,45 +83,45 @@ function Player(name) {
 Player._nextId = 1;
 Player.prototype = {
 	get realX() {
-		return self._realX;
-	}
+		return this._realX;
+	},
 	get realY() {
-		return self._realY;
-	}
+		return this._realY;
+	},
 	get realZ() {
-		return self._realZ;
-	}
+		return this._realZ;
+	},
 	get realA() {
-		return self._realA;
-	}
+		return this._realA;
+	},
 	get knownTime() {
-		return self._knownTime;
-	}
+		return this._knownTime;
+	},
 	get knownX() {
-		return self._knownX;
-	}
+		return this._knownX;
+	},
 	get knownY() {
-		return self._knownY;
-	}
+		return this._knownY;
+	},
 	get knownZ() {
-		return self._knownZ;
-	}
+		return this._knownZ;
+	},
 	get knownA() {
-		return self._knownA;
-	}
+		return this._knownA;
+	},
 	get knownVelocityX() {
-		return self._knownVelocityX;
-	}
+		return this._knownVelocityX;
+	},
 	get knownVelocityY() {
-		return self._knownVelocityY;
-	}
+		return this._knownVelocityY;
+	},
 	get knownVelocityZ() {
-		return self._knownVelocityZ;
-	}
+		return this._knownVelocityZ;
+	},
 	get knownVelocityA() {
-		return self._knownVelocityA;
-	}
-	function updateReal(x, y, z, a) {
+		return this._knownVelocityA;
+	},
+	updateReal: function(x, y, z, a) {
 		oldX = this._realX;
 		oldY = this._realY;
 		oldZ = this._realZ;
@@ -131,8 +131,8 @@ Player.prototype = {
 		this._realZ = z;
 		this._realA = a;
 		this.onRealUpdated.fire(this, oldX, oldY, oldZ, oldA, x, y, z, a);
-	}
-	function updateKnown(time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA) {
+	},
+	updateKnown: function(time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA) {
 		oldTime = this._knownTime;
 		oldX = this._knownX;
 		oldY = this._knownY;
@@ -147,14 +147,14 @@ Player.prototype = {
 		this._knownY = y;
 		this._knownZ = z;
 		this._knownA = a;
-		this._knownVelocityX = x;
-		this._knownVelocityY = y;
-		this._knownVelocityZ = z;
-		this._knownVelocityA = a;
+		this._knownVelocityX = velocityX;
+		this._knownVelocityY = velocityY;
+		this._knownVelocityZ = velocityZ;
+		this._knownVelocityA = velocityA;
 		this.onKnownUpdated.fire(this, oldTime, oldX, oldY, oldZ, oldA, oldVelocityX, oldVelocityY, oldVelocityZ, oldVelocityA,
-					              newTime, newX, newY, newZ, newA, newVelocityX, newVelocityY, newVelocityZ, newVelocityA)
-	}
-	function recomputeReal(time) {
+					              time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA)
+	},
+	recomputeReal: function(time) {
 		delta = time - this.knownTime;
 		// Doesn't compute turns properly yet
 		newX = this.knownX + (this.knownVelocityX * delta);
@@ -168,8 +168,8 @@ Player.prototype = {
 
 function World() {
 	this._players = {};
-	this.onPlayerAdded = Event();
-	this.onPlayerRemoved = Event();
+	this.onPlayerAdded = new Event();
+	this.onPlayerRemoved = new Event();
 }
 
 World.prototype = {
@@ -185,35 +185,111 @@ World.prototype = {
 
 function WorldRenderer(world) {
 	THREE.Object3D.call(this);
-	this._playerRemovedFunctions = {};
+	this._playerRenderers = {};
+	var worldRenderer = this;
 	this._playerAddedListener = world.onPlayerAdded.listen(function(world, player) {
-		var playerObject = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshPhongMaterial({color: 0x0099ff}));
-		var updateRealListener = player.onRealUpdated.listen(function(player, oldX, oldY, oldZ, oldA, x, y, z, a) {
-			playerObject.position.x = x;
-			playerObject.position.y = y;
-			playerObject.position.z = z;
-			playerObject.rotation.y = a;
-		});
-		this._playerRemovedFunctions[player.objectId] = function() {
-			updateRealListener.remove();
-		};
+		var renderer = new PlayerRenderer(player);
+		worldRenderer._playerRenderers[player.objectId] = renderer;
+		worldRenderer.add(renderer);
 	});
-	this._playerRemovedListener = world.onPlayerRemoved.push(function(world, player) {
-		this._playerRemovedFunctions[player.objectId]();
-		delete this._playerRemovedFunctions[player.objectId];
+	this._playerRemovedListener = world.onPlayerRemoved.listen(function(world, player) {
+		var renderer = worldRenderer._playerRenderers[player.objectId];
+		worldRenderer.remove(renderer);
+		renderer.shutdown();
+		delete worldRenderer._playerRenderers[player.objectId];
 	});
 }
 
-WorldRenderer.prototype = Object.create(THREE.Object3D);
+WorldRenderer.prototype = Object.create(THREE.Object3D.prototype);
 WorldRenderer.prototype.constructor = WorldRenderer;
 
 WorldRenderer.prototype.shutdown = function() {
 	this._playerAddedListener.remove();
 	this._playerRemovedListener.remove();
-	for(key in this._playerRemovedFunctions) {
-		this._playerRemovedFunctions[key]();
+	for(key in this._playerRenderers) {
+		this._playerRenderers[key].shutdown();
 	}
 }
+
+function PlayerRenderer(player) {
+	THREE.Object3D.call(this);
+	var playerRenderer = this;
+	this.avatar = new THREE.Object3D();
+	var mesh = new THREE.Mesh(new THREE.CubeGeometry(2, 1, 6), new THREE.MeshBasicMaterial({color: 0x0099ff, emissive: 0x0099ff}));
+	mesh.position.y = 0.5;
+	this.avatar.add(mesh);
+	this.add(this.avatar);
+	this._realUpdatedListener = player.onRealUpdated.listen(function(player, oldX, oldY, oldZ, oldA, x, y, z, a) {
+		console.log("New Z: " + z);
+	    playerRenderer.avatar.position.x = x;
+		playerRenderer.avatar.position.y = y;
+		playerRenderer.avatar.position.z = z;
+		playerRenderer.avatar.rotation.y = a;
+	})
+}
+
+PlayerRenderer.prototype = Object.create(THREE.Object3D.prototype);
+PlayerRenderer.prototype.constructor = PlayerRenderer;
+
+PlayerRenderer.prototype.shutdown = function() {
+	this._realUpdatedListener.remove();
+}
+
+
+var scene = new THREE.Scene()
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+var horizontalFieldOfView = 60;
+var verticalFieldOfView = horizontalFieldOfView / width * height;
+
+var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 1000);
+camera.position.y = 1.57;
+camera.position.z = 25;
+scene.add(camera);
+
+var floorTexture = new THREE.ImageUtils.loadTexture('data/std_ground.png');
+floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+floorTexture.repeat.set(40, 40);
+var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
+var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
+var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+floor.rotation.x = Math.PI / 2;
+scene.add(floor);
+
+var light = new THREE.AmbientLight(0xf0f0f0);
+//light.position.x = 0;
+//light.position.y = 100;
+//light.position.z = 0;
+scene.add(light);
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0xaaccff, 1);
+renderer.setSize(width, height);
+document.body.appendChild(renderer.domElement);
+
+var world = new World();
+var worldRenderer = new WorldRenderer(world);
+scene.add(worldRenderer);
+
+var lastDrawTime = window.performance.now();
+
+var player = new Player();
+player.updateKnown(window.performance.now() / 1000, 0, 0, 0, 0, 0, 0, -5, Math.PI / 4)
+world.addPlayer(player);
+
+function drawOneFrame(currentTime) {
+ requestAnimationFrame(drawOneFrame);
+ for(playerId in world._players) {
+	 world._players[playerId].recomputeReal(currentTime / 1000);
+ }
+ renderer.render(scene, camera);
+// light.position.y = Math.sin(Date.now() / 1000 * Math.PI * 2 / 4) * 50;
+// box.rotation.y = Date.now() / 1000 * Math.PI * 2 / 9;
+}
+
+drawOneFrame();
+
 
 
 
