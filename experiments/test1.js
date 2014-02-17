@@ -82,14 +82,21 @@ camera.position.y = 1.57;
 camera.position.z = 25;
 scene.add(camera);
 
-var floorTexture = new THREE.ImageUtils.loadTexture('data/std_ground.png');
-floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-floorTexture.repeat.set(40, 40);
-var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
-var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
-var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = Math.PI / 2;
-scene.add(floor);
+var thingMaterial = new THREE.MeshLambertMaterial({color: 0x0099ff, side: THREE.DoubleSide});
+thingMaterial.ambient = new THREE.Color(0, 1, 1);
+thingMaterial.emissive = new THREE.Color(0, 1, 1);
+// thingMaterial.emissive.b = 1;
+var thing = new THREE.Mesh(new THREE.PlaneGeometry(2, 2, 1, 1), thingMaterial);
+scene.add(thing);
+
+//var floorTexture = new THREE.ImageUtils.loadTexture('data/std_ground.png');
+//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+//floorTexture.repeat.set(40, 40);
+//var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
+//var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
+//var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+//floor.rotation.x = Math.PI / 2;
+//scene.add(floor);
 
 guidedBoltTexturePrototype = new THREE.ImageUtils.loadTexture('data/missile.png');
 boltTexturePrototype = new THREE.ImageUtils.loadTexture('data/red_bolt.png');
@@ -173,16 +180,19 @@ function explode(position) {
     requestAnimationFrame(nextFrame);
 }
 
-var light = new THREE.AmbientLight(0xf0f0f0);
-// light.position.x = 0;
-// light.position.y = 100;
-// light.position.z = 0;
+
+var light = new THREE.PointLight(0xaaaaaa);
+light.position.x = 0;
+light.position.y = 100;
+light.position.z = 100;
 scene.add(light);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
+
+
 
 // fire(new THREE.Vector3(5, 1.57, 20), new THREE.Vector3(-10, 1.57, -20), window.performance.now() + 1000, window.performance.now() + 2500);
 

@@ -1,4 +1,65 @@
 
+// Alternative to requestAnimationFrame that does some nice things,
+// particularly giving us a global in which the current animation time is
+// stored instead of having to pass it down through function calls. In the
+// future, I'm also planning to expand it to continue to run certain functions
+// under setTimeout when requestAnimationFrame wouldn't otherwise run them
+// (like when the window isn't focused) to, for example, continue to simulate
+// physics and collisions appropriately (although I'm still holding out hope
+// that I can move them to the server at some point).
+// 
+// We use two separate global dicts for old animators (those about to be run
+// during the current animation loop) and new animators (those scheduled to be
+// run since the beginning of the last/current animation loop) to allow
+// animations to be cancelled whether they were newly scheduled during this
+// loop or scheduled during the last loop but haven't yet been run.
+_oldAnimators = {};
+_newAnimators = {};
+_hasNewAnimators = false;
+_nextAnimatorId = 1;
+animationTime = window.performance.now() / 1000;
+function animate(f) {
+	if(!_hasNewAnimators) {
+		_hasNewAnimators = true;
+		requestAnimationFrame(function(newTime) {
+			animationTime = newTime / 1000;
+			_oldAnimators = _newAnimators;
+			_newAnimators = {};
+			_hasNewAnimators = false;
+			var totalSeen = 0;
+			for(var key in _oldAnimators) {
+				totalSeen++;
+				// BIG HUGE NOTE: If an animator that hasn't yet been fired is
+				// removed during the course of this animator, we'll end up
+				// removing a property from _oldAnimators that we haven't yet
+				// visited. This /seems/ to be ok (and will result in the
+				// property not being visited) according to
+				// https://developer.mozilla.org/en/JavaScript/Reference/Statements/for...in,
+				// but if strange issues start happening, it might be
+				// worthwhile to cache the list of keys in a temporary array
+				// and then skip over ones that don't actually exist when we
+				// try to run them.
+				_oldAnimators[key]();
+			}
+			// Don't make the old animators hang around until the next
+			// animation loop
+			_oldAnimators = {};
+			// debugger;
+		});
+	}
+	var id = (_nextAnimatorId++).toString();
+	_newAnimators[id] = f;
+	return id;
+}
+function cancelAnimate(id) {
+	if(_oldAnimators[id]) {
+		delete _oldAnimators[id];
+	}
+	if(_newAnimators[id]) {
+		delete _newAnimators[id];
+	}
+}
+
 //function Coordinates(x, y, z, a) {
 //	this._x = x;
 //	this._y = y;
@@ -60,6 +121,9 @@ Listener.prototype = {
 	} 
 }
 
+// MUST call shutdown() on any Player object once you're done with it to stop
+// its internal animation loop that updates its real position from its known
+// position
 function Player(name) {
 	this.objectId = (Player._nextId++).toString();
 	this.name = name;
@@ -67,7 +131,7 @@ function Player(name) {
 	this._realY = 0;
 	this._realZ = 0;
 	this._realA = 0;
-	this._knownTime = window.performance.now();
+	this._knownTime = animationTime;
 	this._knownX = 0;
 	this._knownY = 0;
 	this._knownZ = 0;
@@ -78,6 +142,15 @@ function Player(name) {
 	this._knownVelocityA = 0;
 	this.onRealUpdated = new Event();
 	this.onKnownUpdated = new Event();
+	this._recomputeRealAnimatorId = 0;
+	// Animate real in terms of known. TODO: Consider animating this only when
+	// we're actually moving.
+	var thisPlayer = this;
+	var recomputeRealAnimator = function() {
+		thisPlayer.recomputeReal();
+		thisPlayer._recomputeRealAnimatorId = animate(recomputeRealAnimator);
+	};
+	recomputeRealAnimator();
 }
 
 Player._nextId = 1;
@@ -121,7 +194,10 @@ Player.prototype = {
 	get knownVelocityA() {
 		return this._knownVelocityA;
 	},
-	updateReal: function(x, y, z, a) {
+	// Don't actually call this. It's automatically called by an internal
+	// animation loop that updates the player's current real position based on
+	// its last known position.
+	setReal: function(x, y, z, a) {
 		oldX = this._realX;
 		oldY = this._realY;
 		oldZ = this._realZ;
@@ -132,7 +208,7 @@ Player.prototype = {
 		this._realA = a;
 		this.onRealUpdated.fire(this, oldX, oldY, oldZ, oldA, x, y, z, a);
 	},
-	updateKnown: function(time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA) {
+	setKnown: function(time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA) {
 		oldTime = this._knownTime;
 		oldX = this._knownX;
 		oldY = this._knownY;
@@ -152,16 +228,19 @@ Player.prototype = {
 		this._knownVelocityZ = velocityZ;
 		this._knownVelocityA = velocityA;
 		this.onKnownUpdated.fire(this, oldTime, oldX, oldY, oldZ, oldA, oldVelocityX, oldVelocityY, oldVelocityZ, oldVelocityA,
-					              time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA)
+					              time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA);
 	},
-	recomputeReal: function(time) {
-		delta = time - this.knownTime;
+	recomputeReal: function() {
+		delta = animationTime - this.knownTime;
 		// Doesn't compute turns properly yet
 		newX = this.knownX + (this.knownVelocityX * delta);
 		newY = this.knownY + (this.knownVelocityY * delta);
 		newZ = this.knownZ + (this.knownVelocityZ * delta);
 		newA = this.knownA + (this.knownVelocityA * delta);
-		this.updateReal(newX, newY, newZ, newA);
+		this.setReal(newX, newY, newZ, newA);
+	},
+	shutdown: function() {
+		cancelAnimate(this._recomputeRealAnimatorId);
 	}
 }
 
@@ -186,17 +265,17 @@ World.prototype = {
 function WorldRenderer(world) {
 	THREE.Object3D.call(this);
 	this._playerRenderers = {};
-	var worldRenderer = this;
+	var thisWorldRenderer = this;
 	this._playerAddedListener = world.onPlayerAdded.listen(function(world, player) {
 		var renderer = new PlayerRenderer(player);
-		worldRenderer._playerRenderers[player.objectId] = renderer;
-		worldRenderer.add(renderer);
+		thisWorldRenderer._playerRenderers[player.objectId] = renderer;
+		thisWorldRenderer.add(renderer);
 	});
 	this._playerRemovedListener = world.onPlayerRemoved.listen(function(world, player) {
-		var renderer = worldRenderer._playerRenderers[player.objectId];
-		worldRenderer.remove(renderer);
+		var renderer = thisWorldRenderer._playerRenderers[player.objectId];
+		thisWorldRenderer.remove(renderer);
 		renderer.shutdown();
-		delete worldRenderer._playerRenderers[player.objectId];
+		delete thisWorldRenderer._playerRenderers[player.objectId];
 	});
 }
 
@@ -213,18 +292,19 @@ WorldRenderer.prototype.shutdown = function() {
 
 function PlayerRenderer(player) {
 	THREE.Object3D.call(this);
-	var playerRenderer = this;
+	var thisPlayerRenderer = this;
 	this.avatar = new THREE.Object3D();
-	var mesh = new THREE.Mesh(new THREE.CubeGeometry(2, 1, 6), new THREE.MeshBasicMaterial({color: 0x0099ff, emissive: 0x0099ff}));
-	mesh.position.y = 0.5;
+	var tankTexture = new THREE.ImageUtils.loadTexture('data/red_tank.png');
+	var mesh = new THREE.Mesh(new THREE.CubeGeometry(2.8, 6, 2.05), new THREE.MeshPhongMaterial({map: tankTexture, side: THREE.DoubleSide}));
+	mesh.position.z = 0.5;
 	this.avatar.add(mesh);
 	this.add(this.avatar);
 	this._realUpdatedListener = player.onRealUpdated.listen(function(player, oldX, oldY, oldZ, oldA, x, y, z, a) {
-		console.log("New Z: " + z);
-	    playerRenderer.avatar.position.x = x;
-		playerRenderer.avatar.position.y = y;
-		playerRenderer.avatar.position.z = z;
-		playerRenderer.avatar.rotation.y = a;
+//		console.log("New Z: " + z);
+	    thisPlayerRenderer.avatar.position.x = x;
+		thisPlayerRenderer.avatar.position.y = y;
+		thisPlayerRenderer.avatar.position.z = z;
+		thisPlayerRenderer.avatar.rotation.z = a;
 	})
 }
 
@@ -244,8 +324,9 @@ var horizontalFieldOfView = 60;
 var verticalFieldOfView = horizontalFieldOfView / width * height;
 
 var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 1000);
-camera.position.y = 1.57;
-camera.position.z = 25;
+camera.position.z = 1.57;
+camera.position.y = -25;
+camera.rotation.x = Math.PI / 2;
 scene.add(camera);
 
 var floorTexture = new THREE.ImageUtils.loadTexture('data/std_ground.png');
@@ -254,10 +335,10 @@ floorTexture.repeat.set(40, 40);
 var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
 var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = Math.PI / 2;
+// floor.rotation.x = Math.PI / 2;
 scene.add(floor);
 
-var light = new THREE.AmbientLight(0xf0f0f0);
+var light = new THREE.AmbientLight(0x888888);
 //light.position.x = 0;
 //light.position.y = 100;
 //light.position.z = 0;
@@ -272,18 +353,16 @@ var world = new World();
 var worldRenderer = new WorldRenderer(world);
 scene.add(worldRenderer);
 
-var lastDrawTime = window.performance.now();
+
+var lastDrawTime = animationTime;
 
 var player = new Player();
-player.updateKnown(window.performance.now() / 1000, 0, 0, 0, 0, 0, 0, -5, Math.PI / 4)
+player.setKnown(animationTime, 0, 0, 0, 0, 0, 5, 0, Math.PI / 4)
 world.addPlayer(player);
 
-function drawOneFrame(currentTime) {
- requestAnimationFrame(drawOneFrame);
- for(playerId in world._players) {
-	 world._players[playerId].recomputeReal(currentTime / 1000);
- }
+function drawOneFrame() {
  renderer.render(scene, camera);
+ animate(drawOneFrame);
 // light.position.y = Math.sin(Date.now() / 1000 * Math.PI * 2 / 4) * 50;
 // box.rotation.y = Date.now() / 1000 * Math.PI * 2 / 9;
 }
