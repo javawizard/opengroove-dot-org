@@ -206,11 +206,51 @@ Player.prototype = {
 	_recomputeRealIfNeeded: function() {
 		if(this._realRecomputedAt != animationTime) {
 			this._realComputedAt = animationTime;
-			timeSinceKnown = animationTime - this.knownTime;
+			var timeSinceKnown = animationTime - this.knownTime;
 			// Doesn't compute turns properly yet
-			this._realX = this.knownX + (this.knownVelocityX * timeSinceKnown);
-			this._realY = this.knownY + (this.knownVelocityY * timeSinceKnown);
-			this._realZ = this.knownZ + (this.knownVelocityZ * timeSinceKnown);
+			
+			var ourPosition = new THREE.Vector3(this._knownX, this._knownY, this._knownZ);
+			// Figure out the player's forward speed
+			var forwardSpeed = new THREE.Vector2(this._knownVelocityX, this._knownVelocityY).length();
+			if (this._knownVelocityA != 0) {
+				// We're turning. Figure out how long it'll take us to go in a
+				// complete circle.
+				var circleTime = (Math.PI * 2) / this._knownVelocityA;
+				var circumference = circleTime * forwardSpeed;
+				var radius = circumference / (Math.PI * 2);
+				// Direction of "forward" when the player's azimuth is 0. I'm
+				// not sure what BZFlag uses here, so use positive Y for now.
+				// (Note: PlayerRenderer will need to be updated to draw the
+				// tank facing the correct way if this ever changes.)
+				// var towardCenterOfRotationV = new THREE.Vector3(0, 1, 0);
+				// Rotate by the tank's known azimuth, plus 90 degrees so that
+				// we're facing the tank's center of rotation.
+				// towardCenterOfRotationV.applyEuler(new THREE.Euler(0, 0, this._knownA + (Math.PI / 2)));
+				var towardCenterOfRotationV = new THREE.Vector3(this._knownVelocityX, this._knownVelocityY, this._knownVelocityZ);
+				towardCenterOfRotationV.normalize();
+				towardCenterOfRotationV.applyEuler(new THREE.Euler(0, 0, Math.PI / 2));
+				var towardCenterOfRotationR = new THREE.Ray(ourPosition, towardCenterOfRotationV);
+				// Center of rotation
+				var centerOfRotation = towardCenterOfRotationR.at(radius);
+				// Position of the player with respect to the center of rotation
+				var playerInTermsOfCoR = ourPosition.sub(centerOfRotation);
+				// Figure out how much we should have turned
+				var angleTurned = (animationTime - this._knownTime) * this._knownVelocityA;
+				// Rotate around our center of rotation by that much
+				playerInTermsOfCoR.applyEuler(new THREE.Euler(0, 0, angleTurned));
+				// Figure out our new position
+				var newPosition = new THREE.Vector3(0, 0, 0);
+				newPosition.addVectors(centerOfRotation, playerInTermsOfCoR);
+				
+				this._realX = newPosition.x;
+				this._realY = newPosition.y;
+				this._realZ = newPosition.z;
+			} else {
+				this._realX = this.knownX + (this.knownVelocityX * timeSinceKnown);
+				this._realY = this.knownY + (this.knownVelocityY * timeSinceKnown);
+				this._realZ = this.knownZ + (this.knownVelocityZ * timeSinceKnown);				
+			}
+			
 			this._realA = this.knownA + (this.knownVelocityA * timeSinceKnown);
 		}
 	},
@@ -328,7 +368,7 @@ var height = window.innerHeight;
 var horizontalFieldOfView = 60;
 var verticalFieldOfView = horizontalFieldOfView / width * height;
 
-var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(verticalFieldOfView, width / height, 1, 1000);
 camera.position.z = 1.57;
 camera.position.y = -25;
 camera.rotation.x = Math.PI / 2;
@@ -340,16 +380,23 @@ floorTexture.repeat.set(40, 40);
 var floorMaterial = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
 var floorGeometry = new THREE.PlaneGeometry(320, 320, 20, 20);
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-// floor.rotation.x = Math.PI / 2;
+floor.rotation.x = Math.PI;
 scene.add(floor);
 
-var light = new THREE.AmbientLight(0x888888);
+var light = new THREE.AmbientLight(0x666666);
 //light.position.x = 0;
 //light.position.y = 100;
 //light.position.z = 0;
 scene.add(light);
 
+var directionalLight = new THREE.DirectionalLight(0xbbbbbb, 1);
+directionalLight.position.set(0.5, 0, 1);
+// Not sure if this is needed
+directionalLight.position.normalize();
+scene.add(directionalLight);
+
 var renderer = new THREE.WebGLRenderer();
+
 renderer.setClearColor(0xaaccff, 1);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
@@ -362,7 +409,7 @@ scene.add(worldRenderer);
 var lastDrawTime = animationTime;
 
 var player = new Player();
-player.setKnown(animationTime, 0, 0, 0, 0, 0, 5, 0, Math.PI / 4)
+player.setKnown(animationTime, 0, 0, 0, 0, 0, 5, 0, (Math.PI / 4))
 world.addPlayer(player);
 
 function drawOneFrame() {
