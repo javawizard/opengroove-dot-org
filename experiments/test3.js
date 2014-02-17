@@ -131,6 +131,7 @@ function Player(name) {
 	this._realY = 0;
 	this._realZ = 0;
 	this._realA = 0;
+	this._realRecomputedAt = 0;
 	this._knownTime = animationTime;
 	this._knownX = 0;
 	this._knownY = 0;
@@ -140,31 +141,25 @@ function Player(name) {
 	this._knownVelocityY = 0;
 	this._knownVelocityZ = 0;
 	this._knownVelocityA = 0;
-	this.onRealUpdated = new Event();
 	this.onKnownUpdated = new Event();
-	this._recomputeRealAnimatorId = 0;
-	// Animate real in terms of known. TODO: Consider animating this only when
-	// we're actually moving.
-	var thisPlayer = this;
-	var recomputeRealAnimator = function() {
-		thisPlayer.recomputeReal();
-		thisPlayer._recomputeRealAnimatorId = animate(recomputeRealAnimator);
-	};
-	recomputeRealAnimator();
 }
 
 Player._nextId = 1;
 Player.prototype = {
 	get realX() {
+		this._recomputeRealIfNeeded();
 		return this._realX;
 	},
 	get realY() {
+		this._recomputeRealIfNeeded();
 		return this._realY;
 	},
 	get realZ() {
+		this._recomputeRealIfNeeded();
 		return this._realZ;
 	},
 	get realA() {
+		this._recomputeRealIfNeeded();
 		return this._realA;
 	},
 	get knownTime() {
@@ -208,6 +203,17 @@ Player.prototype = {
 		this._realA = a;
 		this.onRealUpdated.fire(this, oldX, oldY, oldZ, oldA, x, y, z, a);
 	},
+	_recomputeRealIfNeeded: function() {
+		if(this._realRecomputedAt != animationTime) {
+			this._realComputedAt = animationTime;
+			timeSinceKnown = animationTime - this.knownTime;
+			// Doesn't compute turns properly yet
+			this._realX = this.knownX + (this.knownVelocityX * timeSinceKnown);
+			this._realY = this.knownY + (this.knownVelocityY * timeSinceKnown);
+			this._realZ = this.knownZ + (this.knownVelocityZ * timeSinceKnown);
+			this._realA = this.knownA + (this.knownVelocityA * timeSinceKnown);
+		}
+	},
 	setKnown: function(time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA) {
 		oldTime = this._knownTime;
 		oldX = this._knownX;
@@ -230,18 +236,6 @@ Player.prototype = {
 		this.onKnownUpdated.fire(this, oldTime, oldX, oldY, oldZ, oldA, oldVelocityX, oldVelocityY, oldVelocityZ, oldVelocityA,
 					              time, x, y, z, a, velocityX, velocityY, velocityZ, velocityA);
 	},
-	recomputeReal: function() {
-		delta = animationTime - this.knownTime;
-		// Doesn't compute turns properly yet
-		newX = this.knownX + (this.knownVelocityX * delta);
-		newY = this.knownY + (this.knownVelocityY * delta);
-		newZ = this.knownZ + (this.knownVelocityZ * delta);
-		newA = this.knownA + (this.knownVelocityA * delta);
-		this.setReal(newX, newY, newZ, newA);
-	},
-	shutdown: function() {
-		cancelAnimate(this._recomputeRealAnimatorId);
-	}
 }
 
 
@@ -290,6 +284,13 @@ WorldRenderer.prototype.shutdown = function() {
 	}
 }
 
+// PlayerRenderers are always placed at the world's center. They move the
+// actual player about within themselves, so the user of a PlayerRenderer
+// object is free to set its location and rotation as desired (so for example,
+// if it's rendering multiple "worlds" in the same scene, it can place the
+// PlayerRenderer objects for one world at the center of one playing field and
+// the others at the center of another playing field). The object that gets
+// moved and rotated about is (at present) accessible via player.avatar.
 function PlayerRenderer(player) {
 	THREE.Object3D.call(this);
 	var thisPlayerRenderer = this;
@@ -299,13 +300,16 @@ function PlayerRenderer(player) {
 	mesh.position.z = 0.5;
 	this.avatar.add(mesh);
 	this.add(this.avatar);
-	this._realUpdatedListener = player.onRealUpdated.listen(function(player, oldX, oldY, oldZ, oldA, x, y, z, a) {
-//		console.log("New Z: " + z);
-	    thisPlayerRenderer.avatar.position.x = x;
-		thisPlayerRenderer.avatar.position.y = y;
-		thisPlayerRenderer.avatar.position.z = z;
-		thisPlayerRenderer.avatar.rotation.z = a;
-	})
+	// Start an animation loop to update the avatar's position with the
+	// player's real position as computed by Player's dead reckoning algorithm.
+	var animator = function() {
+		thisPlayerRenderer.avatar.position.x = player.realX;
+		thisPlayerRenderer.avatar.position.y = player.realY;
+		thisPlayerRenderer.avatar.position.z = player.realZ;
+		thisPlayerRenderer.avatar.rotation.z = player.realA;
+		thisPlayerRenderer._animatorId = animate(animator);
+	};
+	animator();
 }
 
 PlayerRenderer.prototype = Object.create(THREE.Object3D.prototype);
@@ -313,6 +317,7 @@ PlayerRenderer.prototype.constructor = PlayerRenderer;
 
 PlayerRenderer.prototype.shutdown = function() {
 	this._realUpdatedListener.remove();
+	cancelAnimate(this._animatorId);
 }
 
 
