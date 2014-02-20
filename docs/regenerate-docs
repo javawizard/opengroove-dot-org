@@ -1,5 +1,5 @@
 #!/bin/bash
 
-quickdoc --discover $1/fileutils --html fileutils --interlink http://docs.python.org/2.7 --inheritance
-quickdoc --discover $1/stm --html stm --interlink http://docs.python.org/2.7 --inheritance
+quickdoc --discover ../../../projects/fileutils --html fileutils --interlink http://docs.python.org/2.7 --inheritance
+quickdoc --discover ../../../projects/stm --html stm --interlink http://docs.python.org/2.7 --inheritance
 
