@@ -125,12 +125,6 @@ stm.datatypes.TMutableWeakRef.</p>
 <dt id="stm.TWeakRef">
 <em class="property">class </em><tt class="descclassname">stm.</tt><tt class="descname">TWeakRef</tt><big>(</big><em>self</em>, <em>value</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#stm.TWeakRef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new weak reference pointing to the specified value.</p>
-<p>Unlike ordinary Python weak references, instances of this class can
-hold &#8220;weak references to None&#8221;; such references always appear alive (as
-one might expect; by virtue of None&#8217;s status as a builtin, it is never
-garbage collected), and the passed-in callback will never be invoked.
-This allows classes like TMutableWeakRef to permit their value to be
-set to None as needed.</p>
 <dl class="method">
 <dt id="stm.TWeakRef.__call__">
 <tt class="descname">__call__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.TWeakRef.__call__" title="Permalink to this definition">¶</a></dt>
@@ -146,6 +140,11 @@ value has been garbage collected.</p>
 <p>This will always return the same value over the course of a given
 transaction.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="stm.TWeakRef.is_alive">
+<tt class="descname">is_alive</tt><a class="headerlink" href="#stm.TWeakRef.is_alive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="stm.TWeakRef.value">
@@ -179,10 +178,38 @@ was passed to it.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="stm.elapsed">
+<tt class="descclassname">stm.</tt><tt class="descname">elapsed</tt><big>(</big><em>seconds=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#stm.elapsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides support for timeouts.</p>
+<p>This function returns True if the specified amount of time has passed, or
+False if it hasn&#8217;t. This provides a transactionally safe way to implement
+things like timeouts.</p>
+<p>Either seconds or time may be specified. Seconds indicates a number of
+seconds from when this transaction was first attempted after which this
+function will return True. Time indicates an absolute time (given in terms
+of time.time()) at which this function will return True.</p>
+<p>This could be used to, for example, pop an item from the end of a list,
+waiting up to n seconds for an item to become available before raising
+Timeout:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">some_list</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">some_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">elapsed</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">Timeout</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>None is considered to be an infinite timeout, so False will be returned if
+both seconds and time are None. This mirrors the old behavior of retry()
+when it took on elapsed&#8217;s job, and makes writing code that may or may not
+time out somewhat easier.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="stm.invariant">
 <tt class="descclassname">stm.</tt><tt class="descname">invariant</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.invariant" title="Permalink to this definition">¶</a></dt>
-<dd><p>(This function is highly experimental and is not yet complete: invariants
-cannot be proposed in a nested transaction yet.)</p>
+<dd><p>(This function is a wrapper on top of watch(). The same warning present on
+watch() applies here.)</p>
 <p>Provides support for transactional invariants.</p>
 <p>This function is called to propose a new invariant. The passed-in function
 must succeed now, at the end of the current transaction, and at the end of
@@ -194,6 +221,9 @@ failure either by returning False or by raising an exception. This allows
 both invariants that signal failure by raising an exception and invariants
 that signal success/failure by returning the value of a simple boolean
 expression.</p>
+<p>This function used to be its own primitive before the introduction of
+watch(). It&#8217;s now just a simple wrapper on top of that function.</p>
+<p>TODO: Update documentation</p>
 </dd></dl>
 
 <dl class="function">
@@ -219,7 +249,10 @@ available, return None with:</p>
 </div>
 <p>Note that each function passed in is automatically run in its own nested
 transaction so that the effects of those that end up retrying are reverted
-and only the effects of the function that succeeds are persisted.</p>
+and only the effects of the function that succeeds are persisted. Also note
+that if any of the functions raise an exception, that exception will be
+propagated, and the side effects of the function reverted. (I&#8217;m still
+debating that last point, so that could change.)</p>
 </dd></dl>
 
 <dl class="function">
@@ -266,14 +299,28 @@ function like the following:</p>
 <p>Functions making use of retry() can be multiplexed, a la Unix&#8217;s select
 system call, with the or_else function. See its documentation for more
 information.</p>
-<p>Either resume_at or resume_after may be specified, and serve to indicate a
-timeout after which the call to retry() will give up and just return
-instead of retrying. resume_after indicates a number of seconds from when
-this transaction was first attempted at which to time out, and resume_at
-indicates a wall clock time (a la time.time()) at which to time out.</p>
-<p>Timeouts are highly experimental and a feature shared with only one other
-STM system that I know of (scala-stm), so I&#8217;d greatly appreciate feedback
-on this feature.</p>
+<p>Resume_after and resume_at provide a mechanism to effect timeouts that
+became obsolete with the introduction of elapsed(). Their presence causes
+retry to behave thus:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">elapsed</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">resume_after</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">resume_at</span><span class="p">):</span>
+    <span class="k">return</span>
+<span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>They will be going away in a future version of this library.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.watch">
+<tt class="descclassname">stm.</tt><tt class="descname">watch</tt><big>(</big><em>function</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#stm.watch" title="Permalink to this definition">¶</a></dt>
+<dd><p>(This function is highly experimental and should not yet be used.)</p>
+<p>A function that generalizes the previous behavior of invariant() to allow
+side effects in a separate callback function when necessary. More
+documentation to come soon. invariant() will shortly be rewritten as a thin
+wrapper around this function.</p>
+<p>If callback is None, then a function is returned such that
+watch(function)(callback) is equivalent to watch(function, callback). This
+allows watch to be used as a decorator.</p>
 </dd></dl>
 
 </div>

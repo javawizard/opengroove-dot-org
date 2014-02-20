@@ -9,13 +9,13 @@
 
 
 
----------------
-Class Hierarchy
----------------
+--------------
+Class BaseFile
+--------------
 
 
 
-.. class:: Hierarchy
+.. class:: BaseFile
 
    x.__init__(...) initializes x; see help(type(x)) for signature
 
@@ -46,6 +46,59 @@ Class Hierarchy
       method if you need to do more complex things like include self as one
       of the returned ancestors.
 
+   .. method:: append(self, data)
+
+      Append the specified data to the end of this file.
+
+   .. attribute:: as_working
+
+      A property that returns a context manager. This context manager sets
+      the working directory to self upon being entered and restores it to
+      what it previously was upon being exited. One can use this to replace
+      something like::
+
+          old_dir = File()
+          new_dir.cd()
+          try:
+              ...stuff...
+          finally:
+              old_dir.cd()
+
+      with the much nicer::
+
+          with new_dir.as_working:
+              ...stuff...
+
+      and get exactly the same effect.
+
+      The context manager's __enter__ returns self (this file), so you can
+      also use an "as" clause on the with statement to get access to the
+      file in case you haven't got it stored in a variable anywhere.
+
+   .. method:: cd(self)
+
+      An alias for :obj:`self.change_to() <change_to>`.
+
+   .. method:: change_to(self)
+
+      Sets the current working directory to self.
+
+      Since File instances internally store paths in absolute form, other
+      File instances will continue to work just fine after this is called.
+
+      If you need to restore the working directory at any point, you might
+      want to consider using :obj:`self.as_working <as_working>` instead.
+
+   .. method:: check_file(self)
+
+      Checks to see whether this File refers to a file. If it doesn't, an
+      exception will be thrown.
+
+   .. method:: check_folder(self)
+
+      Checks to see whether this File refers to a folder. If it doesn't, an
+      exception will be thrown.
+
    .. method:: child(self, *names)
 
       Returns a file object representing the child of this file with the
@@ -60,10 +113,90 @@ Class Hierarchy
       This method is analogous to
       :obj:`os.path.join(self.path, *names) <os.path.join>`.
 
+   .. attribute:: child_names
+
+      A list of the names of all of the children of this file, as a list of
+      strings. If this file is not a folder, the value of this property is
+      None.
+
+   .. attribute:: children
+
+      A list of all of the children of this file, as a list of File objects.
+      If this file is not a folder, the value of this property is None.
+
+   .. method:: copy_into(self, other, overwrite=False)
+
+      Copies this file to an identically named file inside the specified
+      folder. This is just shorthand for self.copy_to(other.child(self.name))
+      which, from experience, seems to be by far the most common use case for
+      the copy_to function.
+
+      The newly-created file in the specified folder will be returned as per
+      other.child(self.name).
+
+   .. method:: copy_to(self, other, overwrite=False, dereference_links=True)
+
+      Copies the contents of this file to the specified file object. An
+      exception will be thrown if the specified file already exists and
+      overwrite is False.
+
+      If dereference_links is True (the default), symbolic links encountered
+      during copying will be dereferenced and their targets copied in their
+      place. If dereference_links is False, such links will be recreated
+      purely as symbolic links.
+
+      This also does not currently preserve file attributes or permissions;
+      such abilities will be added soon.
+
+   .. method:: create_folder(self, ignore_existing=False, recursive=False)
+
+      Creates the folder referred to by this File object. If it already
+      exists but is not a folder, an exception will be thrown. If it already
+      exists and is a folder, an exception will be thrown if ignore_existing
+      is False (the default); if ignore_existing is True, no exception will
+      be thrown.
+
+      If the to-be-created folder's parent does not exist and recursive is
+      False, an exception will be thrown. If recursive is True, the folder's
+      parent, its parent's parent, and so on will be created automatically.
+
+   .. method:: delete(self, ignore_missing=False)
+
+      Deletes this file or folder, recursively deleting children if
+      necessary.
+
+      The contents parameter has no effect, and is present for backward
+      compatibility.
+
+      If the file does not exist and ignore_missing is False, an exception
+      will be thrown. If the file does not exist but ignore_missing is True,
+      this function simply does nothing.
+
+      Note that symbolic links are never recursed into, and are instead
+      themselves removed.
+
+   .. method:: dereference(self, recursive=False)
+
+      Dereference the symbolic link represented by this file and return a
+      File object pointing to the symbolic link's referent.
+
+      If recursive is False, a File object pointing directly to the referent
+      will be returned. If recursive is True, the referent itself will be
+      recursively dereferenced, and the returned File will be guaranteed not
+      to be a link.
+
+      If this file is not a symbolic link, self will be returned.
+
    .. method:: descendant_of(self, other, including_self=False)
 
       Returns true if this file is a descendant of the specified file. This
       is equivalent to other.ancestor_of(self, including_self).
+
+   .. attribute:: exists
+
+      True if this file/folder exists, False if it doesn't. This will be True
+      even for broken symbolic links; use self.valid if you want an
+      alternative that returns False for broken symbolic links.
 
    .. method:: get_ancestors(self, including_self=False)
 
@@ -92,210 +225,6 @@ Class Hierarchy
       represent a relative path, the path of this file relative to the
       specified one. Otherwise, the returned components will represent an
       absolute path.
-
-   .. attribute:: name
-
-      The name of this file. For example, File("a", "b", "c").name will be
-      "c".
-
-      On Unix-based operating systems, File("/").name will be the empty
-      string.
-
-   .. attribute:: parent
-
-      Returns a file representing the parent of this file. If this file has
-      no parent (for example, if it's "/" on Unix-based operating systems or
-      a drive letter on Windows), None will be returned.
-
-   .. attribute:: path
-
-      The absolute path to the file represented by this file object, in a
-      format native to the type of file in use. For instances of
-      fileutils.local.File, this pathname can be used with Python's
-      traditional file-related utilities.
-
-      This property simply returns self.get_path(). See the documentation for
-      that method for more complex ways of creating paths (including
-      obtaining relative paths).
-
-   .. attribute:: path_components
-
-      A property that simply returns
-      :obj:`self.get_path_components() <get_path_components>`.
-
-   .. method:: safe_child(self, *names)
-
-      Same as self.child(*names), but checks that the resulting file is a
-      descendant of self. If it's not, an exception will be thrown. This
-      allows unsanitized paths to be used without fear that things like ".."
-      will be used to escape the confines of self.
-
-      The pathname may contain occurrences of ".." so long as they do not
-      escape self. For example, "a/b/../c" is perfectly fine, but "a/../.."
-      is not.
-
-   .. method:: same_as(self, other)
-
-      Returns True if this file represents the same file as the specified
-      one, False otherwise.
-
-      This is usually the same as self == other, but URL implements this
-      differently: a URL with a trailing slash and a URL without are treated
-      as the same by same_as but different by ==.
-
-      The default implementation returns True if self.path_components ==
-      other.path_components and type(self) == type(other), or False otherwise.
-       
-
-   .. method:: sibling(self, *names)
-
-      Returns a File object representing the sibling of this file with the
-      specified name. This is equivalent to self.parent.child(name).
-
---------------
-Class Listable
---------------
-
-
-
-*Method resolution order:* :obj:`~fileutils.interface.Readable`
-
-.. class:: Listable
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. attribute:: child_names
-
-      A list of the names of all of the children of this file, as a list of
-      strings. If this file is not a folder, the value of this property is
-      None.
-
-   .. attribute:: children
-
-      A list of all of the children of this file, as a list of File objects.
-      If this file is not a folder, the value of this property is None.
-
-   .. method:: recurse(self, filter=None, include_self=True, recurse_skipped=True)
-
-      A generator that recursively yields all child File objects of this file.
-      Files and directories (and the files and directories contained within
-      them, and so on) are all included.
-
-      A filter function accepting one argument can be specified. It will be
-      called for each file and folder. It can return one of True, False,
-      SKIP, YIELD, or RECURSE, with the behavior of each outlined in the
-      following table::
-          
-                                Don't yield   Do yield
-                              +-------------+----------+
-          Don't recurse into  | SKIP        | YIELD    |
-                              +-------------+----------+
-          Do recurse into     | RECURSE     | True     |
-                              +-------------+----------+
-          
-          False behaves the same as RECURSE if recurse_skipped is True, or
-          SKIP otherwise.
-
-      If include_self is True (the default), this file (a.k.a. self) will be
-      yielded as well (if it matches the specified filter function). If it's
-      False, only this file's children (and their children, and so on) will
-      be yielded.
-
-   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.dereference`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.link_target`, :obj:`~fileutils.interface.Readable.open_for_reading`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.size`, :obj:`~fileutils.interface.Readable.type`, :obj:`~fileutils.interface.Readable.valid`
-
----------------
-Class ReadWrite
----------------
-
-
-
-*Method resolution order:* :obj:`~fileutils.interface.Readable`, :obj:`~fileutils.interface.Writable`
-
-.. class:: ReadWrite
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. method:: rename_to(self, other)
-
-      Rename this file or folder to the specified name, which should be
-      another file object (but need not be of the same type as self).
-
-      The default implementation simply does::
-
-          self.copy_to(other)
-          self.delete()
-
-      (which, as a note, doesn't work for directories yet, so at present
-      directories can't be renamed across different subclasses). Subclasses
-      are free to provide a more specialized implementation for renames to
-      files of the same type; File and SSHFile, for example, make use of
-      native functions to speed up such renames (and to allow them to work
-      with directories at present).
-
-   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.dereference`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.link_target`, :obj:`~fileutils.interface.Readable.open_for_reading`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.size`, :obj:`~fileutils.interface.Readable.type`, :obj:`~fileutils.interface.Readable.valid`
-
-   *Members inherited from class* :obj:`~fileutils.interface.Writable`\ *:* :obj:`~fileutils.interface.Writable.append`, :obj:`~fileutils.interface.Writable.create_folder`, :obj:`~fileutils.interface.Writable.delete`, :obj:`~fileutils.interface.Writable.link_to`, :obj:`~fileutils.interface.Writable.makedirs`, :obj:`~fileutils.interface.Writable.mkdir`, :obj:`~fileutils.interface.Writable.mkdirs`, :obj:`~fileutils.interface.Writable.open_for_writing`, :obj:`~fileutils.interface.Writable.write`
-
---------------
-Class Readable
---------------
-
-
-
-.. class:: Readable
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. method:: check_file(self)
-
-      Checks to see whether this File refers to a file. If it doesn't, an
-      exception will be thrown.
-
-   .. method:: check_folder(self)
-
-      Checks to see whether this File refers to a folder. If it doesn't, an
-      exception will be thrown.
-
-   .. method:: copy_into(self, other, overwrite=False)
-
-      Copies this file to an identically named file inside the specified
-      folder. This is just shorthand for self.copy_to(other.child(self.name))
-      which, from experience, seems to be by far the most common use case for
-      the copy_to function.
-
-      The newly-created file in the specified folder will be returned as per
-      other.child(self.name).
-
-   .. method:: copy_to(self, other, overwrite=False)
-
-      Copies the contents of this file to the specified File object or
-      pathname. An exception will be thrown if the specified file already
-      exists and overwrite is False.
-
-      This `does not currently work for folders
-      <https://github.com/javawizard/fileutils/issues/1>`_;
-      I hope to add this ability in the near future.
-
-      This also does not currently preserve file attributes or permissions;
-      such abilities will be added soon.
-
-   .. method:: dereference(self, recursive=False)
-
-      Dereference the symbolic link represented by this file and return a
-      File object pointing to the symbolic link's referent.
-
-      If recursive is False, a File object pointing directly to the referent
-      will be returned. If recursive is True, the referent itself will be
-      recursively dereferenced, and the returned File will be guaranteed not
-      to be a link.
-
-      If this file is not a symbolic link, self will be returned.
-
-   .. attribute:: exists
-
-      True if this file/folder exists, False if it doesn't. This will be True
-      even for broken symbolic links; use self.valid if you want an
-      alternative that returns False for broken symbolic links.
 
    .. method:: hash(self, algorithm=<built-in function openssl_md5>, return_hex=True)
 
@@ -350,10 +279,77 @@ Class Readable
       links are free to interpret this as they wish; URL, for example,
       presents as a link any URL which sends back an HTTP redirect.
 
+   .. method:: link_to(self, target)
+
+      Creates this file as a symbolic link pointing to other, which can be
+      a pathname or an object of the same type as self. Note that if it's a
+      pathname, a symbolic link will be created with the exact path
+      specified; it will therefore be absolute if the path is absolute or
+      relative (to the link itself) if the path is relative. If an object of
+      the same type as self, however, is used, the symbolic link will always
+      be absolute.
+
+   .. method:: mkdir(self, silent=False)
+
+      An alias for self.create_folder(ignore_existing=silent).
+
+   .. method:: mkdirs(self, silent=False)
+               makedirs(self, silent=False)
+
+      An alias for self.create_folder(ignore_existing=silent, recursive=True).
+
+   .. attribute:: name
+
+      The name of this file. For example, File("a", "b", "c").name will be
+      "c".
+
+      On Unix-based operating systems, File("/").name will be the empty
+      string.
+
    .. method:: open_for_reading(self)
 
       Open this file for reading in binary mode and return a Python file-like
       object from which this file's contents can be read.
+
+   .. method:: open_for_writing(self, append=False)
+
+      Open this file for reading in binary mode and return a Python file-like
+      object from which this file's contents can be read.
+
+      If append is False, the file's contents will be erased and the returned
+      stream positioned at the beginning of the (now empty) file. If append
+      is True, the file's contents will not be erased, and the returned
+      stream will be positioned at the end of the file.
+
+      Note that some implementations (e.g. SMBFile and FTPFile) don't have
+      native support for writing files remotely; support in such
+      implementations can be emulated by returning a wrapper around a
+      temporary file that, when closed, uploads itself to the location of
+      the file to be written. As a result, objects returned from
+      open_for_writing should be closed before calling open_for_reading on
+      the same file.
+
+   .. attribute:: parent
+
+      Returns a file representing the parent of this file. If this file has
+      no parent (for example, if it's "/" on Unix-based operating systems or
+      a drive letter on Windows), None will be returned.
+
+   .. attribute:: path
+
+      The absolute path to the file represented by this file object, in a
+      format native to the type of file in use. For instances of
+      fileutils.local.File, this pathname can be used with Python's
+      traditional file-related utilities.
+
+      This property simply returns self.get_path(). See the documentation for
+      that method for more complex ways of creating paths (including
+      obtaining relative paths).
+
+   .. attribute:: path_components
+
+      A property that simply returns
+      :obj:`self.get_path_components() <get_path_components>`.
 
    .. method:: read(self)
 
@@ -373,6 +369,78 @@ Class Readable
           with target.open("wb") as target_stream:
               for block in source.read_blocks():
                   target_stream.write(block)
+
+   .. method:: recurse(self, filter=None, include_self=True, recurse_skipped=True)
+
+      A generator that recursively yields all child File objects of this file.
+      Files and directories (and the files and directories contained within
+      them, and so on) are all included.
+
+      A filter function accepting one argument can be specified. It will be
+      called for each file and folder. It can return one of True, False,
+      SKIP, YIELD, or RECURSE, with the behavior of each outlined in the
+      following table::
+          
+                                Don't yield   Do yield
+                              +-------------+----------+
+          Don't recurse into  | SKIP        | YIELD    |
+                              +-------------+----------+
+          Do recurse into     | RECURSE     | True     |
+                              +-------------+----------+
+          
+          False behaves the same as RECURSE if recurse_skipped is True, or
+          SKIP otherwise.
+
+      If include_self is True (the default), this file (a.k.a. self) will be
+      yielded as well (if it matches the specified filter function). If it's
+      False, only this file's children (and their children, and so on) will
+      be yielded.
+
+   .. method:: rename_to(self, other)
+
+      Rename this file or folder to the specified name, which should be
+      another file object (but need not be of the same type as self).
+
+      The default implementation simply does::
+
+          self.copy_to(other)
+          self.delete()
+
+      (which, as a note, doesn't work for directories yet, so at present
+      directories can't be renamed across different subclasses). Subclasses
+      are free to provide a more specialized implementation for renames to
+      files of the same type; File and SSHFile, for example, make use of
+      native functions to speed up such renames (and to allow them to work
+      with directories at present).
+
+   .. method:: safe_child(self, *names)
+
+      Same as self.child(*names), but checks that the resulting file is a
+      descendant of self. If it's not, an exception will be thrown. This
+      allows unsanitized paths to be used without fear that things like ".."
+      will be used to escape the confines of self.
+
+      The pathname may contain occurrences of ".." so long as they do not
+      escape self. For example, "a/b/../c" is perfectly fine, but "a/../.."
+      is not.
+
+   .. method:: same_as(self, other)
+
+      Returns True if this file represents the same file as the specified
+      one, False otherwise.
+
+      This is usually the same as self == other, but URL implements this
+      differently: a URL with a trailing slash and a URL without are treated
+      as the same by same_as but different by ==.
+
+      The default implementation returns True if self.path_components ==
+      other.path_components and type(self) == type(other), or False otherwise.
+       
+
+   .. method:: sibling(self, *names)
+
+      Returns a File object representing the sibling of this file with the
+      specified name. This is equivalent to self.parent.child(name).
 
    .. attribute:: size
 
@@ -397,133 +465,6 @@ Class Readable
       True if this file/folder exists, False if it doesn't. This will be
       False for broken symbolic links; use self.exists if you want an
       alternative that returns True for broken symbolic links.
-
-----------------------
-Class WorkingDirectory
-----------------------
-
-
-
-.. class:: WorkingDirectory
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. attribute:: as_working
-
-      A property that returns a context manager. This context manager sets
-      the working directory to self upon being entered and restores it to
-      what it previously was upon being exited. One can use this to replace
-      something like::
-
-          old_dir = File()
-          new_dir.cd()
-          try:
-              ...stuff...
-          finally:
-              old_dir.cd()
-
-      with the much nicer::
-
-          with new_dir.as_working:
-              ...stuff...
-
-      and get exactly the same effect.
-
-      The context manager's __enter__ returns self (this file), so you can
-      also use an "as" clause on the with statement to get access to the
-      file in case you haven't got it stored in a variable anywhere.
-
-   .. method:: cd(self)
-
-      An alias for :obj:`self.change_to() <change_to>`.
-
-   .. method:: change_to(self)
-
-      Sets the current working directory to self.
-
-      Since File instances internally store paths in absolute form, other
-      File instances will continue to work just fine after this is called.
-
-      If you need to restore the working directory at any point, you might
-      want to consider using :obj:`self.as_working <as_working>` instead.
-
---------------
-Class Writable
---------------
-
-
-
-.. class:: Writable
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. method:: append(self, data)
-
-      Append the specified data to the end of this file.
-
-   .. method:: create_folder(self, ignore_existing=False, recursive=False)
-
-      Creates the folder referred to by this File object. If it already
-      exists but is not a folder, an exception will be thrown. If it already
-      exists and is a folder, an exception will be thrown if ignore_existing
-      is False (the default); if ignore_existing is True, no exception will
-      be thrown.
-
-      If the to-be-created folder's parent does not exist and recursive is
-      False, an exception will be thrown. If recursive is True, the folder's
-      parent, its parent's parent, and so on will be created automatically.
-
-   .. method:: delete(self, ignore_missing=False)
-
-      Deletes this file or folder, recursively deleting children if
-      necessary.
-
-      The contents parameter has no effect, and is present for backward
-      compatibility.
-
-      If the file does not exist and ignore_missing is False, an exception
-      will be thrown. If the file does not exist but ignore_missing is True,
-      this function simply does nothing.
-
-      Note that symbolic links are never recursed into, and are instead
-      themselves removed.
-
-   .. method:: link_to(self, target)
-
-      Creates this file as a symbolic link pointing to other, which can be
-      a pathname or an object of the same type as self. Note that if it's a
-      pathname, a symbolic link will be created with the exact path
-      specified; it will therefore be absolute if the path is absolute or
-      relative (to the link itself) if the path is relative. If an object of
-      the same type as self, however, is used, the symbolic link will always
-      be absolute.
-
-   .. method:: mkdir(self, silent=False)
-
-      An alias for self.create_folder(ignore_existing=silent).
-
-   .. method:: mkdirs(self, silent=False)
-               makedirs(self, silent=False)
-
-      An alias for self.create_folder(ignore_existing=silent, recursive=True).
-
-   .. method:: open_for_writing(self, append=False)
-
-      Open this file for reading in binary mode and return a Python file-like
-      object from which this file's contents can be read.
-
-      If append is False, the file's contents will be erased and the returned
-      stream positioned at the beginning of the (now empty) file. If append
-      is True, the file's contents will not be erased, and the returned
-      stream will be positioned at the end of the file.
-
-      Note that some implementations (currently only SMBFile) don't have
-      native support for writing files remotely; support in such
-      implementations can be emulated by returning a wrapper around a
-      temporary file that, when closed, uploads itself to the location of
-      the file to be written. As a result, objects returned from
-      open_for_writing should be closed before calling open_for_reading on
-      the same file.
 
    .. method:: write(self, data, binary=True)
 

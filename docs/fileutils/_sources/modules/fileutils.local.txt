@@ -15,7 +15,7 @@ Class File
 
 
 
-*Method resolution order:* :obj:`~fileutils.interface.ReadWrite`, :obj:`~fileutils.interface.Hierarchy`, :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.Listable`, :obj:`~fileutils.interface.Readable`, :obj:`~fileutils.interface.WorkingDirectory`, :obj:`~fileutils.interface.Writable`
+*Method resolution order:* :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.BaseFile`
 
 .. class:: File(self, *path_components)
 
@@ -52,11 +52,6 @@ Class File
       Returns True. File objects are always true values; to test for their
       existence, use self.exists instead.
 
-   .. method:: __str__(self)
-               __repr__(self)
-
-
-
    .. method:: change_to(self)
 
       Sets the current working directory to self.
@@ -67,19 +62,19 @@ Class File
       If you need to restore the working directory at any point, you might
       want to consider using :obj:`self.as_working <as_working>` instead.
 
-      |  *Overrides* :obj:`~fileutils.interface.WorkingDirectory.change_to` *in class* :obj:`~fileutils.interface.WorkingDirectory`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.change_to` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: child(self, *names)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.child` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.child` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: child_names
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Listable.child_names` *in class* :obj:`~fileutils.interface.Listable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.child_names` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: create_folder(self, ignore_existing=False, recursive=False)
 
@@ -93,7 +88,7 @@ Class File
       False, an exception will be thrown. If recursive is True, the folder's
       parent, its parent's parent, and so on will be created automatically.
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.create_folder` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.create_folder` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: delete(self, contents=False, ignore_missing=False)
 
@@ -110,7 +105,7 @@ Class File
       Note that symbolic links are never recursed into, and are instead
       themselves removed.
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.delete` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.delete` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: delete_on_exit
 
@@ -135,7 +130,7 @@ Class File
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.get_path_components` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.get_path_components` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: glob(self, glob)
 
@@ -149,7 +144,7 @@ Class File
       symbolic link, points, as a string. If this file is not a symbolic
       link, None is returned.
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.link_target` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.link_target` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: link_to(self, other)
 
@@ -160,7 +155,7 @@ Class File
       the path is relative. If a File object, however, is used, the symbolic
       link will always be absolute.
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.link_to` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.link_to` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: open(self, *args, **kwargs)
 
@@ -170,25 +165,25 @@ Class File
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.open_for_reading` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.open_for_reading` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: open_for_writing(self, append=False)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.open_for_writing` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.open_for_writing` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: parent
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.parent` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.parent` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: rename_to(self, other)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.ReadWrite.rename_to` *in class* :obj:`~fileutils.interface.ReadWrite`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.rename_to` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: size
 
@@ -200,13 +195,13 @@ Class File
       folders will be recursively summed up and returned. This can take quite
       some time for large folders.
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.size` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.size` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: type
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.type` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.type` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: unzip_into(self, folder)
 
@@ -221,6 +216,10 @@ Class File
       that will explicitly filter out absolute paths.
 
       The return value of this function is File(folder).
+
+   .. attribute:: url
+
+
 
    .. method:: zip_into(self, filename, contents=True)
 
@@ -256,19 +255,91 @@ Class File
       NOTE: This has only been tested on Linux. I still need to test it on
       Windows to make sure pathnames are being handled correctly.
 
-   *Members inherited from class* :obj:`~fileutils.interface.ReadWrite`\ *:* :obj:`~fileutils.interface.ReadWrite.__metaclass__`
+   *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.Hierarchy`\ *:* :obj:`~fileutils.interface.Hierarchy.__div__`, :obj:`~fileutils.interface.Hierarchy.ancestor_of`, :obj:`~fileutils.interface.Hierarchy.ancestors`, :obj:`~fileutils.interface.Hierarchy.descendant_of`, :obj:`~fileutils.interface.Hierarchy.get_ancestors`, :obj:`~fileutils.interface.Hierarchy.get_path`, :obj:`~fileutils.interface.Hierarchy.name`, :obj:`~fileutils.interface.Hierarchy.path`, :obj:`~fileutils.interface.Hierarchy.path_components`, :obj:`~fileutils.interface.Hierarchy.safe_child`, :obj:`~fileutils.interface.Hierarchy.same_as`, :obj:`~fileutils.interface.Hierarchy.sibling`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
+
+---------------
+Class PosixFile
+---------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.local.File`, :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.BaseFile`
+
+.. class:: PosixFile(self, *path_components)
+
+   Creates a new file from the specified path components. Each component
+   represents the name of a folder or a file. These are internally joined
+   as if by os.path.join(*path_components).
+
+   It's also possible, although not recommended, to pass a full pathname
+   (in the operating system's native format) into File. On Windows, one
+   could therefore do File(r"C:\some\file"), and File("/some/file") on
+   Linux and other Unix operating systems.
+
+   You can also call File(File(...)). This is equivalent to File(...) and
+   exists to make it easier for functions to accept either a pathname or
+   a File object.
+
+   Passing no arguments (i.e. File()) results in a file that refers to the
+   working directory as of the time the File instance was constructed.
+
+   Pathnames are internally stored in absolute form; as a result, changing
+   the working directory after creating a File instance will not change
+   the file referred to.
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   *Members inherited from class* :obj:`~fileutils.local.File`\ *:* :obj:`~fileutils.local.File.__cmp__`, :obj:`~fileutils.local.File.__hash__`, :obj:`~fileutils.local.File.__init__`, :obj:`~fileutils.local.File.__nonzero__`, :obj:`~fileutils.local.File.change_to`, :obj:`~fileutils.local.File.child`, :obj:`~fileutils.local.File.child_names`, :obj:`~fileutils.local.File.create_folder`, :obj:`~fileutils.local.File.delete`, :obj:`~fileutils.local.File.delete_on_exit`, :obj:`~fileutils.local.File.get_path_components`, :obj:`~fileutils.local.File.glob`, :obj:`~fileutils.local.File.link_target`, :obj:`~fileutils.local.File.link_to`, :obj:`~fileutils.local.File.open`, :obj:`~fileutils.local.File.open_for_reading`, :obj:`~fileutils.local.File.open_for_writing`, :obj:`~fileutils.local.File.parent`, :obj:`~fileutils.local.File.rename_to`, :obj:`~fileutils.local.File.size`, :obj:`~fileutils.local.File.type`, :obj:`~fileutils.local.File.unzip_into`, :obj:`~fileutils.local.File.url`, :obj:`~fileutils.local.File.zip_into`
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.Listable`\ *:* :obj:`~fileutils.interface.Listable.recurse`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
-   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.dereference`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.valid`
+-----------------
+Class WindowsFile
+-----------------
 
-   *Members inherited from class* :obj:`~fileutils.interface.WorkingDirectory`\ *:* :obj:`~fileutils.interface.WorkingDirectory.as_working`, :obj:`~fileutils.interface.WorkingDirectory.cd`
 
-   *Members inherited from class* :obj:`~fileutils.interface.Writable`\ *:* :obj:`~fileutils.interface.Writable.append`, :obj:`~fileutils.interface.Writable.makedirs`, :obj:`~fileutils.interface.Writable.mkdir`, :obj:`~fileutils.interface.Writable.mkdirs`, :obj:`~fileutils.interface.Writable.write`
+
+*Method resolution order:* :obj:`~fileutils.local.File`, :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.BaseFile`
+
+.. class:: WindowsFile(self, *path_components)
+
+   Creates a new file from the specified path components. Each component
+   represents the name of a folder or a file. These are internally joined
+   as if by os.path.join(*path_components).
+
+   It's also possible, although not recommended, to pass a full pathname
+   (in the operating system's native format) into File. On Windows, one
+   could therefore do File(r"C:\some\file"), and File("/some/file") on
+   Linux and other Unix operating systems.
+
+   You can also call File(File(...)). This is equivalent to File(...) and
+   exists to make it easier for functions to accept either a pathname or
+   a File object.
+
+   Passing no arguments (i.e. File()) results in a file that refers to the
+   working directory as of the time the File instance was constructed.
+
+   Pathnames are internally stored in absolute form; as a result, changing
+   the working directory after creating a File instance will not change
+   the file referred to.
+
+   .. method:: __str__(self)
+               __repr__(self)
+
+
+
+   *Members inherited from class* :obj:`~fileutils.local.File`\ *:* :obj:`~fileutils.local.File.__cmp__`, :obj:`~fileutils.local.File.__hash__`, :obj:`~fileutils.local.File.__init__`, :obj:`~fileutils.local.File.__nonzero__`, :obj:`~fileutils.local.File.change_to`, :obj:`~fileutils.local.File.child`, :obj:`~fileutils.local.File.child_names`, :obj:`~fileutils.local.File.create_folder`, :obj:`~fileutils.local.File.delete`, :obj:`~fileutils.local.File.delete_on_exit`, :obj:`~fileutils.local.File.get_path_components`, :obj:`~fileutils.local.File.glob`, :obj:`~fileutils.local.File.link_target`, :obj:`~fileutils.local.File.link_to`, :obj:`~fileutils.local.File.open`, :obj:`~fileutils.local.File.open_for_reading`, :obj:`~fileutils.local.File.open_for_writing`, :obj:`~fileutils.local.File.parent`, :obj:`~fileutils.local.File.rename_to`, :obj:`~fileutils.local.File.size`, :obj:`~fileutils.local.File.type`, :obj:`~fileutils.local.File.unzip_into`, :obj:`~fileutils.local.File.url`, :obj:`~fileutils.local.File.zip_into`
+
+   *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
+
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 ---------
 Functions

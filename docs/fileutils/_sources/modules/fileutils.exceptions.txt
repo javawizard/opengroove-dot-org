@@ -1,0 +1,311 @@
+
+
+===========================================================================================================
+:mod:`fileutils.exceptions` --- Backport of Python 3.3's reworked OS/IO exception hierarchy (see PEP 3151).
+===========================================================================================================
+
+.. module:: fileutils.exceptions
+   :synopsis: Backport of Python 3.3's reworked OS/IO exception hierarchy (see PEP 3151).
+
+
+
+---------------------
+Class BlockingIOError
+---------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: BlockingIOError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+---------------------
+Class BrokenPipeError
+---------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.exceptions.ConnectionError`, :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: BrokenPipeError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+-----------------------
+Class ChildProcessError
+-----------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ChildProcessError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+----------------------------
+Class ConnectionAbortedError
+----------------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.exceptions.ConnectionError`, :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ConnectionAbortedError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+---------------------
+Class ConnectionError
+---------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ConnectionError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+----------------------------
+Class ConnectionRefusedError
+----------------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.exceptions.ConnectionError`, :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ConnectionRefusedError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+--------------------------
+Class ConnectionResetError
+--------------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.exceptions.ConnectionError`, :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ConnectionResetError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+-------------
+Class Convert
+-------------
+
+
+
+.. class:: Convert(self, filename=None)
+
+
+
+   .. method:: __enter__(self)
+
+
+
+   .. method:: __exit__(self, exception_type, value, traceback)
+
+
+
+---------------------
+Class FileExistsError
+---------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: FileExistsError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+-----------------------
+Class FileNotFoundError
+-----------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: FileNotFoundError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+----------------------
+Class InterruptedError
+----------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: InterruptedError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+-----------------------
+Class IsADirectoryError
+-----------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: IsADirectoryError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+------------------------
+Class NotADirectoryError
+------------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: NotADirectoryError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+---------------------
+Class PermissionError
+---------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: PermissionError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+------------------------
+Class ProcessLookupError
+------------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: ProcessLookupError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+------------------
+Class TimeoutError
+------------------
+
+
+
+*Method resolution order:* :obj:`~exceptions.OSError`, :obj:`~exceptions.EnvironmentError`, :obj:`~exceptions.StandardError`, :obj:`~exceptions.Exception`, :obj:`~exceptions.BaseException`
+
+.. class:: TimeoutError
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   *Members inherited from class* :obj:`~exceptions.OSError`\ *:* :obj:`~exceptions.OSError.__init__`, :obj:`~exceptions.OSError.__new__`
+
+   *Members inherited from class* :obj:`~exceptions.EnvironmentError`\ *:* :obj:`~exceptions.EnvironmentError.__reduce__`, :obj:`~exceptions.EnvironmentError.__str__`
+
+   *Members inherited from class* :obj:`~exceptions.BaseException`\ *:* :obj:`~exceptions.BaseException.__delattr__`, :obj:`~exceptions.BaseException.__getattribute__`, :obj:`~exceptions.BaseException.__getitem__`, :obj:`~exceptions.BaseException.__getslice__`, :obj:`~exceptions.BaseException.__repr__`, :obj:`~exceptions.BaseException.__setattr__`, :obj:`~exceptions.BaseException.__setstate__`, :obj:`~exceptions.BaseException.__unicode__`
+
+---------
+Functions
+---------
+
+
+
+.. function:: convert(exception, filename=None)
+
+
+
+.. function:: generate(exception_class, filename=None)
+

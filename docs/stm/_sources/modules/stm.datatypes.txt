@@ -22,7 +22,7 @@ that reads from the queue in question.
 
 *Method resolution order:* :obj:`~stm.datatypes.TObject`
 
-.. class:: BroadcastEndpoint(self, var)
+.. class:: BroadcastEndpoint(self, queue)
 
 
 
@@ -60,6 +60,11 @@ that reads from the queue in question.
       The block and timeout parameters have the same effect as they do when
       passed to self.get(), but block defaults to False (which seems to be
       the more common use case when calling peek()).
+
+   .. attribute:: remaining
+
+      The number of items remaining to be read from this endpoint. This is
+      the number of times get() could be called without retrying.
 
    .. method:: replace(self, value)
 
@@ -446,6 +451,32 @@ explicitly wrap all of them with TVars.
 
 
    .. method:: __setattr__(self, name, value)
+
+
+
+----------------------
+Class TPossiblyWeakRef
+----------------------
+
+A wrapper around TWeakRef that allows holding references to objects to
+which weak references aren't allowed (such as strings or None). References
+to such objects are held strongly (and the callback associated with the
+given TPossiblyWeakRef never invoked); all others are held as weak
+references.
+
+.. class:: TPossiblyWeakRef(self, value=None, callback=None)
+
+
+
+   .. method:: get(self)
+
+
+
+   .. attribute:: is_alive
+
+
+
+   .. attribute:: value
 
 
 

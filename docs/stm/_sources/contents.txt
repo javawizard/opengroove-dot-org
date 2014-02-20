@@ -2,5 +2,6 @@
    modules/stm.rst
    modules/stm.datatypes.rst
    modules/stm.eventloop.rst
+   modules/stm.threadutils.rst
    modules/stm.timeout.rst
    modules/stm.utils.rst

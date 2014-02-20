@@ -1,0 +1,99 @@
+
+
+==================================================================
+:mod:`stm.threadutils` --- Transactional threads and thread pools.
+==================================================================
+
+.. module:: stm.threadutils
+   :synopsis: Transactional threads and thread pools.
+
+More documentation to come.
+
+------------
+Class Thread
+------------
+
+A transactional wrapper around Python's threading.Thread.
+
+Instances of this class can be created and started from within an STM
+transaction. Threads started in such a way will begin running shortly
+after the transaction commits.
+
+*Method resolution order:* :obj:`~stm.datatypes.TObject`
+
+.. class:: Thread(self, target=None)
+
+   Create a new thread.
+
+   .. method:: run(self)
+
+
+
+   .. method:: start(self)
+
+      Start this thread.
+
+      This can be called both inside and outside of a transaction. If it's
+      called from inside a transaction, the thread will begin running shortly
+      after the transaction commits.
+
+   .. attribute:: state
+
+      The state this thread is currently in. This will be one of:
+
+       * NEW: This thread has been created but start() has not yet been
+         called
+
+       * STARTED: start() has been called but the thread has not yet
+         commenced execution. Threads started from within a transaction will
+         remain in STARTED until shortly after the transaction commits.
+
+       * RUNNING: The thread has commenced execution.
+       
+       * FINISHED: The thread has died.
+
+   *Members inherited from class* :obj:`~stm.datatypes.TObject`\ *:* :obj:`~stm.datatypes.TObject.__delattr__`, :obj:`~stm.datatypes.TObject.__dir__`, :obj:`~stm.datatypes.TObject.__getattr__`, :obj:`~stm.datatypes.TObject.__setattr__`
+
+----------------
+Class ThreadPool
+----------------
+
+An object that schedules execution of functions across a pool of threads.
+
+*Method resolution order:* :obj:`~stm.datatypes.TObject`
+
+.. class:: ThreadPool(self, max_threads, keep_alive)
+
+   Create a new ThreadPool that will use up to the specified number of
+   threads and that will keep idle threads alive for the specified number
+   of seconds before killing them off.
+
+   .. method:: join(self, timeout_after=None, timeout_at=None)
+
+      Wait until this thread pool is idle, i.e. all scheduled tasks have
+      completed. Note that a call to this function may never return if enough
+      calls to schedule() are being made to keep the thread pool saturated
+      with tasks to run.
+
+      timeout_after and timeout_at specify a timeout (in the same format as
+      that given to stm.utils.wait_until) after which join() will give up
+      and raise stm.timeout.Timeout.
+
+   .. method:: schedule(*args, **kwargs)
+
+      Schedule a function to be run by this thread pool. The function will
+      be executed as soon as one of this pool's threads is free.
+
+   .. attribute:: tasks_finished
+
+
+
+   .. attribute:: tasks_remaining
+
+
+
+   .. attribute:: tasks_scheduled
+
+
+
+   *Members inherited from class* :obj:`~stm.datatypes.TObject`\ *:* :obj:`~stm.datatypes.TObject.__delattr__`, :obj:`~stm.datatypes.TObject.__dir__`, :obj:`~stm.datatypes.TObject.__getattr__`, :obj:`~stm.datatypes.TObject.__setattr__`

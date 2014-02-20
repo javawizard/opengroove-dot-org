@@ -30,3 +30,86 @@ Functions
            def do_something():
                ...
            return stm.atomically(do_something)
+
+.. function:: atomically_watch(function, callback=None)
+
+   A wrapper around stm.watch that automatically runs the call inside a
+   transaction. This is essentially equivalent to::
+
+       stm.atomically(lambda: stm.watch(function, callback))
+
+   but, as with stm.watch, atomically_watch can be used as a decorator by
+   omitting the callback parameter. For example, the following could be used
+   outside of a transaction to place a new watch::
+
+       @atomically_watch(some_tvar.get)
+       def _(result):
+           ...do something...
+
+   This would be equivalent to:
+
+       @stm.atomically
+       def _():
+           @stm.watch(some_tvar.get)
+           def _(result):
+               ..do something..
+
+   Note that the callback will (as callbacks always are) still be run inside
+   a transaction. If you need to perform I/O in the callback, use
+   stm.eventloop.scheduled_function to decorate the callback such that it will
+   be run by the event loop outside of the scope of STM::
+
+       @atomically_watch(some_tvar.get)
+       @stm.eventloop.scheduled_function
+       def _(result):
+           print "Changed to " + str(result) # Or any other I/O
+       
+
+.. function:: changes_only(callback=None, according_to=None)
+
+   A decorator that can be used to decorate callbacks that are to be passed to
+   stm.watch to filter out duplicate invocations with the same result value.
+   It can be used either as::
+
+       @changes_only
+       def callback(result):
+           ...
+
+   or as::
+
+       @changes_only(according_to=some_predicate)
+       def callback(result):
+           ...
+
+   with the latter allowing a custom two-argument function to be used to
+   compare the equality of the value passed to a given invocation with the
+   value passed to the previous invocation; the former compares values using
+   the "is" operator.
+
+   Note that the resulting callback will keep a reference around to the last
+   value with which it was called, so make sure you're not counting on this
+   value's being garbage collected immediately after the callback is invoked.
+
+.. function:: wait_until(function, timeout_after=None, timeout_at=None)
+
+   Wait until the specified function returns true. This is just short for::
+
+       if function():
+           return
+       elif elapsed(timeout_after, timeout_at):
+           raise stm.timeout.Timeout
+       else:
+           retry()
+
+   but the entire thing is automatically wrapped in a call to stm.atomically,
+   so wait_until can be called outside of a transaction.
+
+   timeout_after and timeout_at specify (in the same format as elapsed()'s
+   seconds and time parameters) a timeout after which wait_until will give up
+   and raise stm.timeout.Timeout.
+
+.. function:: would_block(function)
+
+   Run the specified function in a nested transaction, abort the nested
+   transaction to avoid any side effects being persisted, then return True if
+   the function attempted to retry.

@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Python  documentation" href="../index.html" />
-    <link rel="next" title="stm.timeout — Obsolete module providing timeout support for transactions" href="stm.timeout.html" />
+    <link rel="next" title="stm.threadutils — Transactional threads and thread pools." href="stm.threadutils.html" />
     <link rel="prev" title="stm.datatypes — Some useful data types built on top of the STM system." href="stm.datatypes.html" /> 
   </head>
   <body>
@@ -40,7 +40,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="stm.timeout.html" title="stm.timeout — Obsolete module providing timeout support for transactions"
+          <a href="stm.threadutils.html" title="stm.threadutils — Transactional threads and thread pools."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="stm.datatypes.html" title="stm.datatypes — Some useful data types built on top of the STM system."
@@ -72,6 +72,11 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="stm.eventloop.EventLoop.scheduled_function">
+<tt class="descname">scheduled_function</tt><big>(</big><em>self</em>, <em>function</em><big>)</big><a class="headerlink" href="#stm.eventloop.EventLoop.scheduled_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="stm.eventloop.EventLoop.start">
 <tt class="descname">start</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.eventloop.EventLoop.start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -89,6 +94,19 @@
 <dl class="function">
 <dt id="stm.eventloop.schedule">
 <tt class="descclassname">stm.eventloop.</tt><tt class="descname">schedule</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.eventloop.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be run later.</p>
+<p>This can be used from within a transaction to schedule a function to be
+called outside of the transaction, after it commits. The specified function
+will be run outside of the context of a transaction, so it can do things
+like I/O that transactions normally aren&#8217;t allowed to do.</p>
+<p>Note that such functions are run synchronously and in the order they were
+scheduled. They should therefore complete quickly, or spawn a new thread
+(or make use of a stm.threadutils.ThreadPool) to do their work.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.eventloop.scheduled_function">
+<tt class="descclassname">stm.eventloop.</tt><tt class="descname">scheduled_function</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.eventloop.scheduled_function" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -111,10 +129,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="stm.datatypes.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">stm.datatypes</span></tt> &#8212; Some useful data types built on top of the STM system.</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">stm.datatypes</span></tt> &#8212; Some useful data types built on top of the STM system.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="stm.timeout.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">stm.timeout</span></tt> &#8212; Obsolete module providing timeout support for transactions</a></p>
+  <p class="topless"><a href="stm.threadutils.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">stm.threadutils</span></tt> &#8212; Transactional threads and thread pools.</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/stm.eventloop.txt"
@@ -147,7 +165,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="stm.timeout.html" title="stm.timeout — Obsolete module providing timeout support for transactions"
+          <a href="stm.threadutils.html" title="stm.threadutils — Transactional threads and thread pools."
              >next</a> |</li>
         <li class="right" >
           <a href="stm.datatypes.html" title="stm.datatypes — Some useful data types built on top of the STM system."

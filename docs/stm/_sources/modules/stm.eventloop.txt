@@ -27,6 +27,10 @@ Class EventLoop
 
 
 
+   .. method:: scheduled_function(self, function)
+
+
+
    .. method:: start(self)
 
 
@@ -42,4 +46,17 @@ Functions
 
 
 .. function:: schedule(function)
+
+   Schedule a function to be run later.
+
+   This can be used from within a transaction to schedule a function to be
+   called outside of the transaction, after it commits. The specified function
+   will be run outside of the context of a transaction, so it can do things
+   like I/O that transactions normally aren't allowed to do.
+
+   Note that such functions are run synchronously and in the order they were
+   scheduled. They should therefore complete quickly, or spawn a new thread
+   (or make use of a stm.threadutils.ThreadPool) to do their work.
+
+.. function:: scheduled_function(function)
 

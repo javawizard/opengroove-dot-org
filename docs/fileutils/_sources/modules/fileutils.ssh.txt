@@ -17,26 +17,21 @@ A concrete file implementation allowing file operations to be carried
 out on a remote host via SSH and SFTP.
 
 Instances of SSHFile can be constructed around an instance of
-paramiko.SFTPClient by doing::
+paramiko.Transport by doing::
 
-    f = SSHFile(sftp_client)
+    f = SSHFile.from_transport(transport)
 
-They can also be obtained from :obj:`~SSHFile.connect_with_password`.
+They can also be obtained from :obj:`~SSHFile.connect`.
 
-SSHFile instances are reentrant context managers that close their
-underlying SFTPClient's transport on exit. This in combination with
-connect_with_password allows the following pattern to be used to
-properly clean things up after manipulating remote files::
+SSHFile instances wrap their underlying paramiko.Transport instances with
+an object that automatically closes them on garbage collection. There's
+therefore no need to do anything special with an SSHFile when you're done
+with it, although you can use it as a context manager to force it to close
+before it's garbage collected.
 
-    with SSHFile.connect_with_password(...) as f:
-        ...do stuff with f...
-        with f: # SSHFiles are reentrant, so this works fine
-            ...do more stuff with f...
-        ...do even more stuff with f...
+*Method resolution order:* :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.BaseFile`
 
-*Method resolution order:* :obj:`~fileutils.interface.ReadWrite`, :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.Listable`, :obj:`~fileutils.interface.Readable`, :obj:`~fileutils.interface.Hierarchy`, :obj:`~fileutils.interface.Writable`
-
-.. class:: SSHFile(self, client, client_name=None, path='/')
+.. class:: SSHFile(self, connection, path='/')
 
 
 
@@ -57,89 +52,93 @@ properly clean things up after manipulating remote files::
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.child` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.child` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: child_names
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Listable.child_names` *in class* :obj:`~fileutils.interface.Listable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.child_names` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: create_folder(self, ignore_existing=False, recursive=False)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.create_folder` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.create_folder` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: delete(self, ignore_missing=False)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.delete` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.delete` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: disconnect(self)
 
+      Disconnect this SSHFile's underlying connection.
 
+      You usually won't need to call this explicitly; connections are
+      automatically closed when all SSHFiles referring to them are garbage
+      collected. You can use this method to force the connection to
+      disconnect before all such references are garbage collected, if you
+      want.
 
    .. method:: get_path_components(self, relative_to=None)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.get_path_components` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.get_path_components` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: link_target
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.link_target` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.link_target` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: link_to(self, other)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.link_to` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.link_to` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: open_for_reading(self)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.open_for_reading` *in class* :obj:`~fileutils.interface.Readable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.open_for_reading` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: open_for_writing(self, append=False)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Writable.open_for_writing` *in class* :obj:`~fileutils.interface.Writable`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.open_for_writing` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: parent
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Hierarchy.parent` *in class* :obj:`~fileutils.interface.Hierarchy`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.parent` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. method:: rename_to(self, other)
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.ReadWrite.rename_to` *in class* :obj:`~fileutils.interface.ReadWrite`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.rename_to` *in class* :obj:`~fileutils.interface.BaseFile`
+
+   .. attribute:: size
+
+
+
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.size` *in class* :obj:`~fileutils.interface.BaseFile`
 
    .. attribute:: type
 
 
 
-      |  *Overrides* :obj:`~fileutils.interface.Readable.type` *in class* :obj:`~fileutils.interface.Readable`
-
-   *Members inherited from class* :obj:`~fileutils.interface.ReadWrite`\ *:* :obj:`~fileutils.interface.ReadWrite.__metaclass__`
+      |  *Overrides* :obj:`~fileutils.interface.BaseFile.type` *in class* :obj:`~fileutils.interface.BaseFile`
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.Listable`\ *:* :obj:`~fileutils.interface.Listable.recurse`
-
-   *Members inherited from class* :obj:`~fileutils.interface.Readable`\ *:* :obj:`~fileutils.interface.Readable.check_file`, :obj:`~fileutils.interface.Readable.check_folder`, :obj:`~fileutils.interface.Readable.copy_into`, :obj:`~fileutils.interface.Readable.copy_to`, :obj:`~fileutils.interface.Readable.dereference`, :obj:`~fileutils.interface.Readable.exists`, :obj:`~fileutils.interface.Readable.hash`, :obj:`~fileutils.interface.Readable.is_broken`, :obj:`~fileutils.interface.Readable.is_directory`, :obj:`~fileutils.interface.Readable.is_file`, :obj:`~fileutils.interface.Readable.is_folder`, :obj:`~fileutils.interface.Readable.is_link`, :obj:`~fileutils.interface.Readable.read`, :obj:`~fileutils.interface.Readable.read_blocks`, :obj:`~fileutils.interface.Readable.size`, :obj:`~fileutils.interface.Readable.valid`
-
-   *Members inherited from class* :obj:`~fileutils.interface.Hierarchy`\ *:* :obj:`~fileutils.interface.Hierarchy.__div__`, :obj:`~fileutils.interface.Hierarchy.ancestor_of`, :obj:`~fileutils.interface.Hierarchy.ancestors`, :obj:`~fileutils.interface.Hierarchy.descendant_of`, :obj:`~fileutils.interface.Hierarchy.get_ancestors`, :obj:`~fileutils.interface.Hierarchy.get_path`, :obj:`~fileutils.interface.Hierarchy.name`, :obj:`~fileutils.interface.Hierarchy.path`, :obj:`~fileutils.interface.Hierarchy.path_components`, :obj:`~fileutils.interface.Hierarchy.safe_child`, :obj:`~fileutils.interface.Hierarchy.same_as`, :obj:`~fileutils.interface.Hierarchy.sibling`
-
-   *Members inherited from class* :obj:`~fileutils.interface.Writable`\ *:* :obj:`~fileutils.interface.Writable.append`, :obj:`~fileutils.interface.Writable.makedirs`, :obj:`~fileutils.interface.Writable.mkdir`, :obj:`~fileutils.interface.Writable.mkdirs`, :obj:`~fileutils.interface.Writable.write`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.change_to`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 ---------
 Functions

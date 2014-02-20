@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fileutils.exceptions — Backport of Python 3.3’s reworked OS/IO exception hierarchy (see PEP 3151). &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="next" title="fileutils.ftp —" href="fileutils.ftp.html" />
+    <link rel="prev" title="fileutils.constants —" href="fileutils.constants.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.ftp.html" title="fileutils.ftp —"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fileutils.exceptions">
+<span id="fileutils-exceptions-backport-of-python-3-3-s-reworked-os-io-exception-hierarchy-see-pep-3151"></span><h1><a class="reference internal" href="#module-fileutils.exceptions" title="fileutils.exceptions: Backport of Python 3.3's reworked OS/IO exception hierarchy (see PEP 3151)."><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.exceptions</span></tt></a> &#8212; Backport of Python 3.3&#8217;s reworked OS/IO exception hierarchy (see PEP 3151).<a class="headerlink" href="#module-fileutils.exceptions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="class-blockingioerror">
+<h2>Class BlockingIOError<a class="headerlink" href="#class-blockingioerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.BlockingIOError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">BlockingIOError</tt><a class="headerlink" href="#fileutils.exceptions.BlockingIOError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-brokenpipeerror">
+<h2>Class BrokenPipeError<a class="headerlink" href="#class-brokenpipeerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.exceptions.ConnectionError" title="fileutils.exceptions.ConnectionError"><tt class="xref py py-obj docutils literal"><span class="pre">ConnectionError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.BrokenPipeError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">BrokenPipeError</tt><a class="headerlink" href="#fileutils.exceptions.BrokenPipeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-childprocesserror">
+<h2>Class ChildProcessError<a class="headerlink" href="#class-childprocesserror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ChildProcessError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ChildProcessError</tt><a class="headerlink" href="#fileutils.exceptions.ChildProcessError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-connectionabortederror">
+<h2>Class ConnectionAbortedError<a class="headerlink" href="#class-connectionabortederror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.exceptions.ConnectionError" title="fileutils.exceptions.ConnectionError"><tt class="xref py py-obj docutils literal"><span class="pre">ConnectionError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ConnectionAbortedError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ConnectionAbortedError</tt><a class="headerlink" href="#fileutils.exceptions.ConnectionAbortedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-connectionerror">
+<h2>Class ConnectionError<a class="headerlink" href="#class-connectionerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ConnectionError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ConnectionError</tt><a class="headerlink" href="#fileutils.exceptions.ConnectionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-connectionrefusederror">
+<h2>Class ConnectionRefusedError<a class="headerlink" href="#class-connectionrefusederror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.exceptions.ConnectionError" title="fileutils.exceptions.ConnectionError"><tt class="xref py py-obj docutils literal"><span class="pre">ConnectionError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ConnectionRefusedError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ConnectionRefusedError</tt><a class="headerlink" href="#fileutils.exceptions.ConnectionRefusedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-connectionreseterror">
+<h2>Class ConnectionResetError<a class="headerlink" href="#class-connectionreseterror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.exceptions.ConnectionError" title="fileutils.exceptions.ConnectionError"><tt class="xref py py-obj docutils literal"><span class="pre">ConnectionError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ConnectionResetError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ConnectionResetError</tt><a class="headerlink" href="#fileutils.exceptions.ConnectionResetError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-convert">
+<h2>Class Convert<a class="headerlink" href="#class-convert" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fileutils.exceptions.Convert">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">Convert</tt><big>(</big><em>self</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#fileutils.exceptions.Convert" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="fileutils.exceptions.Convert.__enter__">
+<tt class="descname">__enter__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.exceptions.Convert.__enter__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.exceptions.Convert.__exit__">
+<tt class="descname">__exit__</tt><big>(</big><em>self</em>, <em>exception_type</em>, <em>value</em>, <em>traceback</em><big>)</big><a class="headerlink" href="#fileutils.exceptions.Convert.__exit__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-fileexistserror">
+<h2>Class FileExistsError<a class="headerlink" href="#class-fileexistserror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.FileExistsError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">FileExistsError</tt><a class="headerlink" href="#fileutils.exceptions.FileExistsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-filenotfounderror">
+<h2>Class FileNotFoundError<a class="headerlink" href="#class-filenotfounderror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.FileNotFoundError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">FileNotFoundError</tt><a class="headerlink" href="#fileutils.exceptions.FileNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-interruptederror">
+<h2>Class InterruptedError<a class="headerlink" href="#class-interruptederror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.InterruptedError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">InterruptedError</tt><a class="headerlink" href="#fileutils.exceptions.InterruptedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-isadirectoryerror">
+<h2>Class IsADirectoryError<a class="headerlink" href="#class-isadirectoryerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.IsADirectoryError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">IsADirectoryError</tt><a class="headerlink" href="#fileutils.exceptions.IsADirectoryError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-notadirectoryerror">
+<h2>Class NotADirectoryError<a class="headerlink" href="#class-notadirectoryerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.NotADirectoryError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">NotADirectoryError</tt><a class="headerlink" href="#fileutils.exceptions.NotADirectoryError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-permissionerror">
+<h2>Class PermissionError<a class="headerlink" href="#class-permissionerror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.PermissionError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">PermissionError</tt><a class="headerlink" href="#fileutils.exceptions.PermissionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-processlookuperror">
+<h2>Class ProcessLookupError<a class="headerlink" href="#class-processlookuperror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.ProcessLookupError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">ProcessLookupError</tt><a class="headerlink" href="#fileutils.exceptions.ProcessLookupError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-timeouterror">
+<h2>Class TimeoutError<a class="headerlink" href="#class-timeouterror" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.StandardError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">StandardError</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">Exception</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.exceptions.TimeoutError">
+<em class="property">class </em><tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">TimeoutError</tt><a class="headerlink" href="#fileutils.exceptions.TimeoutError" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.OSError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">OSError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__new__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EnvironmentError" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">EnvironmentError</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__reduce__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__str__</span></tt></p>
+<p><em>Members inherited from class</em> <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.BaseException" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">BaseException</span></tt></a><em>:</em> <tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getattribute__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getitem__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__getslice__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__repr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__setstate__</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">__unicode__</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fileutils.exceptions.convert">
+<tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">convert</tt><big>(</big><em>exception</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#fileutils.exceptions.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fileutils.exceptions.generate">
+<tt class="descclassname">fileutils.exceptions.</tt><tt class="descname">generate</tt><big>(</big><em>exception_class</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#fileutils.exceptions.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.exceptions</span></tt> &#8212; Backport of Python 3.3&#8217;s reworked OS/IO exception hierarchy (see PEP 3151).</a><ul>
+<li><a class="reference internal" href="#class-blockingioerror">Class BlockingIOError</a></li>
+<li><a class="reference internal" href="#class-brokenpipeerror">Class BrokenPipeError</a></li>
+<li><a class="reference internal" href="#class-childprocesserror">Class ChildProcessError</a></li>
+<li><a class="reference internal" href="#class-connectionabortederror">Class ConnectionAbortedError</a></li>
+<li><a class="reference internal" href="#class-connectionerror">Class ConnectionError</a></li>
+<li><a class="reference internal" href="#class-connectionrefusederror">Class ConnectionRefusedError</a></li>
+<li><a class="reference internal" href="#class-connectionreseterror">Class ConnectionResetError</a></li>
+<li><a class="reference internal" href="#class-convert">Class Convert</a></li>
+<li><a class="reference internal" href="#class-fileexistserror">Class FileExistsError</a></li>
+<li><a class="reference internal" href="#class-filenotfounderror">Class FileNotFoundError</a></li>
+<li><a class="reference internal" href="#class-interruptederror">Class InterruptedError</a></li>
+<li><a class="reference internal" href="#class-isadirectoryerror">Class IsADirectoryError</a></li>
+<li><a class="reference internal" href="#class-notadirectoryerror">Class NotADirectoryError</a></li>
+<li><a class="reference internal" href="#class-permissionerror">Class PermissionError</a></li>
+<li><a class="reference internal" href="#class-processlookuperror">Class ProcessLookupError</a></li>
+<li><a class="reference internal" href="#class-timeouterror">Class TimeoutError</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fileutils.constants.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">fileutils.constants</span></tt> &#8212;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fileutils.ftp.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">fileutils.ftp</span></tt> &#8212;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/fileutils.exceptions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.ftp.html" title="fileutils.ftp —"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

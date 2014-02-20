@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fileutils.mixins — &mdash; Python  documentation</title>
+    <title>fileutils.smb — &mdash; Python  documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Python  documentation" href="../index.html" />
-    <link rel="next" title="fileutils.smb —" href="fileutils.smb.html" />
-    <link rel="prev" title="fileutils.local —" href="fileutils.local.html" /> 
+    <link rel="next" title="fileutils.ssh —" href="fileutils.ssh.html" />
+    <link rel="prev" title="fileutils.mixins —" href="fileutils.mixins.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,10 +40,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fileutils.smb.html" title="fileutils.smb —"
+          <a href="fileutils.ssh.html" title="fileutils.ssh —"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fileutils.local.html" title="fileutils.local —"
+          <a href="fileutils.mixins.html" title="fileutils.mixins —"
              accesskey="P">previous</a> |</li>
         <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
       </ul>
@@ -54,25 +54,16 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-fileutils.mixins">
-<span id="fileutils-mixins"></span><h1><a class="reference internal" href="#module-fileutils.mixins" title="fileutils.mixins"><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.mixins</span></tt></a> &#8212;<a class="headerlink" href="#module-fileutils.mixins" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="class-childrenmixin">
-<h2>Class ChildrenMixin<a class="headerlink" href="#class-childrenmixin" title="Permalink to this headline">¶</a></h2>
-<p><em>Method resolution order:</em> <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a></p>
+  <div class="section" id="module-fileutils.smb">
+<span id="fileutils-smb"></span><h1><a class="reference internal" href="#module-fileutils.smb" title="fileutils.smb"><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.smb</span></tt></a> &#8212;<a class="headerlink" href="#module-fileutils.smb" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="class-smbfile">
+<h2>Class SMBFile<a class="headerlink" href="#class-smbfile" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="fileutils.mixins.html#fileutils.mixins.ChildrenMixin" title="fileutils.mixins.ChildrenMixin"><tt class="xref py py-obj docutils literal"><span class="pre">ChildrenMixin</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a></p>
 <dl class="class">
-<dt id="fileutils.mixins.ChildrenMixin">
-<em class="property">class </em><tt class="descclassname">fileutils.mixins.</tt><tt class="descname">ChildrenMixin</tt><a class="headerlink" href="#fileutils.mixins.ChildrenMixin" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.smb.SMBFile">
+<em class="property">class </em><tt class="descclassname">fileutils.smb.</tt><tt class="descname">SMBFile</tt><a class="headerlink" href="#fileutils.smb.SMBFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
-<dl class="attribute">
-<dt id="fileutils.mixins.ChildrenMixin.children">
-<tt class="descname">children</tt><a class="headerlink" href="#fileutils.mixins.ChildrenMixin.children" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of all of the children of this file, as a list of File objects.
-If this file is not a folder, the value of this property is None.</p>
-<div class="line-block">
-<div class="line"><em>Overrides</em> <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.children" title="fileutils.interface.BaseFile.children"><tt class="xref py py-obj docutils literal"><span class="pre">children</span></tt></a> <em>in class</em> <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a></div>
-</div>
-</dd></dl>
-
+<p><em>Members inherited from class</em> <a class="reference internal" href="fileutils.mixins.html#fileutils.mixins.ChildrenMixin" title="fileutils.mixins.ChildrenMixin"><tt class="xref py py-obj docutils literal"><span class="pre">ChildrenMixin</span></tt></a><em>:</em> <a class="reference internal" href="fileutils.mixins.html#fileutils.mixins.ChildrenMixin.children" title="fileutils.mixins.ChildrenMixin.children"><tt class="xref py py-obj docutils literal"><span class="pre">children</span></tt></a></p>
 <p><em>Members inherited from class</em> <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a><em>:</em> <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.__div__" title="fileutils.interface.BaseFile.__div__"><tt class="xref py py-obj docutils literal"><span class="pre">__div__</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.ancestor_of" title="fileutils.interface.BaseFile.ancestor_of"><tt class="xref py py-obj docutils literal"><span class="pre">ancestor_of</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.ancestors" title="fileutils.interface.BaseFile.ancestors"><tt class="xref py py-obj docutils literal"><span class="pre">ancestors</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.append" title="fileutils.interface.BaseFile.append"><tt class="xref py py-obj docutils literal"><span class="pre">append</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.as_working" title="fileutils.interface.BaseFile.as_working"><tt class="xref py py-obj docutils literal"><span class="pre">as_working</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.cd" title="fileutils.interface.BaseFile.cd"><tt class="xref py py-obj docutils literal"><span class="pre">cd</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.change_to" title="fileutils.interface.BaseFile.change_to"><tt class="xref py py-obj docutils literal"><span class="pre">change_to</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.check_file" title="fileutils.interface.BaseFile.check_file"><tt class="xref py py-obj docutils literal"><span class="pre">check_file</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.check_folder" title="fileutils.interface.BaseFile.check_folder"><tt class="xref py py-obj docutils literal"><span class="pre">check_folder</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.child" title="fileutils.interface.BaseFile.child"><tt class="xref py py-obj docutils literal"><span class="pre">child</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.child_names" title="fileutils.interface.BaseFile.child_names"><tt class="xref py py-obj docutils literal"><span class="pre">child_names</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.copy_into" title="fileutils.interface.BaseFile.copy_into"><tt class="xref py py-obj docutils literal"><span class="pre">copy_into</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.copy_to" title="fileutils.interface.BaseFile.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.create_folder" title="fileutils.interface.BaseFile.create_folder"><tt class="xref py py-obj docutils literal"><span class="pre">create_folder</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.delete" title="fileutils.interface.BaseFile.delete"><tt class="xref py py-obj docutils literal"><span class="pre">delete</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.dereference" title="fileutils.interface.BaseFile.dereference"><tt class="xref py py-obj docutils literal"><span class="pre">dereference</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.descendant_of" title="fileutils.interface.BaseFile.descendant_of"><tt class="xref py py-obj docutils literal"><span class="pre">descendant_of</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.exists" title="fileutils.interface.BaseFile.exists"><tt class="xref py py-obj docutils literal"><span class="pre">exists</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.get_ancestors" title="fileutils.interface.BaseFile.get_ancestors"><tt class="xref py py-obj docutils literal"><span class="pre">get_ancestors</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.get_path" title="fileutils.interface.BaseFile.get_path"><tt class="xref py py-obj docutils literal"><span class="pre">get_path</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.get_path_components" title="fileutils.interface.BaseFile.get_path_components"><tt class="xref py py-obj docutils literal"><span class="pre">get_path_components</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.hash" title="fileutils.interface.BaseFile.hash"><tt class="xref py py-obj docutils literal"><span class="pre">hash</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.is_broken" title="fileutils.interface.BaseFile.is_broken"><tt class="xref py py-obj docutils literal"><span class="pre">is_broken</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.is_directory" title="fileutils.interface.BaseFile.is_directory"><tt class="xref py py-obj docutils literal"><span class="pre">is_directory</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.is_file" title="fileutils.interface.BaseFile.is_file"><tt class="xref py py-obj docutils literal"><span class="pre">is_file</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.is_folder" title="fileutils.interface.BaseFile.is_folder"><tt class="xref py py-obj docutils literal"><span class="pre">is_folder</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.is_link" title="fileutils.interface.BaseFile.is_link"><tt class="xref py py-obj docutils literal"><span class="pre">is_link</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.link_target" title="fileutils.interface.BaseFile.link_target"><tt class="xref py py-obj docutils literal"><span class="pre">link_target</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.link_to" title="fileutils.interface.BaseFile.link_to"><tt class="xref py py-obj docutils literal"><span class="pre">link_to</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.makedirs" title="fileutils.interface.BaseFile.makedirs"><tt class="xref py py-obj docutils literal"><span class="pre">makedirs</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.mkdir" title="fileutils.interface.BaseFile.mkdir"><tt class="xref py py-obj docutils literal"><span class="pre">mkdir</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.mkdirs" title="fileutils.interface.BaseFile.mkdirs"><tt class="xref py py-obj docutils literal"><span class="pre">mkdirs</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.name" title="fileutils.interface.BaseFile.name"><tt class="xref py py-obj docutils literal"><span class="pre">name</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.open_for_reading" title="fileutils.interface.BaseFile.open_for_reading"><tt class="xref py py-obj docutils literal"><span class="pre">open_for_reading</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.open_for_writing" title="fileutils.interface.BaseFile.open_for_writing"><tt class="xref py py-obj docutils literal"><span class="pre">open_for_writing</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.parent" title="fileutils.interface.BaseFile.parent"><tt class="xref py py-obj docutils literal"><span class="pre">parent</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.path" title="fileutils.interface.BaseFile.path"><tt class="xref py py-obj docutils literal"><span class="pre">path</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.path_components" title="fileutils.interface.BaseFile.path_components"><tt class="xref py py-obj docutils literal"><span class="pre">path_components</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.read" title="fileutils.interface.BaseFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.read_blocks" title="fileutils.interface.BaseFile.read_blocks"><tt class="xref py py-obj docutils literal"><span class="pre">read_blocks</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.recurse" title="fileutils.interface.BaseFile.recurse"><tt class="xref py py-obj docutils literal"><span class="pre">recurse</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.rename_to" title="fileutils.interface.BaseFile.rename_to"><tt class="xref py py-obj docutils literal"><span class="pre">rename_to</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.safe_child" title="fileutils.interface.BaseFile.safe_child"><tt class="xref py py-obj docutils literal"><span class="pre">safe_child</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.same_as" title="fileutils.interface.BaseFile.same_as"><tt class="xref py py-obj docutils literal"><span class="pre">same_as</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.sibling" title="fileutils.interface.BaseFile.sibling"><tt class="xref py py-obj docutils literal"><span class="pre">sibling</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.size" title="fileutils.interface.BaseFile.size"><tt class="xref py py-obj docutils literal"><span class="pre">size</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.type" title="fileutils.interface.BaseFile.type"><tt class="xref py py-obj docutils literal"><span class="pre">type</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.valid" title="fileutils.interface.BaseFile.valid"><tt class="xref py py-obj docutils literal"><span class="pre">valid</span></tt></a>, <a class="reference internal" href="fileutils.interface.html#fileutils.interface.BaseFile.write" title="fileutils.interface.BaseFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a></p>
 </dd></dl>
 
@@ -87,21 +78,21 @@ If this file is not a folder, the value of this property is None.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.mixins</span></tt> &#8212;</a><ul>
-<li><a class="reference internal" href="#class-childrenmixin">Class ChildrenMixin</a></li>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.smb</span></tt> &#8212;</a><ul>
+<li><a class="reference internal" href="#class-smbfile">Class SMBFile</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="fileutils.local.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">fileutils.local</span></tt> &#8212;</a></p>
+  <p class="topless"><a href="fileutils.mixins.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">fileutils.mixins</span></tt> &#8212;</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="fileutils.smb.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">fileutils.smb</span></tt> &#8212;</a></p>
+  <p class="topless"><a href="fileutils.ssh.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">fileutils.ssh</span></tt> &#8212;</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/modules/fileutils.mixins.txt"
+    <li><a href="../_sources/modules/fileutils.smb.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -131,10 +122,10 @@ If this file is not a folder, the value of this property is None.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fileutils.smb.html" title="fileutils.smb —"
+          <a href="fileutils.ssh.html" title="fileutils.ssh —"
              >next</a> |</li>
         <li class="right" >
-          <a href="fileutils.local.html" title="fileutils.local —"
+          <a href="fileutils.mixins.html" title="fileutils.mixins —"
              >previous</a> |</li>
         <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
       </ul>

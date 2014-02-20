@@ -73,6 +73,98 @@ implicitly run inside a call to stm.atomically(). Thus the following:</p>
 </div>
 </dd></dl>
 
+<dl class="function">
+<dt id="stm.utils.atomically_watch">
+<tt class="descclassname">stm.utils.</tt><tt class="descname">atomically_watch</tt><big>(</big><em>function</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#stm.utils.atomically_watch" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around stm.watch that automatically runs the call inside a
+transaction. This is essentially equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">stm</span><span class="o">.</span><span class="n">atomically</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">stm</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">callback</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>but, as with stm.watch, atomically_watch can be used as a decorator by
+omitting the callback parameter. For example, the following could be used
+outside of a transaction to place a new watch:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@atomically_watch</span><span class="p">(</span><span class="n">some_tvar</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="o">...</span><span class="n">do</span> <span class="n">something</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>This would be equivalent to:</p>
+<blockquote>
+<div><p>&#64;stm.atomically
+def _():</p>
+<blockquote>
+<div><p>&#64;stm.watch(some_tvar.get)
+def _(result):</p>
+<blockquote>
+<div>..do something..</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p>Note that the callback will (as callbacks always are) still be run inside
+a transaction. If you need to perform I/O in the callback, use
+stm.eventloop.scheduled_function to decorate the callback such that it will
+be run by the event loop outside of the scope of STM:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@atomically_watch</span><span class="p">(</span><span class="n">some_tvar</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+<span class="nd">@stm.eventloop.scheduled_function</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;Changed to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="c"># Or any other I/O</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.utils.changes_only">
+<tt class="descclassname">stm.utils.</tt><tt class="descname">changes_only</tt><big>(</big><em>callback=None</em>, <em>according_to=None</em><big>)</big><a class="headerlink" href="#stm.utils.changes_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator that can be used to decorate callbacks that are to be passed to
+stm.watch to filter out duplicate invocations with the same result value.
+It can be used either as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@changes_only</span>
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>or as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@changes_only</span><span class="p">(</span><span class="n">according_to</span><span class="o">=</span><span class="n">some_predicate</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>with the latter allowing a custom two-argument function to be used to
+compare the equality of the value passed to a given invocation with the
+value passed to the previous invocation; the former compares values using
+the &#8220;is&#8221; operator.</p>
+<p>Note that the resulting callback will keep a reference around to the last
+value with which it was called, so make sure you&#8217;re not counting on this
+value&#8217;s being garbage collected immediately after the callback is invoked.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.utils.wait_until">
+<tt class="descclassname">stm.utils.</tt><tt class="descname">wait_until</tt><big>(</big><em>function</em>, <em>timeout_after=None</em>, <em>timeout_at=None</em><big>)</big><a class="headerlink" href="#stm.utils.wait_until" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until the specified function returns true. This is just short for:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">function</span><span class="p">():</span>
+    <span class="k">return</span>
+<span class="k">elif</span> <span class="n">elapsed</span><span class="p">(</span><span class="n">timeout_after</span><span class="p">,</span> <span class="n">timeout_at</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">stm</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">Timeout</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>but the entire thing is automatically wrapped in a call to stm.atomically,
+so wait_until can be called outside of a transaction.</p>
+<p>timeout_after and timeout_at specify (in the same format as elapsed()&#8217;s
+seconds and time parameters) a timeout after which wait_until will give up
+and raise stm.timeout.Timeout.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.utils.would_block">
+<tt class="descclassname">stm.utils.</tt><tt class="descname">would_block</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.utils.would_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the specified function in a nested transaction, abort the nested
+transaction to avoid any side effects being persisted, then return True if
+the function attempted to retry.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -92,7 +184,7 @@ implicitly run inside a call to stm.atomically(). Thus the following:</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="stm.timeout.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">stm.timeout</span></tt> &#8212; Obsolete module providing timeout support for transactions</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">stm.timeout</span></tt> &#8212; Obsolete module providing timeout support for transactions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/stm.utils.txt"

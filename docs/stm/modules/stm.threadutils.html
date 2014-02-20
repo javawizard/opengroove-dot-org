@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stm.threadutils — Transactional threads and thread pools. &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="next" title="stm.timeout — Obsolete module providing timeout support for transactions" href="stm.timeout.html" />
+    <link rel="prev" title="stm.eventloop —" href="stm.eventloop.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.timeout.html" title="stm.timeout — Obsolete module providing timeout support for transactions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="stm.eventloop.html" title="stm.eventloop —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-stm.threadutils">
+<span id="stm-threadutils-transactional-threads-and-thread-pools"></span><h1><a class="reference internal" href="#module-stm.threadutils" title="stm.threadutils: Transactional threads and thread pools."><tt class="xref py py-mod docutils literal"><span class="pre">stm.threadutils</span></tt></a> &#8212; Transactional threads and thread pools.<a class="headerlink" href="#module-stm.threadutils" title="Permalink to this headline">¶</a></h1>
+<p>More documentation to come.</p>
+<div class="section" id="class-thread">
+<h2>Class Thread<a class="headerlink" href="#class-thread" title="Permalink to this headline">¶</a></h2>
+<p>A transactional wrapper around Python&#8217;s threading.Thread.</p>
+<p>Instances of this class can be created and started from within an STM
+transaction. Threads started in such a way will begin running shortly
+after the transaction commits.</p>
+<p><em>Method resolution order:</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject" title="stm.datatypes.TObject"><tt class="xref py py-obj docutils literal"><span class="pre">TObject</span></tt></a></p>
+<dl class="class">
+<dt id="stm.threadutils.Thread">
+<em class="property">class </em><tt class="descclassname">stm.threadutils.</tt><tt class="descname">Thread</tt><big>(</big><em>self</em>, <em>target=None</em><big>)</big><a class="headerlink" href="#stm.threadutils.Thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new thread.</p>
+<dl class="method">
+<dt id="stm.threadutils.Thread.run">
+<tt class="descname">run</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.threadutils.Thread.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stm.threadutils.Thread.start">
+<tt class="descname">start</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#stm.threadutils.Thread.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start this thread.</p>
+<p>This can be called both inside and outside of a transaction. If it&#8217;s
+called from inside a transaction, the thread will begin running shortly
+after the transaction commits.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stm.threadutils.Thread.state">
+<tt class="descname">state</tt><a class="headerlink" href="#stm.threadutils.Thread.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>The state this thread is currently in. This will be one of:</p>
+<blockquote>
+<div><ul class="simple">
+<li>NEW: This thread has been created but start() has not yet been
+called</li>
+<li>STARTED: start() has been called but the thread has not yet
+commenced execution. Threads started from within a transaction will
+remain in STARTED until shortly after the transaction commits.</li>
+<li>RUNNING: The thread has commenced execution.</li>
+<li>FINISHED: The thread has died.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<p><em>Members inherited from class</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject" title="stm.datatypes.TObject"><tt class="xref py py-obj docutils literal"><span class="pre">TObject</span></tt></a><em>:</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__delattr__" title="stm.datatypes.TObject.__delattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__dir__" title="stm.datatypes.TObject.__dir__"><tt class="xref py py-obj docutils literal"><span class="pre">__dir__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__getattr__" title="stm.datatypes.TObject.__getattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__getattr__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__setattr__" title="stm.datatypes.TObject.__setattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="class-threadpool">
+<h2>Class ThreadPool<a class="headerlink" href="#class-threadpool" title="Permalink to this headline">¶</a></h2>
+<p>An object that schedules execution of functions across a pool of threads.</p>
+<p><em>Method resolution order:</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject" title="stm.datatypes.TObject"><tt class="xref py py-obj docutils literal"><span class="pre">TObject</span></tt></a></p>
+<dl class="class">
+<dt id="stm.threadutils.ThreadPool">
+<em class="property">class </em><tt class="descclassname">stm.threadutils.</tt><tt class="descname">ThreadPool</tt><big>(</big><em>self</em>, <em>max_threads</em>, <em>keep_alive</em><big>)</big><a class="headerlink" href="#stm.threadutils.ThreadPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new ThreadPool that will use up to the specified number of
+threads and that will keep idle threads alive for the specified number
+of seconds before killing them off.</p>
+<dl class="method">
+<dt id="stm.threadutils.ThreadPool.join">
+<tt class="descname">join</tt><big>(</big><em>self</em>, <em>timeout_after=None</em>, <em>timeout_at=None</em><big>)</big><a class="headerlink" href="#stm.threadutils.ThreadPool.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until this thread pool is idle, i.e. all scheduled tasks have
+completed. Note that a call to this function may never return if enough
+calls to schedule() are being made to keep the thread pool saturated
+with tasks to run.</p>
+<p>timeout_after and timeout_at specify a timeout (in the same format as
+that given to stm.utils.wait_until) after which join() will give up
+and raise stm.timeout.Timeout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stm.threadutils.ThreadPool.schedule">
+<tt class="descname">schedule</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#stm.threadutils.ThreadPool.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be run by this thread pool. The function will
+be executed as soon as one of this pool&#8217;s threads is free.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="stm.threadutils.ThreadPool.tasks_finished">
+<tt class="descname">tasks_finished</tt><a class="headerlink" href="#stm.threadutils.ThreadPool.tasks_finished" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="stm.threadutils.ThreadPool.tasks_remaining">
+<tt class="descname">tasks_remaining</tt><a class="headerlink" href="#stm.threadutils.ThreadPool.tasks_remaining" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="stm.threadutils.ThreadPool.tasks_scheduled">
+<tt class="descname">tasks_scheduled</tt><a class="headerlink" href="#stm.threadutils.ThreadPool.tasks_scheduled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><em>Members inherited from class</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject" title="stm.datatypes.TObject"><tt class="xref py py-obj docutils literal"><span class="pre">TObject</span></tt></a><em>:</em> <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__delattr__" title="stm.datatypes.TObject.__delattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__delattr__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__dir__" title="stm.datatypes.TObject.__dir__"><tt class="xref py py-obj docutils literal"><span class="pre">__dir__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__getattr__" title="stm.datatypes.TObject.__getattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__getattr__</span></tt></a>, <a class="reference internal" href="stm.datatypes.html#stm.datatypes.TObject.__setattr__" title="stm.datatypes.TObject.__setattr__"><tt class="xref py py-obj docutils literal"><span class="pre">__setattr__</span></tt></a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">stm.threadutils</span></tt> &#8212; Transactional threads and thread pools.</a><ul>
+<li><a class="reference internal" href="#class-thread">Class Thread</a></li>
+<li><a class="reference internal" href="#class-threadpool">Class ThreadPool</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="stm.eventloop.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">stm.eventloop</span></tt> &#8212;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="stm.timeout.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">stm.timeout</span></tt> &#8212; Obsolete module providing timeout support for transactions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/stm.threadutils.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="stm.timeout.html" title="stm.timeout — Obsolete module providing timeout support for transactions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="stm.eventloop.html" title="stm.eventloop —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,8 +1,11 @@
 .. toctree::
    modules/fileutils.rst
    modules/fileutils.constants.rst
+   modules/fileutils.exceptions.rst
+   modules/fileutils.ftp.rst
    modules/fileutils.interface.rst
    modules/fileutils.local.rst
    modules/fileutils.mixins.rst
+   modules/fileutils.smb.rst
    modules/fileutils.ssh.rst
    modules/fileutils.url.rst

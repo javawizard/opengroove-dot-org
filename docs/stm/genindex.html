@@ -55,11 +55,13 @@
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -291,6 +293,10 @@
   <dt><a href="modules/stm.html#stm.atomically">atomically() (in module stm)</a>
   </dt>
 
+      
+  <dt><a href="modules/stm.utils.html#stm.utils.atomically_watch">atomically_watch() (in module stm.utils)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -305,6 +311,16 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.BroadcastQueue">BroadcastQueue (class in stm.datatypes)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="modules/stm.utils.html#stm.utils.changes_only">changes_only() (in module stm.utils)</a>
   </dt>
 
   </dl></td>
@@ -330,15 +346,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="modules/stm.datatypes.html#stm.datatypes.Empty">Empty (class in stm.datatypes)</a>
+  <dt><a href="modules/stm.html#stm.elapsed">elapsed() (in module stm)</a>
   </dt>
 
       
-  <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop">EventLoop (class in stm.eventloop)</a>
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.Empty">Empty (class in stm.datatypes)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop">EventLoop (class in stm.eventloop)</a>
+  </dt>
+
       
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TList.extend">extend() (stm.datatypes.TList method)</a>
   </dt>
@@ -376,6 +396,10 @@
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TMutableWeakRef.get">(stm.datatypes.TMutableWeakRef method)</a>
   </dt>
 
+        
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.TPossiblyWeakRef.get">(stm.datatypes.TPossiblyWeakRef method)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -396,6 +420,16 @@
   </dt>
 
       
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.TPossiblyWeakRef.is_alive">is_alive (stm.datatypes.TPossiblyWeakRef attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="modules/stm.html#stm.TWeakRef.is_alive">(stm.TWeakRef attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.BroadcastEndpoint.is_empty">is_empty (stm.datatypes.BroadcastEndpoint attribute)</a>
   </dt>
 
@@ -415,6 +449,16 @@
 
       
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TDict.itervalues">itervalues() (stm.datatypes.TDict method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool.join">join() (stm.threadutils.ThreadPool method)</a>
   </dt>
 
   </dl></td>
@@ -512,19 +556,29 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="modules/stm.datatypes.html#stm.datatypes.BroadcastEndpoint.replace">replace() (stm.datatypes.BroadcastEndpoint method)</a>
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.BroadcastEndpoint.remaining">remaining (stm.datatypes.BroadcastEndpoint attribute)</a>
   </dt>
 
       
-  <dt><a href="modules/stm.html#stm.retry">retry() (in module stm)</a>
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.BroadcastEndpoint.replace">replace() (stm.datatypes.BroadcastEndpoint method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="modules/stm.html#stm.retry">retry() (in module stm)</a>
+  </dt>
+
+      
   <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop.run">run() (stm.eventloop.EventLoop method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.Thread.run">(stm.threadutils.Thread method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -538,6 +592,20 @@
       <dd><dl>
         
   <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop.schedule">(stm.eventloop.EventLoop method)</a>
+  </dt>
+
+        
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool.schedule">(stm.threadutils.ThreadPool method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="modules/stm.eventloop.html#stm.eventloop.scheduled_function">scheduled_function() (in module stm.eventloop)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop.scheduled_function">(stm.eventloop.EventLoop method)</a>
   </dt>
 
       </dl></dd>
@@ -555,18 +623,32 @@
   <dt><a href="modules/stm.eventloop.html#stm.eventloop.EventLoop.start">start() (stm.eventloop.EventLoop method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.Thread.start">(stm.threadutils.Thread method)</a>
+  </dt>
+
+      </dl></dd>
       
-  <dt><a href="modules/stm.html#module-stm">stm (module)</a>
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.Thread.state">state (stm.threadutils.Thread attribute)</a>
   </dt>
 
       
-  <dt><a href="modules/stm.datatypes.html#module-stm.datatypes">stm.datatypes (module)</a>
+  <dt><a href="modules/stm.html#module-stm">stm (module)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="modules/stm.datatypes.html#module-stm.datatypes">stm.datatypes (module)</a>
+  </dt>
+
+      
   <dt><a href="modules/stm.eventloop.html#module-stm.eventloop">stm.eventloop (module)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.threadutils.html#module-stm.threadutils">stm.threadutils (module)</a>
   </dt>
 
       
@@ -588,7 +670,27 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool.tasks_finished">tasks_finished (stm.threadutils.ThreadPool attribute)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool.tasks_remaining">tasks_remaining (stm.threadutils.ThreadPool attribute)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool.tasks_scheduled">tasks_scheduled (stm.threadutils.ThreadPool attribute)</a>
+  </dt>
+
+      
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TDict">TDict (class in stm.datatypes)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.Thread">Thread (class in stm.threadutils)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.threadutils.html#stm.threadutils.ThreadPool">ThreadPool (class in stm.threadutils)</a>
   </dt>
 
       
@@ -599,6 +701,8 @@
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TList">TList (class in stm.datatypes)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TMutableWeakRef">TMutableWeakRef (class in stm.datatypes)</a>
   </dt>
@@ -607,8 +711,10 @@
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TObject">TObject (class in stm.datatypes)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.TPossiblyWeakRef">TPossiblyWeakRef (class in stm.datatypes)</a>
+  </dt>
+
       
   <dt><a href="modules/stm.datatypes.html#stm.datatypes.TSet">TSet (class in stm.datatypes)</a>
   </dt>
@@ -645,6 +751,10 @@
   </dt>
 
         
+  <dt><a href="modules/stm.datatypes.html#stm.datatypes.TPossiblyWeakRef.value">(stm.datatypes.TPossiblyWeakRef attribute)</a>
+  </dt>
+
+        
   <dt><a href="modules/stm.datatypes.html#stm.datatypes._DictEntry.value">(stm.datatypes._DictEntry attribute)</a>
   </dt>
 
@@ -669,6 +779,14 @@
   <dt><a href="modules/stm.timeout.html#stm.timeout.wait_then_raise">wait_then_raise() (in module stm.timeout)</a>
   </dt>
 
+      
+  <dt><a href="modules/stm.utils.html#stm.utils.wait_until">wait_until() (in module stm.utils)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.html#stm.watch">watch() (in module stm)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -677,6 +795,10 @@
 
       
   <dt><a href="modules/stm.timeout.html#stm.timeout.with_timeout">with_timeout() (in module stm.timeout)</a>
+  </dt>
+
+      
+  <dt><a href="modules/stm.utils.html#stm.utils.would_block">would_block() (in module stm.utils)</a>
   </dt>
 
   </dl></td>
