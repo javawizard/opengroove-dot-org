@@ -13,7 +13,12 @@
 Class BaseFile
 --------------
 
+An abstract class representing an absolute path to a file on a particular
+FileSystem instance.
 
+Instances of this class can be obtained from FileSystem.child(). They can
+also be obtained from FileSystem.roots, a property providing a list of all
+of the file system's root directories.
 
 .. class:: BaseFile
 
@@ -75,6 +80,12 @@ Class BaseFile
       also use an "as" clause on the with statement to get access to the
       file in case you haven't got it stored in a variable anywhere.
 
+   .. attribute:: attributes
+
+      This is the new attributes system. It's highly experimental, so beware
+      that it might not work as expected and that its API could change
+      without notice. More to come.
+
    .. method:: cd(self)
 
       An alias for :obj:`self.change_to() <change_to>`.
@@ -124,6 +135,57 @@ Class BaseFile
       A list of all of the children of this file, as a list of File objects.
       If this file is not a folder, the value of this property is None.
 
+   .. method:: copy_attributes_to(self, other, which_attributes={})
+
+      Copy file/directory attributes from self to other.
+
+      which_attributes is a dictionary indicating which attribute sets are
+      to be copied. The keys are subclasses of AttributeSet (these are class
+      objects themselves, not instances of said classes) and the values
+      indicate whether, and how, attribute sets are to be copied:
+
+          True indicates that the attribute set in question should be copied.
+          The copying will be performed with the attribute set's copy_to
+          method.
+          
+          False indicates that the attribute set in question should not be
+          copied.
+          
+          A two-argument function can be used to copy attributes in a custom
+          manner. The function will be called with the source attribute set
+          as the first argument and the target attribute set as the second
+          argument.
+
+      One additional key, None, can be specified. Its value indicates
+      whether, and how, all attribute sets not explicitly specified in the
+      dictionary are to be copied. If not specified, each attribute set's
+      copy_by_default property is used to decide whether or not to copy that
+      attribute set.
+
+      To copy POSIX permissions and mode bits only, and nothing else, one
+      could use::
+
+          foo.copy_attributes_to(bar, {PosixPermissions: True, None: False})
+
+      To skip copying of POSIX permissions and mode bits but copy everything
+      else, one could use::
+
+          foo.copy_attributes_to(bar, {PosixPermissions: False})
+
+      To copy only the extended attribute "user.foo", one could use::
+
+          def copy_user_foo(source, target):
+              target.set("user.foo", source.get("user.foo"))
+          foo.copy_attributes_to(bar, {ExtendedAttributes: copy_user_foo,
+                                       None: False})
+
+      (This example would be easier written as::
+
+          bar.attributes[ExtendedAttributes].set("user.foo,
+              foo.attributes[ExtendedAttributes].get("user.foo"))
+
+      so take it as purely an example.)
+
    .. method:: copy_into(self, other, overwrite=False)
 
       Copies this file to an identically named file inside the specified
@@ -134,7 +196,7 @@ Class BaseFile
       The newly-created file in the specified folder will be returned as per
       other.child(self.name).
 
-   .. method:: copy_to(self, other, overwrite=False, dereference_links=True)
+   .. method:: copy_to(self, other, overwrite=False, dereference_links=True, attribute_sets=None)
 
       Copies the contents of this file to the specified file object. An
       exception will be thrown if the specified file already exists and
@@ -269,6 +331,12 @@ Class BaseFile
       True if this File is a symbolic link, False if it isn't. This will be
       True even for broken symbolic links.
 
+   .. attribute:: is_mountpoint
+
+      True if this File is a mount point, False if it isn't.
+
+      This is just short for self.mountpoint.location == self.
+
    .. attribute:: link_target
 
       Returns the target to which this file, which is expected to be a
@@ -297,6 +365,10 @@ Class BaseFile
                makedirs(self, silent=False)
 
       An alias for self.create_folder(ignore_existing=silent, recursive=True).
+
+   .. attribute:: mountpoint
+
+      The MountPoint instance on which this file resides.
 
    .. attribute:: name
 
@@ -474,3 +546,223 @@ Class BaseFile
 
       If binary is True (the default), the file will be written
       byte-for-byte. If it's False, the file will be written in text mode. 
+
+---------------
+Class DiskUsage
+---------------
+
+Disk space and inode usage.
+
+Instances of this class are typically obtained from MountPoint.usage.
+
+.. class:: DiskUsage(self, space, inodes)
+
+
+
+   .. method:: __repr__(self)
+               __str__(self)
+
+
+
+   .. attribute:: inodes
+
+      An instance of Usage indicating utilization of inodes, or None on
+      platforms (like Windows) that don't have such a concept.
+
+   .. attribute:: space
+
+      An instance of Usage indicating utilization of disk space.
+
+----------------
+Class FileSystem
+----------------
+
+An abstract class representing an entire file system hierarchy.
+
+Instances of this class are typically obtained by directly instantiating
+its subclasses. The most commonly used subclass, LocalFileSystem, maintains
+a singleton instance that corresponds to the filesystem of the local
+machine. Other subclasses include SSHFileSystem.
+
+.. class:: FileSystem
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: child(self, path)
+
+      Return an instance of BaseFile representing the file located at the
+      specific path. 
+
+   .. attribute:: mountpoints
+
+      A list of MountPoint instances corresponding to all mount points on the
+      system.
+
+      On Windows, there will be exactly one mount point for each drive
+      letter. On POSIX systems, there will be one mount point per, well,
+      mount point.
+
+   .. attribute:: roots
+
+      A list of all of the file system hierarchy roots exposes by this
+      FileSystem instance.
+
+      On Windows, there will be one root per drive letter. On POSIX systems,
+      there will be exactly one root, namely '/'.
+
+-----------------
+Class MountDevice
+-----------------
+
+A device as mounted under a particular mount point.
+
+Note: The API of this class is still in flux. I'm particularly considering
+splitting it into two classes whose names are yet to be decided, one of
+which will contain every property except subpath and the other of which
+will contain two properties, subpath and device, the latter pointing to an
+instance of the former class. Bear this in mind when writing code that uses
+this class.
+
+.. class:: MountDevice
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: device
+
+      A textual representation of this device, if the subclass exposes such
+      information.
+
+      If self.location is not None, this will be self.location.path.
+
+      On Linux, for special file system types, this will be the name of the
+      type in question; 'tmpfs', for example.
+
+   .. attribute:: location
+
+      The location of this device as a BaseFile instance, if the subclass
+      exposes mount point devices in the form of a file in the file system
+      hierarchy. On Linux, for example, this might be something like
+      File('/dev/sda1'). On Windows this will be None, and it will also be
+      None on Linux for special file systems like tmpfs that don't have any
+      representation in the file system hierarchy.
+
+   .. attribute:: subpath
+
+      The subpath, as a string containing an absolute path, of the file
+      system located on this device being exposed to the mount point on which
+      this device is mounted, or None if the subclass doesn't support such a
+      notion.
+
+      For most mount devices that support this, this will just be "/". It can
+      be a different path when a nested path within a particular file system
+      is exposed with a bind mount; in such a case, this is the path within
+      the file system being exposed at the mount point on which this device
+      is mounted.
+
+----------------
+Class MountPoint
+----------------
+
+An abstract class representing mount points on a file system.
+
+Instances of this class can be obtained from BaseFile.mountpoint, a
+property that returns the MountPoint instance on which the file in question
+resides. They can also be obtained from FileSystem.mountpoints, a property
+that returns a list of all of the system's mount points.
+
+.. class:: MountPoint
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: available_space
+
+
+
+   .. attribute:: device
+
+      An instance of MountDevice representing the topmost device currently
+      mounted at this mount point. This is the device whose data is currently
+      available at this mount point.
+
+      This is just short for self.devices[-1], but if self.devices is empty,
+      None will be returned instead.
+
+   .. attribute:: devices
+
+      A list of instances of MountDevice representing all of the devices
+      currently mounted at this mount point, in the order in which they were
+      attached. The last of these is the device whose data is currently
+      available at this mount point.
+
+      Not all systems support stacks of devices mounted at the same
+      mount point. For systems that don't support this, there will never be
+      more than one device mounted at any given mount point. For systems that
+      do (such as Linux), unmounting a mount point simply causes the last
+      device attached to the mount point to be popped off the stack, and the
+      next device's data is made available at that mount point.
+
+   .. attribute:: filesystem
+
+      The FileSystem instance on which this mount point resides.
+
+   .. attribute:: free_space
+
+
+
+   .. attribute:: location
+
+      The BaseFile instance indicating the directory at which this mount
+      point is mounted.
+
+   .. attribute:: total_space
+
+
+
+   .. method:: unmount(self, force=True)
+
+      Unmount the topmost device attached to this mountpoint.
+
+   .. attribute:: usage
+
+      An instance of DiskUsage indicating the current disk and inode usage
+      for this mount point.
+
+   .. attribute:: used_space
+
+
+
+-----------
+Class Usage
+-----------
+
+Usage of a particular file system resource, such as disk space (given in
+bytes) or inodes.
+
+.. class:: Usage(self, total, used, available)
+
+
+
+   .. method:: __repr__(self)
+
+
+
+   .. attribute:: available
+
+      Amount of free disk space or number of inodes available to the current
+      user.
+
+      This is often the same as self.free, but things like disk space quotas
+      and blocks reserved for the superuser can make it have a value less
+      than that of self.free.
+
+   .. attribute:: free
+
+      Amount of disk space or number of inodes not currently in use.
+
+   .. attribute:: total
+
+      Total amount of disk space or inodes available.
+
+   .. attribute:: used
+
+      Amount of disk space or number of inodes currently in use.

@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fileutils.attributes — &mdash; Python  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python  documentation" href="../index.html" />
+    <link rel="next" title="fileutils.constants —" href="fileutils.constants.html" />
+    <link rel="prev" title="fileutils —" href="fileutils.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.html" title="fileutils —"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fileutils.attributes">
+<span id="fileutils-attributes"></span><h1><a class="reference internal" href="#module-fileutils.attributes" title="fileutils.attributes"><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.attributes</span></tt></a> &#8212;<a class="headerlink" href="#module-fileutils.attributes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="class-attributeset">
+<h2>Class AttributeSet<a class="headerlink" href="#class-attributeset" title="Permalink to this headline">¶</a></h2>
+<p>A set of attributes on a file.</p>
+<p>Each of the subclasses of this class provide an interface to a particular
+set of filesystem attributes. PosixPermissions, for example, provides an
+interface to POSIX-style permissions and mode bits, and ExtendedAttributes
+provides a platform-neutral interface to user-defined extended attributes.</p>
+<p>AttributeSet instances can be obtained from any BaseFile instance&#8217;s
+attributes property. This property is a dictionary whose keys are the
+various subclasses of AttributeSet (the class objects themselves, not
+instances of said classes) and whose values are instances of the
+corresponding subclass. For example, one could, on a POSIX system, get an
+instance of PosixPermissions corresponding to /home with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">File</span><span class="p">(</span><span class="s">&#39;/home&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">PosixPermissions</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Instances of these subclasses can then be used to read and modify the
+file&#8217;s attributes in a subclass specific manner. PosixPermissions has
+properties that can be used to set the various mode bits, so, for example,
+one could grant a particular file&#8217;s group permission to write to that file
+thus:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">some_file</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">PosixPermissions</span><span class="p">]</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="fileutils.attributes.AttributeSet">
+<em class="property">class </em><tt class="descclassname">fileutils.attributes.</tt><tt class="descname">AttributeSet</tt><a class="headerlink" href="#fileutils.attributes.AttributeSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.attributes.AttributeSet.copy_by_default">
+<tt class="descname">copy_by_default</tt><a class="headerlink" href="#fileutils.attributes.AttributeSet.copy_by_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this attribute set should be copied by default, false if it
+shouldn&#8217;t be.</p>
+<p>Functions like BaseFile.copy_attributes_to (and, by extension,
+BaseFile.copy_to and BaseFile.copy_into) consult this property when
+they&#8217;re not given further direction as to which attribute sets should
+be copied from one file to another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.AttributeSet.copy_to">
+<tt class="descname">copy_to</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.attributes.AttributeSet.copy_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy attributes exposed by this attribute set to the specified
+attribute set.</p>
+<p>All of the subclasses of AttributeSet provide implementations of this
+method. Subclasses of those subclasses shouldn&#8217;t need to override this.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-extendedattributes">
+<h2>Class ExtendedAttributes<a class="headerlink" href="#class-extendedattributes" title="Permalink to this headline">¶</a></h2>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.attributes.ExtendedAttributes">
+<em class="property">class </em><tt class="descclassname">fileutils.attributes.</tt><tt class="descname">ExtendedAttributes</tt><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.attributes.ExtendedAttributes.copy_to">
+<tt class="descname">copy_to</tt><big>(</big><em>self</em>, <em>other</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.copy_to" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><em>Overrides</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet.copy_to" title="fileutils.attributes.AttributeSet.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a> <em>in class</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.ExtendedAttributes.delete">
+<tt class="descname">delete</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.ExtendedAttributes.get">
+<tt class="descname">get</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.ExtendedAttributes.list">
+<tt class="descname">list</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.ExtendedAttributes.set">
+<tt class="descname">set</tt><big>(</big><em>self</em>, <em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-posixpermissions">
+<h2>Class PosixPermissions<a class="headerlink" href="#class-posixpermissions" title="Permalink to this headline">¶</a></h2>
+<p>An attribute set providing access to a file&#8217;s POSIX permission and mode
+bits.</p>
+<p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a></p>
+<dl class="class">
+<dt id="fileutils.attributes.PosixPermissions">
+<em class="property">class </em><tt class="descclassname">fileutils.attributes.</tt><tt class="descname">PosixPermissions</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.execute">
+<tt class="descname">execute</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if any of the file&#8217;s execute bits are set, false if none of them
+are.</p>
+<p>Setting the value of this property to True turns on the corresponding
+execute bit for each read bit that&#8217;s set (but does not clear other
+execute bits that are already set). Setting the value of this property
+to False clears all executable bits that are set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.PosixPermissions.get">
+<tt class="descname">get</tt><big>(</big><em>self</em>, <em>mask</em><big>)</big><a class="headerlink" href="#fileutils.attributes.PosixPermissions.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.group">
+<tt class="descname">group</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.mode">
+<tt class="descname">mode</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.other">
+<tt class="descname">other</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.other" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fileutils.attributes.PosixPermissions.set">
+<tt class="descname">set</tt><big>(</big><em>self</em>, <em>mask</em>, <em>value</em><big>)</big><a class="headerlink" href="#fileutils.attributes.PosixPermissions.set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.setgid">
+<tt class="descname">setgid</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.setgid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.setuid">
+<tt class="descname">setuid</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.setuid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.sticky">
+<tt class="descname">sticky</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.sticky" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.attributes.PosixPermissions.user">
+<tt class="descname">user</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><em>Members inherited from class</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a><em>:</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet.copy_to" title="fileutils.attributes.AttributeSet.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.attributes</span></tt> &#8212;</a><ul>
+<li><a class="reference internal" href="#class-attributeset">Class AttributeSet</a></li>
+<li><a class="reference internal" href="#class-extendedattributes">Class ExtendedAttributes</a></li>
+<li><a class="reference internal" href="#class-posixpermissions">Class PosixPermissions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fileutils.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">fileutils</span></tt> &#8212;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fileutils.constants.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">fileutils.constants</span></tt> &#8212;</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/fileutils.attributes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fileutils.constants.html" title="fileutils.constants —"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileutils.html" title="fileutils —"
+             >previous</a> |</li>
+        <li><a href="../contents.html">Python  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright .
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

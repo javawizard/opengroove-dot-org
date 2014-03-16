@@ -53,6 +53,12 @@
   <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.html"><tt class="docutils literal"><span class="pre">fileutils</span></tt> &#8212;</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/fileutils.attributes.html"><tt class="docutils literal"><span class="pre">fileutils.attributes</span></tt> &#8212;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.attributes.html#class-attributeset">Class AttributeSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.attributes.html#class-extendedattributes">Class ExtendedAttributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.attributes.html#class-posixpermissions">Class PosixPermissions</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.constants.html"><tt class="docutils literal"><span class="pre">fileutils.constants</span></tt> &#8212;</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.exceptions.html"><tt class="docutils literal"><span class="pre">fileutils.exceptions</span></tt> &#8212; Backport of Python 3.3&#8217;s reworked OS/IO exception hierarchy (see PEP 3151).</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.exceptions.html#class-blockingioerror">Class BlockingIOError</a></li>
@@ -80,17 +86,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.interface.html"><tt class="docutils literal"><span class="pre">fileutils.interface</span></tt> &#8212; Abstract classes.</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-basefile">Class BaseFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-diskusage">Class DiskUsage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-filesystem">Class FileSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-mountdevice">Class MountDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-mountpoint">Class MountPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.interface.html#class-usage">Class Usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.local.html"><tt class="docutils literal"><span class="pre">fileutils.local</span></tt> &#8212;</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-file">Class File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-localfilesystem">Class LocalFileSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-localmountpoint">Class LocalMountPoint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-posixfile">Class PosixFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-posixlocalextendedattributes">Class PosixLocalExtendedAttributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-posixlocalfilesystem">Class PosixLocalFileSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-posixlocalmountpoint">Class PosixLocalMountPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-posixlocalpermissions">Class PosixLocalPermissions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-windowsfile">Class WindowsFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-windowslocalfilesystem">Class WindowsLocalFileSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#class-windowsmountpoint">Class WindowsMountPoint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.local.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.mixins.html"><tt class="docutils literal"><span class="pre">fileutils.mixins</span></tt> &#8212;</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.mixins.html#class-childrenmixin">Class ChildrenMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.mixins.html#class-defaultmountdevice">Class DefaultMountDevice</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.smb.html"><tt class="docutils literal"><span class="pre">fileutils.smb</span></tt> &#8212;</a><ul>
@@ -99,11 +119,16 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.ssh.html"><tt class="docutils literal"><span class="pre">fileutils.ssh</span></tt> &#8212;</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.ssh.html#class-sshfile">Class SSHFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.ssh.html#class-sshfilesystem">Class SSHFileSystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.ssh.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/fileutils.url.html"><tt class="docutils literal"><span class="pre">fileutils.url</span></tt> &#8212;</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/fileutils.url.html#class-url">Class URL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/fileutils.zip.html"><tt class="docutils literal"><span class="pre">fileutils.zip</span></tt> &#8212;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/fileutils.zip.html#class-zipfile">Class ZipFile</a></li>
 </ul>
 </li>
 </ul>

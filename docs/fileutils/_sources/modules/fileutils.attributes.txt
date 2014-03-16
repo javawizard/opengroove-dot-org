@@ -1,0 +1,155 @@
+
+
+================================
+:mod:`fileutils.attributes` --- 
+================================
+
+.. module:: fileutils.attributes
+   :synopsis: 
+
+
+
+------------------
+Class AttributeSet
+------------------
+
+A set of attributes on a file.
+
+Each of the subclasses of this class provide an interface to a particular
+set of filesystem attributes. PosixPermissions, for example, provides an
+interface to POSIX-style permissions and mode bits, and ExtendedAttributes
+provides a platform-neutral interface to user-defined extended attributes.
+
+AttributeSet instances can be obtained from any BaseFile instance's
+attributes property. This property is a dictionary whose keys are the
+various subclasses of AttributeSet (the class objects themselves, not
+instances of said classes) and whose values are instances of the
+corresponding subclass. For example, one could, on a POSIX system, get an
+instance of PosixPermissions corresponding to /home with::
+
+    File('/home').attributes[PosixPermissions]
+
+Instances of these subclasses can then be used to read and modify the
+file's attributes in a subclass specific manner. PosixPermissions has
+properties that can be used to set the various mode bits, so, for example,
+one could grant a particular file's group permission to write to that file
+thus::
+
+    some_file.attributes[PosixPermissions].group.write = True
+
+.. class:: AttributeSet
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: copy_by_default
+
+      True if this attribute set should be copied by default, false if it
+      shouldn't be.
+
+      Functions like BaseFile.copy_attributes_to (and, by extension,
+      BaseFile.copy_to and BaseFile.copy_into) consult this property when
+      they're not given further direction as to which attribute sets should
+      be copied from one file to another.
+
+   .. method:: copy_to(self, other)
+
+      Copy attributes exposed by this attribute set to the specified
+      attribute set.
+
+      All of the subclasses of AttributeSet provide implementations of this
+      method. Subclasses of those subclasses shouldn't need to override this.
+
+------------------------
+Class ExtendedAttributes
+------------------------
+
+
+
+*Method resolution order:* :obj:`~fileutils.attributes.AttributeSet`
+
+.. class:: ExtendedAttributes
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: copy_to(self, other)
+
+
+
+      |  *Overrides* :obj:`~fileutils.attributes.AttributeSet.copy_to` *in class* :obj:`~fileutils.attributes.AttributeSet`
+
+   .. method:: delete(self, name)
+
+
+
+   .. method:: get(self, name)
+
+
+
+   .. method:: list(self)
+
+
+
+   .. method:: set(self, name, value)
+
+
+
+----------------------
+Class PosixPermissions
+----------------------
+
+An attribute set providing access to a file's POSIX permission and mode
+bits.
+
+*Method resolution order:* :obj:`~fileutils.attributes.AttributeSet`
+
+.. class:: PosixPermissions
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: execute
+
+      True if any of the file's execute bits are set, false if none of them
+      are.
+
+      Setting the value of this property to True turns on the corresponding
+      execute bit for each read bit that's set (but does not clear other
+      execute bits that are already set). Setting the value of this property
+      to False clears all executable bits that are set.
+
+   .. method:: get(self, mask)
+
+
+
+   .. attribute:: group
+
+
+
+   .. attribute:: mode
+
+
+
+   .. attribute:: other
+
+
+
+   .. method:: set(self, mask, value)
+
+
+
+   .. attribute:: setgid
+
+
+
+   .. attribute:: setuid
+
+
+
+   .. attribute:: sticky
+
+
+
+   .. attribute:: user
+
+
+
+   *Members inherited from class* :obj:`~fileutils.attributes.AttributeSet`\ *:* :obj:`~fileutils.attributes.AttributeSet.copy_to`

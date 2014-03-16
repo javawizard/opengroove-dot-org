@@ -1,5 +1,6 @@
 .. toctree::
    modules/fileutils.rst
+   modules/fileutils.attributes.rst
    modules/fileutils.constants.rst
    modules/fileutils.exceptions.rst
    modules/fileutils.ftp.rst
@@ -9,3 +10,4 @@
    modules/fileutils.smb.rst
    modules/fileutils.ssh.rst
    modules/fileutils.url.rst
+   modules/fileutils.zip.rst
