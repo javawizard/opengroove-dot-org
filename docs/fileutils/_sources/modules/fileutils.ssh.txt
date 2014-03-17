@@ -31,7 +31,7 @@ before it's garbage collected.
 
 *Method resolution order:* :obj:`~fileutils.mixins.ChildrenMixin`, :obj:`~fileutils.interface.BaseFile`
 
-.. class:: SSHFile(self, connection, path='/')
+.. class:: SSHFile(self, filesystem, path='/')
 
 
 
@@ -138,21 +138,26 @@ before it's garbage collected.
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.attributes`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.change_to`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mountpoint`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.mountpoint`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.attributes`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.change_to`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mount`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.mountpoint`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 -------------------
 Class SSHFileSystem
 -------------------
 
-
+An implementation of :obj:`FileSystem <fileutils.interface.FileSystem>`
+that allows access to a remote machine using SSH and SFTP.
 
 *Method resolution order:* :obj:`~fileutils.interface.FileSystem`
 
-.. class:: SSHFileSystem(self, transport, client, client_name=None, autoclose=True)
+.. class:: SSHFileSystem(self, transport, client=None, client_name=None, autoclose=True)
 
 
 
    .. method:: __del__(self)
+
+
+
+   .. method:: __repr__(self)
 
 
 
@@ -172,7 +177,7 @@ Class SSHFileSystem
 
       |  *Overrides* :obj:`~fileutils.interface.FileSystem.roots` *in class* :obj:`~fileutils.interface.FileSystem`
 
-   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.mountpoints`
+   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.mountpoints`, :obj:`~fileutils.interface.FileSystem.root`
 
 ---------
 Functions
@@ -182,3 +187,5 @@ Functions
 
 .. function:: ssh_connect(host, username)
 
+   Obsolete; use SSHFileSystem.connect instead. Present only for backward
+   compatibility, and will likely be going away soon.

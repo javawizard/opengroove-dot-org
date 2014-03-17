@@ -7,7 +7,239 @@
 .. module:: fileutils.interface
    :synopsis: Abstract classes.
 
+This module contains all of the abstract classes that define the public API for
+fileutils.
 
+----------------
+Class FileSystem
+----------------
+
+An abstract class representing an entire file system hierarchy.
+
+Instances of this class are typically obtained by directly instantiating
+its subclasses. The most commonly used subclass,
+:obj:`LocalFileSystem <fileutils.local.LocalFileSystem>`, maintains
+a singleton instance that corresponds to the filesystem of the local
+machine. Other subclasses include
+:obj:`SSHFileSystem <fileutils.ssh.SSHFileSystem>`.
+
+.. class:: FileSystem
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. method:: child(self, path)
+
+      Return an instance of :obj:`BaseFile` representing the file located at
+      the specific path. 
+
+   .. attribute:: mountpoints
+
+      A list of :obj:`MountPoint` instances corresponding to all mount points
+      on the system.
+
+      On Windows, there will be exactly one mount point for each drive
+      letter. On POSIX systems, there will be one mount point per, well,
+      mount point.
+
+   .. attribute:: root
+
+      A sensible "default" root for this file system, or None if there isn't
+      really any sensible default.
+
+      The default implementation just returns self.roots[0]. 
+
+   .. attribute:: roots
+
+      A list of all of the file system hierarchy roots exposes by this
+      FileSystem instance, as :obj:`BaseFile` instances.
+
+      On Windows, there will be one root per drive letter. On POSIX systems,
+      there will be exactly one root, namely '/'.
+
+----------------
+Class MountPoint
+----------------
+
+An abstract class representing mount points on a file system.
+
+Instances of this class can be obtained from :obj:`~BaseFile.mountpoint`, a
+property that returns the MountPoint instance on which the file in question
+resides. They can also be obtained from :obj:`~FileSystem.mountpoints`, a
+property that returns a list of all of the system's mount points.
+
+.. class:: MountPoint
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: available_space
+
+      Shorthand for self.\ :obj:`usage <usage>`.\ :obj:`space <DiskUsage.space>`.\ :obj:`available <Usage.available>`.
+
+   .. attribute:: device
+
+      An instance of :obj:`MountDevice` representing the topmost device
+      currently mounted at this mount point. This is the device whose data is
+      currently available at this mount point.
+
+      This is just short for :obj:`self.devices <devices>`[-1], but if
+      self.devices is empty, None will be returned instead.
+
+   .. attribute:: devices
+
+      A list of instances of :obj:`MountDevice` representing all of the
+      devices currently mounted at this mount point, in the order in which
+      they were attached. The last of these is the device whose data is
+      currently available at this mount point.
+
+      Not all systems support stacks of devices mounted at the same
+      mount point. For systems that don't support this, there will never be
+      more than one device mounted at any given mount point. For systems that
+      do (such as Linux), unmounting a mount point simply causes the last
+      device attached to the mount point to be popped off the stack, and the
+      next device's data is made available at that mount point.
+
+   .. attribute:: filesystem
+
+      The :obj:`FileSystem` instance on which this mount point resides.
+
+   .. attribute:: free_space
+
+      Shorthand for self.\ :obj:`usage <usage>`.\ :obj:`space <DiskUsage.space>`.\ :obj:`free <Usage.free>`.
+
+   .. attribute:: location
+
+      The :obj:`BaseFile` instance indicating the directory at which this
+      mount point is mounted.
+
+   .. attribute:: total_space
+
+      Shorthand for self.\ :obj:`usage <usage>`.\ :obj:`space <DiskUsage.space>`.\ :obj:`total <Usage.total>`.
+
+   .. method:: unmount(self, force=True)
+
+      Unmount the topmost device attached to this mount point.
+
+   .. attribute:: usage
+
+      An instance of :obj:`DiskUsage` indicating the current disk and inode
+      usage for this mount point.
+
+   .. attribute:: used_space
+
+      Shorthand for self.\ :obj:`usage <usage>`.\ :obj:`space <DiskUsage.space>`.\ :obj:`used <Usage.used>`.
+
+-----------------
+Class MountDevice
+-----------------
+
+A device as mounted under a particular mount point.
+
+Note: The API of this class is still in flux. I'm particularly considering
+splitting it into two classes whose names are yet to be decided, one of
+which will contain every property except subpath and the other of which
+will contain two properties, subpath and device, the latter pointing to an
+instance of the former class. Bear this in mind when writing code that uses
+this class.
+
+.. class:: MountDevice
+
+   x.__init__(...) initializes x; see help(type(x)) for signature
+
+   .. attribute:: device
+
+      A textual representation of this device, if the subclass exposes such
+      information.
+
+      If :obj:`self.location <location>` is not None, this will be
+      self.location.path.
+
+      On Linux, for special file system types, this will be the name of the
+      type in question; 'tmpfs', for example.
+
+   .. attribute:: location
+
+      The location of this device as a :obj:`BaseFile` instance, if the subclass
+      exposes mount point devices in the form of a file in the file system
+      hierarchy. On Linux, for example, this might be something like
+      File('/dev/sda1'). On Windows this will be None, and it will also be
+      None on Linux for special file systems like tmpfs that don't have any
+      representation in the file system hierarchy.
+
+   .. attribute:: subpath
+
+      The subpath, as a string containing an absolute path, of the file
+      system located on this device being exposed to the mount point on which
+      this device is mounted, or None if the subclass doesn't support such a
+      notion.
+
+      For most mount devices that support this, this will just be "/". It can
+      be a different path when a nested path within a particular file system
+      is exposed with a bind mount; in such a case, this is the path within
+      the file system being exposed at the mount point on which this device
+      is mounted.
+
+---------------
+Class DiskUsage
+---------------
+
+Disk space and inode usage.
+
+Instances of this class are typically obtained from
+:obj:`MountPoint.usage`.
+
+.. class:: DiskUsage(self, space, inodes)
+
+
+
+   .. method:: __repr__(self)
+               __str__(self)
+
+
+
+   .. attribute:: inodes
+
+      An instance of :obj:`Usage` indicating utilization of inodes, or None
+      on platforms (like Windows) that don't have such a concept.
+
+   .. attribute:: space
+
+      An instance of :obj:`Usage` indicating utilization of disk space.
+
+-----------
+Class Usage
+-----------
+
+Usage of a particular file system resource, such as disk space (given in
+bytes) or inodes.
+
+.. class:: Usage(self, total, used, available)
+
+
+
+   .. method:: __repr__(self)
+
+
+
+   .. attribute:: available
+
+      Amount of free disk space or number of inodes available to the current
+      user.
+
+      This is often the same as :obj:`self.free <free>`, but things like disk
+      space quotas and blocks reserved for the superuser can make it have a
+      value less than that of self.free.
+
+   .. attribute:: free
+
+      Amount of disk space or number of inodes not currently in use.
+
+   .. attribute:: total
+
+      Total amount of disk space or inodes available.
+
+   .. attribute:: used
+
+      Amount of disk space or number of inodes currently in use.
 
 --------------
 Class BaseFile
@@ -16,8 +248,9 @@ Class BaseFile
 An abstract class representing an absolute path to a file on a particular
 FileSystem instance.
 
-Instances of this class can be obtained from FileSystem.child(). They can
-also be obtained from FileSystem.roots, a property providing a list of all
+Instances of this class can be obtained from
+:obj:`FileSystem.child()` <FileSystem.child>`. They can also be obtained
+from :obj:`FileSystem.roots`, a property providing a list of all
 of the file system's root directories.
 
 .. class:: BaseFile
@@ -331,7 +564,7 @@ of the file system's root directories.
       True if this File is a symbolic link, False if it isn't. This will be
       True even for broken symbolic links.
 
-   .. attribute:: is_mountpoint
+   .. attribute:: is_mount
 
       True if this File is a mount point, False if it isn't.
 
@@ -546,223 +779,3 @@ of the file system's root directories.
 
       If binary is True (the default), the file will be written
       byte-for-byte. If it's False, the file will be written in text mode. 
-
----------------
-Class DiskUsage
----------------
-
-Disk space and inode usage.
-
-Instances of this class are typically obtained from MountPoint.usage.
-
-.. class:: DiskUsage(self, space, inodes)
-
-
-
-   .. method:: __repr__(self)
-               __str__(self)
-
-
-
-   .. attribute:: inodes
-
-      An instance of Usage indicating utilization of inodes, or None on
-      platforms (like Windows) that don't have such a concept.
-
-   .. attribute:: space
-
-      An instance of Usage indicating utilization of disk space.
-
-----------------
-Class FileSystem
-----------------
-
-An abstract class representing an entire file system hierarchy.
-
-Instances of this class are typically obtained by directly instantiating
-its subclasses. The most commonly used subclass, LocalFileSystem, maintains
-a singleton instance that corresponds to the filesystem of the local
-machine. Other subclasses include SSHFileSystem.
-
-.. class:: FileSystem
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. method:: child(self, path)
-
-      Return an instance of BaseFile representing the file located at the
-      specific path. 
-
-   .. attribute:: mountpoints
-
-      A list of MountPoint instances corresponding to all mount points on the
-      system.
-
-      On Windows, there will be exactly one mount point for each drive
-      letter. On POSIX systems, there will be one mount point per, well,
-      mount point.
-
-   .. attribute:: roots
-
-      A list of all of the file system hierarchy roots exposes by this
-      FileSystem instance.
-
-      On Windows, there will be one root per drive letter. On POSIX systems,
-      there will be exactly one root, namely '/'.
-
------------------
-Class MountDevice
------------------
-
-A device as mounted under a particular mount point.
-
-Note: The API of this class is still in flux. I'm particularly considering
-splitting it into two classes whose names are yet to be decided, one of
-which will contain every property except subpath and the other of which
-will contain two properties, subpath and device, the latter pointing to an
-instance of the former class. Bear this in mind when writing code that uses
-this class.
-
-.. class:: MountDevice
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. attribute:: device
-
-      A textual representation of this device, if the subclass exposes such
-      information.
-
-      If self.location is not None, this will be self.location.path.
-
-      On Linux, for special file system types, this will be the name of the
-      type in question; 'tmpfs', for example.
-
-   .. attribute:: location
-
-      The location of this device as a BaseFile instance, if the subclass
-      exposes mount point devices in the form of a file in the file system
-      hierarchy. On Linux, for example, this might be something like
-      File('/dev/sda1'). On Windows this will be None, and it will also be
-      None on Linux for special file systems like tmpfs that don't have any
-      representation in the file system hierarchy.
-
-   .. attribute:: subpath
-
-      The subpath, as a string containing an absolute path, of the file
-      system located on this device being exposed to the mount point on which
-      this device is mounted, or None if the subclass doesn't support such a
-      notion.
-
-      For most mount devices that support this, this will just be "/". It can
-      be a different path when a nested path within a particular file system
-      is exposed with a bind mount; in such a case, this is the path within
-      the file system being exposed at the mount point on which this device
-      is mounted.
-
-----------------
-Class MountPoint
-----------------
-
-An abstract class representing mount points on a file system.
-
-Instances of this class can be obtained from BaseFile.mountpoint, a
-property that returns the MountPoint instance on which the file in question
-resides. They can also be obtained from FileSystem.mountpoints, a property
-that returns a list of all of the system's mount points.
-
-.. class:: MountPoint
-
-   x.__init__(...) initializes x; see help(type(x)) for signature
-
-   .. attribute:: available_space
-
-
-
-   .. attribute:: device
-
-      An instance of MountDevice representing the topmost device currently
-      mounted at this mount point. This is the device whose data is currently
-      available at this mount point.
-
-      This is just short for self.devices[-1], but if self.devices is empty,
-      None will be returned instead.
-
-   .. attribute:: devices
-
-      A list of instances of MountDevice representing all of the devices
-      currently mounted at this mount point, in the order in which they were
-      attached. The last of these is the device whose data is currently
-      available at this mount point.
-
-      Not all systems support stacks of devices mounted at the same
-      mount point. For systems that don't support this, there will never be
-      more than one device mounted at any given mount point. For systems that
-      do (such as Linux), unmounting a mount point simply causes the last
-      device attached to the mount point to be popped off the stack, and the
-      next device's data is made available at that mount point.
-
-   .. attribute:: filesystem
-
-      The FileSystem instance on which this mount point resides.
-
-   .. attribute:: free_space
-
-
-
-   .. attribute:: location
-
-      The BaseFile instance indicating the directory at which this mount
-      point is mounted.
-
-   .. attribute:: total_space
-
-
-
-   .. method:: unmount(self, force=True)
-
-      Unmount the topmost device attached to this mountpoint.
-
-   .. attribute:: usage
-
-      An instance of DiskUsage indicating the current disk and inode usage
-      for this mount point.
-
-   .. attribute:: used_space
-
-
-
------------
-Class Usage
------------
-
-Usage of a particular file system resource, such as disk space (given in
-bytes) or inodes.
-
-.. class:: Usage(self, total, used, available)
-
-
-
-   .. method:: __repr__(self)
-
-
-
-   .. attribute:: available
-
-      Amount of free disk space or number of inodes available to the current
-      user.
-
-      This is often the same as self.free, but things like disk space quotas
-      and blocks reserved for the superuser can make it have a value less
-      than that of self.free.
-
-   .. attribute:: free
-
-      Amount of disk space or number of inodes not currently in use.
-
-   .. attribute:: total
-
-      Total amount of disk space or inodes available.
-
-   .. attribute:: used
-
-      Amount of disk space or number of inodes currently in use.

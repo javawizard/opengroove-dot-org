@@ -56,12 +56,280 @@
             
   <div class="section" id="module-fileutils.interface">
 <span id="fileutils-interface-abstract-classes"></span><h1><a class="reference internal" href="#module-fileutils.interface" title="fileutils.interface: Abstract classes."><tt class="xref py py-mod docutils literal"><span class="pre">fileutils.interface</span></tt></a> &#8212; Abstract classes.<a class="headerlink" href="#module-fileutils.interface" title="Permalink to this headline">¶</a></h1>
+<p>This module contains all of the abstract classes that define the public API for
+fileutils.</p>
+<div class="section" id="class-filesystem">
+<h2>Class FileSystem<a class="headerlink" href="#class-filesystem" title="Permalink to this headline">¶</a></h2>
+<p>An abstract class representing an entire file system hierarchy.</p>
+<p>Instances of this class are typically obtained by directly instantiating
+its subclasses. The most commonly used subclass,
+<a class="reference internal" href="fileutils.local.html#fileutils.local.LocalFileSystem" title="fileutils.local.LocalFileSystem"><tt class="xref py py-obj docutils literal"><span class="pre">LocalFileSystem</span></tt></a>, maintains
+a singleton instance that corresponds to the filesystem of the local
+machine. Other subclasses include
+<a class="reference internal" href="fileutils.ssh.html#fileutils.ssh.SSHFileSystem" title="fileutils.ssh.SSHFileSystem"><tt class="xref py py-obj docutils literal"><span class="pre">SSHFileSystem</span></tt></a>.</p>
+<dl class="class">
+<dt id="fileutils.interface.FileSystem">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">FileSystem</tt><a class="headerlink" href="#fileutils.interface.FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="method">
+<dt id="fileutils.interface.FileSystem.child">
+<tt class="descname">child</tt><big>(</big><em>self</em>, <em>path</em><big>)</big><a class="headerlink" href="#fileutils.interface.FileSystem.child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an instance of <a class="reference internal" href="#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a> representing the file located at
+the specific path.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.FileSystem.mountpoints">
+<tt class="descname">mountpoints</tt><a class="headerlink" href="#fileutils.interface.FileSystem.mountpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#fileutils.interface.MountPoint" title="fileutils.interface.MountPoint"><tt class="xref py py-obj docutils literal"><span class="pre">MountPoint</span></tt></a> instances corresponding to all mount points
+on the system.</p>
+<p>On Windows, there will be exactly one mount point for each drive
+letter. On POSIX systems, there will be one mount point per, well,
+mount point.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.FileSystem.root">
+<tt class="descname">root</tt><a class="headerlink" href="#fileutils.interface.FileSystem.root" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sensible &#8220;default&#8221; root for this file system, or None if there isn&#8217;t
+really any sensible default.</p>
+<p>The default implementation just returns self.roots[0].</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.FileSystem.roots">
+<tt class="descname">roots</tt><a class="headerlink" href="#fileutils.interface.FileSystem.roots" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of all of the file system hierarchy roots exposes by this
+FileSystem instance, as <a class="reference internal" href="#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a> instances.</p>
+<p>On Windows, there will be one root per drive letter. On POSIX systems,
+there will be exactly one root, namely &#8216;/&#8217;.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-mountpoint">
+<h2>Class MountPoint<a class="headerlink" href="#class-mountpoint" title="Permalink to this headline">¶</a></h2>
+<p>An abstract class representing mount points on a file system.</p>
+<p>Instances of this class can be obtained from <a class="reference internal" href="#fileutils.interface.BaseFile.mountpoint" title="fileutils.interface.BaseFile.mountpoint"><tt class="xref py py-obj docutils literal"><span class="pre">mountpoint</span></tt></a>, a
+property that returns the MountPoint instance on which the file in question
+resides. They can also be obtained from <a class="reference internal" href="#fileutils.interface.FileSystem.mountpoints" title="fileutils.interface.FileSystem.mountpoints"><tt class="xref py py-obj docutils literal"><span class="pre">mountpoints</span></tt></a>, a
+property that returns a list of all of the system&#8217;s mount points.</p>
+<dl class="class">
+<dt id="fileutils.interface.MountPoint">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">MountPoint</tt><a class="headerlink" href="#fileutils.interface.MountPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.available_space">
+<tt class="descname">available_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.available_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorthand for self.<a class="reference internal" href="#fileutils.interface.MountPoint.usage" title="fileutils.interface.MountPoint.usage"><tt class="xref py py-obj docutils literal"><span class="pre">usage</span></tt></a>.<a class="reference internal" href="#fileutils.interface.DiskUsage.space" title="fileutils.interface.DiskUsage.space"><tt class="xref py py-obj docutils literal"><span class="pre">space</span></tt></a>.<a class="reference internal" href="#fileutils.interface.Usage.available" title="fileutils.interface.Usage.available"><tt class="xref py py-obj docutils literal"><span class="pre">available</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.device">
+<tt class="descname">device</tt><a class="headerlink" href="#fileutils.interface.MountPoint.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#fileutils.interface.MountDevice" title="fileutils.interface.MountDevice"><tt class="xref py py-obj docutils literal"><span class="pre">MountDevice</span></tt></a> representing the topmost device
+currently mounted at this mount point. This is the device whose data is
+currently available at this mount point.</p>
+<p>This is just short for :obj:<a href="#id1"><span class="problematic" id="id2">`</span></a>self.devices &lt;devices&gt;`[-1], but if
+self.devices is empty, None will be returned instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.devices">
+<tt class="descname">devices</tt><a class="headerlink" href="#fileutils.interface.MountPoint.devices" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of instances of <a class="reference internal" href="#fileutils.interface.MountDevice" title="fileutils.interface.MountDevice"><tt class="xref py py-obj docutils literal"><span class="pre">MountDevice</span></tt></a> representing all of the
+devices currently mounted at this mount point, in the order in which
+they were attached. The last of these is the device whose data is
+currently available at this mount point.</p>
+<p>Not all systems support stacks of devices mounted at the same
+mount point. For systems that don&#8217;t support this, there will never be
+more than one device mounted at any given mount point. For systems that
+do (such as Linux), unmounting a mount point simply causes the last
+device attached to the mount point to be popped off the stack, and the
+next device&#8217;s data is made available at that mount point.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.filesystem">
+<tt class="descname">filesystem</tt><a class="headerlink" href="#fileutils.interface.MountPoint.filesystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#fileutils.interface.FileSystem" title="fileutils.interface.FileSystem"><tt class="xref py py-obj docutils literal"><span class="pre">FileSystem</span></tt></a> instance on which this mount point resides.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.free_space">
+<tt class="descname">free_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.free_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorthand for self.<a class="reference internal" href="#fileutils.interface.MountPoint.usage" title="fileutils.interface.MountPoint.usage"><tt class="xref py py-obj docutils literal"><span class="pre">usage</span></tt></a>.<a class="reference internal" href="#fileutils.interface.DiskUsage.space" title="fileutils.interface.DiskUsage.space"><tt class="xref py py-obj docutils literal"><span class="pre">space</span></tt></a>.<a class="reference internal" href="#fileutils.interface.Usage.free" title="fileutils.interface.Usage.free"><tt class="xref py py-obj docutils literal"><span class="pre">free</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.location">
+<tt class="descname">location</tt><a class="headerlink" href="#fileutils.interface.MountPoint.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a> instance indicating the directory at which this
+mount point is mounted.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.total_space">
+<tt class="descname">total_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.total_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorthand for self.<a class="reference internal" href="#fileutils.interface.MountPoint.usage" title="fileutils.interface.MountPoint.usage"><tt class="xref py py-obj docutils literal"><span class="pre">usage</span></tt></a>.<a class="reference internal" href="#fileutils.interface.DiskUsage.space" title="fileutils.interface.DiskUsage.space"><tt class="xref py py-obj docutils literal"><span class="pre">space</span></tt></a>.<a class="reference internal" href="#fileutils.interface.Usage.total" title="fileutils.interface.Usage.total"><tt class="xref py py-obj docutils literal"><span class="pre">total</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fileutils.interface.MountPoint.unmount">
+<tt class="descname">unmount</tt><big>(</big><em>self</em>, <em>force=True</em><big>)</big><a class="headerlink" href="#fileutils.interface.MountPoint.unmount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unmount the topmost device attached to this mount point.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.usage">
+<tt class="descname">usage</tt><a class="headerlink" href="#fileutils.interface.MountPoint.usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#fileutils.interface.DiskUsage" title="fileutils.interface.DiskUsage"><tt class="xref py py-obj docutils literal"><span class="pre">DiskUsage</span></tt></a> indicating the current disk and inode
+usage for this mount point.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountPoint.used_space">
+<tt class="descname">used_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.used_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorthand for self.<a class="reference internal" href="#fileutils.interface.MountPoint.usage" title="fileutils.interface.MountPoint.usage"><tt class="xref py py-obj docutils literal"><span class="pre">usage</span></tt></a>.<a class="reference internal" href="#fileutils.interface.DiskUsage.space" title="fileutils.interface.DiskUsage.space"><tt class="xref py py-obj docutils literal"><span class="pre">space</span></tt></a>.<a class="reference internal" href="#fileutils.interface.Usage.used" title="fileutils.interface.Usage.used"><tt class="xref py py-obj docutils literal"><span class="pre">used</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-mountdevice">
+<h2>Class MountDevice<a class="headerlink" href="#class-mountdevice" title="Permalink to this headline">¶</a></h2>
+<p>A device as mounted under a particular mount point.</p>
+<p>Note: The API of this class is still in flux. I&#8217;m particularly considering
+splitting it into two classes whose names are yet to be decided, one of
+which will contain every property except subpath and the other of which
+will contain two properties, subpath and device, the latter pointing to an
+instance of the former class. Bear this in mind when writing code that uses
+this class.</p>
+<dl class="class">
+<dt id="fileutils.interface.MountDevice">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">MountDevice</tt><a class="headerlink" href="#fileutils.interface.MountDevice" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dl class="attribute">
+<dt id="fileutils.interface.MountDevice.device">
+<tt class="descname">device</tt><a class="headerlink" href="#fileutils.interface.MountDevice.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>A textual representation of this device, if the subclass exposes such
+information.</p>
+<p>If <a class="reference internal" href="#fileutils.interface.MountDevice.location" title="fileutils.interface.MountDevice.location"><tt class="xref py py-obj docutils literal"><span class="pre">self.location</span></tt></a> is not None, this will be
+self.location.path.</p>
+<p>On Linux, for special file system types, this will be the name of the
+type in question; &#8216;tmpfs&#8217;, for example.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountDevice.location">
+<tt class="descname">location</tt><a class="headerlink" href="#fileutils.interface.MountDevice.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>The location of this device as a <a class="reference internal" href="#fileutils.interface.BaseFile" title="fileutils.interface.BaseFile"><tt class="xref py py-obj docutils literal"><span class="pre">BaseFile</span></tt></a> instance, if the subclass
+exposes mount point devices in the form of a file in the file system
+hierarchy. On Linux, for example, this might be something like
+File(&#8216;/dev/sda1&#8217;). On Windows this will be None, and it will also be
+None on Linux for special file systems like tmpfs that don&#8217;t have any
+representation in the file system hierarchy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.MountDevice.subpath">
+<tt class="descname">subpath</tt><a class="headerlink" href="#fileutils.interface.MountDevice.subpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>The subpath, as a string containing an absolute path, of the file
+system located on this device being exposed to the mount point on which
+this device is mounted, or None if the subclass doesn&#8217;t support such a
+notion.</p>
+<p>For most mount devices that support this, this will just be &#8220;/&#8221;. It can
+be a different path when a nested path within a particular file system
+is exposed with a bind mount; in such a case, this is the path within
+the file system being exposed at the mount point on which this device
+is mounted.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-diskusage">
+<h2>Class DiskUsage<a class="headerlink" href="#class-diskusage" title="Permalink to this headline">¶</a></h2>
+<p>Disk space and inode usage.</p>
+<p>Instances of this class are typically obtained from
+<a class="reference internal" href="#fileutils.interface.MountPoint.usage" title="fileutils.interface.MountPoint.usage"><tt class="xref py py-obj docutils literal"><span class="pre">MountPoint.usage</span></tt></a>.</p>
+<dl class="class">
+<dt id="fileutils.interface.DiskUsage">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">DiskUsage</tt><big>(</big><em>self</em>, <em>space</em>, <em>inodes</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="fileutils.interface.DiskUsage.__repr__">
+<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage.__repr__" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.interface.DiskUsage.__str__">
+<tt class="descname">__str__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage.__str__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.DiskUsage.inodes">
+<tt class="descname">inodes</tt><a class="headerlink" href="#fileutils.interface.DiskUsage.inodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#fileutils.interface.Usage" title="fileutils.interface.Usage"><tt class="xref py py-obj docutils literal"><span class="pre">Usage</span></tt></a> indicating utilization of inodes, or None
+on platforms (like Windows) that don&#8217;t have such a concept.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.DiskUsage.space">
+<tt class="descname">space</tt><a class="headerlink" href="#fileutils.interface.DiskUsage.space" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#fileutils.interface.Usage" title="fileutils.interface.Usage"><tt class="xref py py-obj docutils literal"><span class="pre">Usage</span></tt></a> indicating utilization of disk space.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-usage">
+<h2>Class Usage<a class="headerlink" href="#class-usage" title="Permalink to this headline">¶</a></h2>
+<p>Usage of a particular file system resource, such as disk space (given in
+bytes) or inodes.</p>
+<dl class="class">
+<dt id="fileutils.interface.Usage">
+<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Usage</tt><big>(</big><em>self</em>, <em>total</em>, <em>used</em>, <em>available</em><big>)</big><a class="headerlink" href="#fileutils.interface.Usage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="fileutils.interface.Usage.__repr__">
+<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Usage.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Usage.available">
+<tt class="descname">available</tt><a class="headerlink" href="#fileutils.interface.Usage.available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of free disk space or number of inodes available to the current
+user.</p>
+<p>This is often the same as <a class="reference internal" href="#fileutils.interface.Usage.free" title="fileutils.interface.Usage.free"><tt class="xref py py-obj docutils literal"><span class="pre">self.free</span></tt></a>, but things like disk
+space quotas and blocks reserved for the superuser can make it have a
+value less than that of self.free.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Usage.free">
+<tt class="descname">free</tt><a class="headerlink" href="#fileutils.interface.Usage.free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of disk space or number of inodes not currently in use.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Usage.total">
+<tt class="descname">total</tt><a class="headerlink" href="#fileutils.interface.Usage.total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total amount of disk space or inodes available.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fileutils.interface.Usage.used">
+<tt class="descname">used</tt><a class="headerlink" href="#fileutils.interface.Usage.used" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of disk space or number of inodes currently in use.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="class-basefile">
 <h2>Class BaseFile<a class="headerlink" href="#class-basefile" title="Permalink to this headline">¶</a></h2>
 <p>An abstract class representing an absolute path to a file on a particular
 FileSystem instance.</p>
-<p>Instances of this class can be obtained from FileSystem.child(). They can
-also be obtained from FileSystem.roots, a property providing a list of all
+<p>Instances of this class can be obtained from
+<a class="reference internal" href="#fileutils.interface.FileSystem.child" title="fileutils.interface.FileSystem.child"><tt class="xref py py-obj docutils literal"><span class="pre">FileSystem.child()</span></tt></a> &lt;FileSystem.child&gt;`. They can also be obtained
+from <a class="reference internal" href="#fileutils.interface.FileSystem.roots" title="fileutils.interface.FileSystem.roots"><tt class="xref py py-obj docutils literal"><span class="pre">FileSystem.roots</span></tt></a>, a property providing a list of all
 of the file system&#8217;s root directories.</p>
 <dl class="class">
 <dt id="fileutils.interface.BaseFile">
@@ -407,8 +675,8 @@ True even for broken symbolic links.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="fileutils.interface.BaseFile.is_mountpoint">
-<tt class="descname">is_mountpoint</tt><a class="headerlink" href="#fileutils.interface.BaseFile.is_mountpoint" title="Permalink to this definition">¶</a></dt>
+<dt id="fileutils.interface.BaseFile.is_mount">
+<tt class="descname">is_mount</tt><a class="headerlink" href="#fileutils.interface.BaseFile.is_mount" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this File is a mount point, False if it isn&#8217;t.</p>
 <p>This is just short for self.mountpoint.location == self.</p>
 </dd></dl>
@@ -587,7 +855,7 @@ with directories at present).</p>
 <dl class="method">
 <dt id="fileutils.interface.BaseFile.safe_child">
 <tt class="descname">safe_child</tt><big>(</big><em>self</em>, <em>*names</em><big>)</big><a class="headerlink" href="#fileutils.interface.BaseFile.safe_child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as self.child(<a href="#id1"><span class="problematic" id="id2">*</span></a>names), but checks that the resulting file is a
+<dd><p>Same as self.child(<a href="#id3"><span class="problematic" id="id4">*</span></a>names), but checks that the resulting file is a
 descendant of self. If it&#8217;s not, an exception will be thrown. This
 allows unsanitized paths to be used without fear that things like &#8221;..&#8221;
 will be used to escape the confines of self.</p>
@@ -656,255 +924,6 @@ byte-for-byte. If it&#8217;s False, the file will be written in text mode.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="class-diskusage">
-<h2>Class DiskUsage<a class="headerlink" href="#class-diskusage" title="Permalink to this headline">¶</a></h2>
-<p>Disk space and inode usage.</p>
-<p>Instances of this class are typically obtained from MountPoint.usage.</p>
-<dl class="class">
-<dt id="fileutils.interface.DiskUsage">
-<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">DiskUsage</tt><big>(</big><em>self</em>, <em>space</em>, <em>inodes</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="fileutils.interface.DiskUsage.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage.__repr__" title="Permalink to this definition">¶</a></dt>
-<dt id="fileutils.interface.DiskUsage.__str__">
-<tt class="descname">__str__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.DiskUsage.__str__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.DiskUsage.inodes">
-<tt class="descname">inodes</tt><a class="headerlink" href="#fileutils.interface.DiskUsage.inodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of Usage indicating utilization of inodes, or None on
-platforms (like Windows) that don&#8217;t have such a concept.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.DiskUsage.space">
-<tt class="descname">space</tt><a class="headerlink" href="#fileutils.interface.DiskUsage.space" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of Usage indicating utilization of disk space.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="class-filesystem">
-<h2>Class FileSystem<a class="headerlink" href="#class-filesystem" title="Permalink to this headline">¶</a></h2>
-<p>An abstract class representing an entire file system hierarchy.</p>
-<p>Instances of this class are typically obtained by directly instantiating
-its subclasses. The most commonly used subclass, LocalFileSystem, maintains
-a singleton instance that corresponds to the filesystem of the local
-machine. Other subclasses include SSHFileSystem.</p>
-<dl class="class">
-<dt id="fileutils.interface.FileSystem">
-<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">FileSystem</tt><a class="headerlink" href="#fileutils.interface.FileSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
-<dl class="method">
-<dt id="fileutils.interface.FileSystem.child">
-<tt class="descname">child</tt><big>(</big><em>self</em>, <em>path</em><big>)</big><a class="headerlink" href="#fileutils.interface.FileSystem.child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an instance of BaseFile representing the file located at the
-specific path.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.FileSystem.mountpoints">
-<tt class="descname">mountpoints</tt><a class="headerlink" href="#fileutils.interface.FileSystem.mountpoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of MountPoint instances corresponding to all mount points on the
-system.</p>
-<p>On Windows, there will be exactly one mount point for each drive
-letter. On POSIX systems, there will be one mount point per, well,
-mount point.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.FileSystem.roots">
-<tt class="descname">roots</tt><a class="headerlink" href="#fileutils.interface.FileSystem.roots" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of all of the file system hierarchy roots exposes by this
-FileSystem instance.</p>
-<p>On Windows, there will be one root per drive letter. On POSIX systems,
-there will be exactly one root, namely &#8216;/&#8217;.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="class-mountdevice">
-<h2>Class MountDevice<a class="headerlink" href="#class-mountdevice" title="Permalink to this headline">¶</a></h2>
-<p>A device as mounted under a particular mount point.</p>
-<p>Note: The API of this class is still in flux. I&#8217;m particularly considering
-splitting it into two classes whose names are yet to be decided, one of
-which will contain every property except subpath and the other of which
-will contain two properties, subpath and device, the latter pointing to an
-instance of the former class. Bear this in mind when writing code that uses
-this class.</p>
-<dl class="class">
-<dt id="fileutils.interface.MountDevice">
-<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">MountDevice</tt><a class="headerlink" href="#fileutils.interface.MountDevice" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
-<dl class="attribute">
-<dt id="fileutils.interface.MountDevice.device">
-<tt class="descname">device</tt><a class="headerlink" href="#fileutils.interface.MountDevice.device" title="Permalink to this definition">¶</a></dt>
-<dd><p>A textual representation of this device, if the subclass exposes such
-information.</p>
-<p>If self.location is not None, this will be self.location.path.</p>
-<p>On Linux, for special file system types, this will be the name of the
-type in question; &#8216;tmpfs&#8217;, for example.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountDevice.location">
-<tt class="descname">location</tt><a class="headerlink" href="#fileutils.interface.MountDevice.location" title="Permalink to this definition">¶</a></dt>
-<dd><p>The location of this device as a BaseFile instance, if the subclass
-exposes mount point devices in the form of a file in the file system
-hierarchy. On Linux, for example, this might be something like
-File(&#8216;/dev/sda1&#8217;). On Windows this will be None, and it will also be
-None on Linux for special file systems like tmpfs that don&#8217;t have any
-representation in the file system hierarchy.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountDevice.subpath">
-<tt class="descname">subpath</tt><a class="headerlink" href="#fileutils.interface.MountDevice.subpath" title="Permalink to this definition">¶</a></dt>
-<dd><p>The subpath, as a string containing an absolute path, of the file
-system located on this device being exposed to the mount point on which
-this device is mounted, or None if the subclass doesn&#8217;t support such a
-notion.</p>
-<p>For most mount devices that support this, this will just be &#8220;/&#8221;. It can
-be a different path when a nested path within a particular file system
-is exposed with a bind mount; in such a case, this is the path within
-the file system being exposed at the mount point on which this device
-is mounted.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="class-mountpoint">
-<h2>Class MountPoint<a class="headerlink" href="#class-mountpoint" title="Permalink to this headline">¶</a></h2>
-<p>An abstract class representing mount points on a file system.</p>
-<p>Instances of this class can be obtained from BaseFile.mountpoint, a
-property that returns the MountPoint instance on which the file in question
-resides. They can also be obtained from FileSystem.mountpoints, a property
-that returns a list of all of the system&#8217;s mount points.</p>
-<dl class="class">
-<dt id="fileutils.interface.MountPoint">
-<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">MountPoint</tt><a class="headerlink" href="#fileutils.interface.MountPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.available_space">
-<tt class="descname">available_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.available_space" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.device">
-<tt class="descname">device</tt><a class="headerlink" href="#fileutils.interface.MountPoint.device" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of MountDevice representing the topmost device currently
-mounted at this mount point. This is the device whose data is currently
-available at this mount point.</p>
-<p>This is just short for self.devices[-1], but if self.devices is empty,
-None will be returned instead.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.devices">
-<tt class="descname">devices</tt><a class="headerlink" href="#fileutils.interface.MountPoint.devices" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of instances of MountDevice representing all of the devices
-currently mounted at this mount point, in the order in which they were
-attached. The last of these is the device whose data is currently
-available at this mount point.</p>
-<p>Not all systems support stacks of devices mounted at the same
-mount point. For systems that don&#8217;t support this, there will never be
-more than one device mounted at any given mount point. For systems that
-do (such as Linux), unmounting a mount point simply causes the last
-device attached to the mount point to be popped off the stack, and the
-next device&#8217;s data is made available at that mount point.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.filesystem">
-<tt class="descname">filesystem</tt><a class="headerlink" href="#fileutils.interface.MountPoint.filesystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>The FileSystem instance on which this mount point resides.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.free_space">
-<tt class="descname">free_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.free_space" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.location">
-<tt class="descname">location</tt><a class="headerlink" href="#fileutils.interface.MountPoint.location" title="Permalink to this definition">¶</a></dt>
-<dd><p>The BaseFile instance indicating the directory at which this mount
-point is mounted.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.total_space">
-<tt class="descname">total_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.total_space" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fileutils.interface.MountPoint.unmount">
-<tt class="descname">unmount</tt><big>(</big><em>self</em>, <em>force=True</em><big>)</big><a class="headerlink" href="#fileutils.interface.MountPoint.unmount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unmount the topmost device attached to this mountpoint.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.usage">
-<tt class="descname">usage</tt><a class="headerlink" href="#fileutils.interface.MountPoint.usage" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of DiskUsage indicating the current disk and inode usage
-for this mount point.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.MountPoint.used_space">
-<tt class="descname">used_space</tt><a class="headerlink" href="#fileutils.interface.MountPoint.used_space" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="class-usage">
-<h2>Class Usage<a class="headerlink" href="#class-usage" title="Permalink to this headline">¶</a></h2>
-<p>Usage of a particular file system resource, such as disk space (given in
-bytes) or inodes.</p>
-<dl class="class">
-<dt id="fileutils.interface.Usage">
-<em class="property">class </em><tt class="descclassname">fileutils.interface.</tt><tt class="descname">Usage</tt><big>(</big><em>self</em>, <em>total</em>, <em>used</em>, <em>available</em><big>)</big><a class="headerlink" href="#fileutils.interface.Usage" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="fileutils.interface.Usage.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.interface.Usage.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.Usage.available">
-<tt class="descname">available</tt><a class="headerlink" href="#fileutils.interface.Usage.available" title="Permalink to this definition">¶</a></dt>
-<dd><p>Amount of free disk space or number of inodes available to the current
-user.</p>
-<p>This is often the same as self.free, but things like disk space quotas
-and blocks reserved for the superuser can make it have a value less
-than that of self.free.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.Usage.free">
-<tt class="descname">free</tt><a class="headerlink" href="#fileutils.interface.Usage.free" title="Permalink to this definition">¶</a></dt>
-<dd><p>Amount of disk space or number of inodes not currently in use.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.Usage.total">
-<tt class="descname">total</tt><a class="headerlink" href="#fileutils.interface.Usage.total" title="Permalink to this definition">¶</a></dt>
-<dd><p>Total amount of disk space or inodes available.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="fileutils.interface.Usage.used">
-<tt class="descname">used</tt><a class="headerlink" href="#fileutils.interface.Usage.used" title="Permalink to this definition">¶</a></dt>
-<dd><p>Amount of disk space or number of inodes currently in use.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -916,12 +935,12 @@ than that of self.free.</p>
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fileutils.interface</span></tt> &#8212; Abstract classes.</a><ul>
-<li><a class="reference internal" href="#class-basefile">Class BaseFile</a></li>
-<li><a class="reference internal" href="#class-diskusage">Class DiskUsage</a></li>
 <li><a class="reference internal" href="#class-filesystem">Class FileSystem</a></li>
-<li><a class="reference internal" href="#class-mountdevice">Class MountDevice</a></li>
 <li><a class="reference internal" href="#class-mountpoint">Class MountPoint</a></li>
+<li><a class="reference internal" href="#class-mountdevice">Class MountDevice</a></li>
+<li><a class="reference internal" href="#class-diskusage">Class DiskUsage</a></li>
 <li><a class="reference internal" href="#class-usage">Class Usage</a></li>
+<li><a class="reference internal" href="#class-basefile">Class BaseFile</a></li>
 </ul>
 </li>
 </ul>

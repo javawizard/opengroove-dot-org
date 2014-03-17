@@ -178,107 +178,6 @@ was passed to it.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="stm.elapsed">
-<tt class="descclassname">stm.</tt><tt class="descname">elapsed</tt><big>(</big><em>seconds=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#stm.elapsed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides support for timeouts.</p>
-<p>This function returns True if the specified amount of time has passed, or
-False if it hasn&#8217;t. This provides a transactionally safe way to implement
-things like timeouts.</p>
-<p>Either seconds or time may be specified. Seconds indicates a number of
-seconds from when this transaction was first attempted after which this
-function will return True. Time indicates an absolute time (given in terms
-of time.time()) at which this function will return True.</p>
-<p>This could be used to, for example, pop an item from the end of a list,
-waiting up to n seconds for an item to become available before raising
-Timeout:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">some_list</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">some_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-<span class="k">elif</span> <span class="n">elapsed</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="n">Timeout</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">retry</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>None is considered to be an infinite timeout, so False will be returned if
-both seconds and time are None. This mirrors the old behavior of retry()
-when it took on elapsed&#8217;s job, and makes writing code that may or may not
-time out somewhat easier.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="stm.invariant">
-<tt class="descclassname">stm.</tt><tt class="descname">invariant</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.invariant" title="Permalink to this definition">¶</a></dt>
-<dd><p>(This function is a wrapper on top of watch(). The same warning present on
-watch() applies here.)</p>
-<p>Provides support for transactional invariants.</p>
-<p>This function is called to propose a new invariant. The passed-in function
-must succeed now, at the end of the current transaction, and at the end of
-every subsequent transaction. If it fails at the end of any transaction,
-that transaction will be immediately aborted, and the exception raised by
-the invariant propagated.</p>
-<p>To succeed, a function must return either None or True. It can indicate
-failure either by returning False or by raising an exception. This allows
-both invariants that signal failure by raising an exception and invariants
-that signal success/failure by returning the value of a simple boolean
-expression.</p>
-<p>This function used to be its own primitive before the introduction of
-watch(). It&#8217;s now just a simple wrapper on top of that function.</p>
-<p>TODO: Update documentation</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="stm.or_else">
-<tt class="descclassname">stm.</tt><tt class="descname">or_else</tt><big>(</big><em>*functions</em><big>)</big><a class="headerlink" href="#stm.or_else" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run (and return the value produced by) the first function passed into this
-function that does not retry (see the documentation of the retry()
-function), or retry if all of the passed-in functions retry (or if no
-arguments are passed in). See the documentation for retry() for more
-information.</p>
-<p>This function could be considered the STM equivalent of Unix&#8217;s select()
-system call. One could, for example, read an item from the first of two
-queues, q1 and q2, to actually produce an item with something like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">q2</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>or_else can also be used to make non-blocking variants of blocking
-functions. For example, given one of our queues above, we can get the first
-value available from the queue or, if it does not currently have any values
-available, return None with:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">None</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Note that each function passed in is automatically run in its own nested
-transaction so that the effects of those that end up retrying are reverted
-and only the effects of the function that succeeds are persisted. Also note
-that if any of the functions raise an exception, that exception will be
-propagated, and the side effects of the function reverted. (I&#8217;m still
-debating that last point, so that could change.)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="stm.previously">
-<tt class="descclassname">stm.</tt><tt class="descname">previously</tt><big>(</big><em>function</em>, <em>toplevel=False</em><big>)</big><a class="headerlink" href="#stm.previously" title="Permalink to this definition">¶</a></dt>
-<dd><p>(This function is highly experimental. Use at your own risk.)</p>
-<p>Return the value that the specified function would have returned had it
-been run in a transaction just prior to the current one.</p>
-<p>If toplevel is False, the specified function will be run as if it were just
-before the start of the innermost nested transaction, if any. If toplevel
-is True, the specified function will be run as if it were just before the
-start of the outermost transaction.</p>
-<p>This function can be used to propose invariants that reason about changes
-made over the course of a transaction, like the following invariant that
-prevents a particular variable from ever being decremented:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="nd">@invariant</span>
-<span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
-    <span class="n">old_value</span> <span class="o">=</span> <span class="n">previously</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
-    <span class="n">new_value</span> <span class="o">=</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">new_value</span> <span class="o">&lt;</span> <span class="n">old_value</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;This var cannot be decremented&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="stm.retry">
 <tt class="descclassname">stm.</tt><tt class="descname">retry</tt><big>(</big><em>resume_after=None</em>, <em>resume_at=None</em><big>)</big><a class="headerlink" href="#stm.retry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides support for transactions that block.</p>
@@ -311,6 +210,79 @@ retry to behave thus:</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="stm.or_else">
+<tt class="descclassname">stm.</tt><tt class="descname">or_else</tt><big>(</big><em>*functions</em><big>)</big><a class="headerlink" href="#stm.or_else" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run (and return the value produced by) the first function passed into this
+function that does not retry (see the documentation of the retry()
+function), or retry if all of the passed-in functions retry (or if no
+arguments are passed in). See the documentation for retry() for more
+information.</p>
+<p>This function could be considered the STM equivalent of Unix&#8217;s select()
+system call. One could, for example, read an item from the first of two
+queues, q1 and q2, to actually produce an item with something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">q2</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or_else can also be used to make non-blocking variants of blocking
+functions. For example, given one of our queues above, we can get the first
+value available from the queue or, if it does not currently have any values
+available, return None with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">item</span> <span class="o">=</span> <span class="n">or_else</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that each function passed in is automatically run in its own nested
+transaction so that the effects of those that end up retrying are reverted
+and only the effects of the function that succeeds are persisted. Also note
+that if any of the functions raise an exception, that exception will be
+propagated, and the side effects of the function reverted. (I&#8217;m still
+debating that last point, so that could change.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.invariant">
+<tt class="descclassname">stm.</tt><tt class="descname">invariant</tt><big>(</big><em>function</em><big>)</big><a class="headerlink" href="#stm.invariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>(This function is a wrapper on top of watch(). The same warning present on
+watch() applies here.)</p>
+<p>Provides support for transactional invariants.</p>
+<p>This function is called to propose a new invariant. The passed-in function
+must succeed now, at the end of the current transaction, and at the end of
+every subsequent transaction. If it fails at the end of any transaction,
+that transaction will be immediately aborted, and the exception raised by
+the invariant propagated.</p>
+<p>To succeed, a function must return either None or True. It can indicate
+failure either by returning False or by raising an exception. This allows
+both invariants that signal failure by raising an exception and invariants
+that signal success/failure by returning the value of a simple boolean
+expression.</p>
+<p>This function used to be its own primitive before the introduction of
+watch(). It&#8217;s now just a simple wrapper on top of that function.</p>
+<p>TODO: Update documentation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.previously">
+<tt class="descclassname">stm.</tt><tt class="descname">previously</tt><big>(</big><em>function</em>, <em>toplevel=False</em><big>)</big><a class="headerlink" href="#stm.previously" title="Permalink to this definition">¶</a></dt>
+<dd><p>(This function is highly experimental. Use at your own risk.)</p>
+<p>Return the value that the specified function would have returned had it
+been run in a transaction just prior to the current one.</p>
+<p>If toplevel is False, the specified function will be run as if it were just
+before the start of the innermost nested transaction, if any. If toplevel
+is True, the specified function will be run as if it were just before the
+start of the outermost transaction.</p>
+<p>This function can be used to propose invariants that reason about changes
+made over the course of a transaction, like the following invariant that
+prevents a particular variable from ever being decremented:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@invariant</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">():</span>
+    <span class="n">old_value</span> <span class="o">=</span> <span class="n">previously</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+    <span class="n">new_value</span> <span class="o">=</span> <span class="n">some_var</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">new_value</span> <span class="o">&lt;</span> <span class="n">old_value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;This var cannot be decremented&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="stm.watch">
 <tt class="descclassname">stm.</tt><tt class="descname">watch</tt><big>(</big><em>function</em>, <em>callback=None</em><big>)</big><a class="headerlink" href="#stm.watch" title="Permalink to this definition">¶</a></dt>
 <dd><p>(This function is highly experimental and should not yet be used.)</p>
@@ -321,6 +293,34 @@ wrapper around this function.</p>
 <p>If callback is None, then a function is returned such that
 watch(function)(callback) is equivalent to watch(function, callback). This
 allows watch to be used as a decorator.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stm.elapsed">
+<tt class="descclassname">stm.</tt><tt class="descname">elapsed</tt><big>(</big><em>seconds=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#stm.elapsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides support for timeouts.</p>
+<p>This function returns True if the specified amount of time has passed, or
+False if it hasn&#8217;t. This provides a transactionally safe way to implement
+things like timeouts.</p>
+<p>Either seconds or time may be specified. Seconds indicates a number of
+seconds from when this transaction was first attempted after which this
+function will return True. Time indicates an absolute time (given in terms
+of time.time()) at which this function will return True.</p>
+<p>This could be used to, for example, pop an item from the end of a list,
+waiting up to n seconds for an item to become available before raising
+Timeout:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">some_list</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">some_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">elapsed</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">Timeout</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">retry</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>None is considered to be an infinite timeout, so False will be returned if
+both seconds and time are None. This mirrors the old behavior of retry()
+when it took on elapsed&#8217;s job, and makes writing code that may or may not
+time out somewhat easier.</p>
 </dd></dl>
 
 </div>

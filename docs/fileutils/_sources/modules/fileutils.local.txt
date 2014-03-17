@@ -102,18 +102,7 @@ created.
 
    .. method:: delete(self, contents=False, ignore_missing=False)
 
-      Deletes this file or folder, recursively deleting children if
-      necessary.
 
-      The contents parameter has no effect, and is present for backward
-      compatibility.
-
-      If the file does not exist and ignore_missing is False, an exception
-      will be thrown. If the file does not exist but ignore_missing is True,
-      this function simply does nothing.
-
-      Note that symbolic links are never recursed into, and are instead
-      themselves removed.
 
       |  *Overrides* :obj:`~fileutils.interface.BaseFile.delete` *in class* :obj:`~fileutils.interface.BaseFile`
 
@@ -277,7 +266,7 @@ created.
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mountpoint`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mount`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 ---------------------
 Class LocalFileSystem
@@ -297,7 +286,7 @@ Class LocalFileSystem
 
       |  *Overrides* :obj:`~fileutils.interface.FileSystem.child` *in class* :obj:`~fileutils.interface.FileSystem`
 
-   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.mountpoints`, :obj:`~fileutils.interface.FileSystem.roots`
+   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.mountpoints`, :obj:`~fileutils.interface.FileSystem.root`, :obj:`~fileutils.interface.FileSystem.roots`
 
 ---------------------
 Class LocalMountPoint
@@ -340,7 +329,7 @@ Class PosixFile
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mountpoint`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mount`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 ----------------------------------
 Class PosixLocalExtendedAttributes
@@ -350,11 +339,12 @@ Class PosixLocalExtendedAttributes
 
 *Method resolution order:* :obj:`~fileutils.attributes.ExtendedAttributes`, :obj:`~fileutils.attributes.AttributeSet`
 
-.. class:: PosixLocalExtendedAttributes(self, path)
+.. class:: PosixLocalExtendedAttributes(self, f)
 
 
 
    .. method:: __repr__(self)
+               __str__(self)
 
 
 
@@ -409,6 +399,8 @@ Class PosixLocalFileSystem
       |  *Overrides* :obj:`~fileutils.interface.FileSystem.roots` *in class* :obj:`~fileutils.interface.FileSystem`
 
    *Members inherited from class* :obj:`~fileutils.local.LocalFileSystem`\ *:* :obj:`~fileutils.local.LocalFileSystem.child`
+
+   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.root`
 
 --------------------------
 Class PosixLocalMountPoint
@@ -467,7 +459,12 @@ Class PosixLocalPermissions
 
 *Method resolution order:* :obj:`~fileutils.attributes.PosixPermissions`, :obj:`~fileutils.attributes.AttributeSet`
 
-.. class:: PosixLocalPermissions(self, path)
+.. class:: PosixLocalPermissions(self, f)
+
+
+
+   .. method:: __repr__(self)
+               __str__(self)
 
 
 
@@ -520,7 +517,7 @@ Class WindowsFile
 
    *Members inherited from class* :obj:`~fileutils.mixins.ChildrenMixin`\ *:* :obj:`~fileutils.mixins.ChildrenMixin.children`
 
-   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mountpoint`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
+   *Members inherited from class* :obj:`~fileutils.interface.BaseFile`\ *:* :obj:`~fileutils.interface.BaseFile.__div__`, :obj:`~fileutils.interface.BaseFile.ancestor_of`, :obj:`~fileutils.interface.BaseFile.ancestors`, :obj:`~fileutils.interface.BaseFile.append`, :obj:`~fileutils.interface.BaseFile.as_working`, :obj:`~fileutils.interface.BaseFile.cd`, :obj:`~fileutils.interface.BaseFile.check_file`, :obj:`~fileutils.interface.BaseFile.check_folder`, :obj:`~fileutils.interface.BaseFile.copy_attributes_to`, :obj:`~fileutils.interface.BaseFile.copy_into`, :obj:`~fileutils.interface.BaseFile.copy_to`, :obj:`~fileutils.interface.BaseFile.dereference`, :obj:`~fileutils.interface.BaseFile.descendant_of`, :obj:`~fileutils.interface.BaseFile.exists`, :obj:`~fileutils.interface.BaseFile.get_ancestors`, :obj:`~fileutils.interface.BaseFile.get_path`, :obj:`~fileutils.interface.BaseFile.hash`, :obj:`~fileutils.interface.BaseFile.is_broken`, :obj:`~fileutils.interface.BaseFile.is_directory`, :obj:`~fileutils.interface.BaseFile.is_file`, :obj:`~fileutils.interface.BaseFile.is_folder`, :obj:`~fileutils.interface.BaseFile.is_link`, :obj:`~fileutils.interface.BaseFile.is_mount`, :obj:`~fileutils.interface.BaseFile.makedirs`, :obj:`~fileutils.interface.BaseFile.mkdir`, :obj:`~fileutils.interface.BaseFile.mkdirs`, :obj:`~fileutils.interface.BaseFile.name`, :obj:`~fileutils.interface.BaseFile.path`, :obj:`~fileutils.interface.BaseFile.path_components`, :obj:`~fileutils.interface.BaseFile.read`, :obj:`~fileutils.interface.BaseFile.read_blocks`, :obj:`~fileutils.interface.BaseFile.recurse`, :obj:`~fileutils.interface.BaseFile.safe_child`, :obj:`~fileutils.interface.BaseFile.same_as`, :obj:`~fileutils.interface.BaseFile.sibling`, :obj:`~fileutils.interface.BaseFile.valid`, :obj:`~fileutils.interface.BaseFile.write`
 
 ----------------------------
 Class WindowsLocalFileSystem
@@ -547,6 +544,8 @@ Class WindowsLocalFileSystem
       |  *Overrides* :obj:`~fileutils.interface.FileSystem.roots` *in class* :obj:`~fileutils.interface.FileSystem`
 
    *Members inherited from class* :obj:`~fileutils.local.LocalFileSystem`\ *:* :obj:`~fileutils.local.LocalFileSystem.child`
+
+   *Members inherited from class* :obj:`~fileutils.interface.FileSystem`\ *:* :obj:`~fileutils.interface.FileSystem.root`
 
 -----------------------
 Class WindowsMountPoint

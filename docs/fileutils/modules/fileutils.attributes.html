@@ -109,6 +109,7 @@ method. Subclasses of those subclasses shouldn&#8217;t need to override this.</p
 </div>
 <div class="section" id="class-extendedattributes">
 <h2>Class ExtendedAttributes<a class="headerlink" href="#class-extendedattributes" title="Permalink to this headline">¶</a></h2>
+<p>An attribute set providing access to a file&#8217;s extended user attributes.</p>
 <p><em>Method resolution order:</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a></p>
 <dl class="class">
 <dt id="fileutils.attributes.ExtendedAttributes">
@@ -125,22 +126,29 @@ method. Subclasses of those subclasses shouldn&#8217;t need to override this.</p
 <dl class="method">
 <dt id="fileutils.attributes.ExtendedAttributes.delete">
 <tt class="descname">delete</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delete the extended user attribute with the specified name.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fileutils.attributes.ExtendedAttributes.get">
 <tt class="descname">get</tt><big>(</big><em>self</em>, <em>name</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the value of the extended attribute with the specified name, or
+raise KeyError if no such extended attribute exists.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fileutils.attributes.ExtendedAttributes.list">
 <tt class="descname">list</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a list of strings naming all of the extended attributes present
+on this file.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fileutils.attributes.ExtendedAttributes.set">
 <tt class="descname">set</tt><big>(</big><em>self</em>, <em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#fileutils.attributes.ExtendedAttributes.set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the value of the specified extended attribute to the specified
+value.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -178,7 +186,13 @@ to False clears all executable bits that are set.</p>
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.mode">
 <tt class="descname">mode</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.mode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The numerical mode of this file.</p>
+<p>Setting the value of this property causes a call to chmod to be made,
+unless this file is a symbolic link and the underlying platform doesn&#8217;t
+support custom permissions on symbolic links (Linux is such a
+platform); in such a case, nothing whatsoever happens, and the new mode
+is silently ignored.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.other">
@@ -193,12 +207,16 @@ to False clears all executable bits that are set.</p>
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.setgid">
 <tt class="descname">setgid</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.setgid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>True if this file&#8217;s setgid bit is set, false if it isn&#8217;t.</p>
+<p>This property can be modified to set or clear the file&#8217;s setgid flag.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.setuid">
 <tt class="descname">setuid</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.setuid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>True if this file&#8217;s setuid bit is set, false if it isn&#8217;t.</p>
+<p>This property can be modified to set or clear the file&#8217;s setuid flag.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.sticky">
@@ -208,7 +226,20 @@ to False clears all executable bits that are set.</p>
 <dl class="attribute">
 <dt id="fileutils.attributes.PosixPermissions.user">
 <tt class="descname">user</tt><a class="headerlink" href="#fileutils.attributes.PosixPermissions.user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>An object with three properties: read, write, and execute. These
+properties are all booleans corresponding to the respective user
+permission bit. They can be set to new values to modify the permissions
+of the file in question.</p>
+<p>For example, one can see if this file&#8217;s owner has permission to execute
+this file with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">execute</span>
+</pre></div>
+</div>
+<p>and one can mark the file as being executable by its owner with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">execute</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <p><em>Members inherited from class</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet" title="fileutils.attributes.AttributeSet"><tt class="xref py py-obj docutils literal"><span class="pre">AttributeSet</span></tt></a><em>:</em> <a class="reference internal" href="#fileutils.attributes.AttributeSet.copy_to" title="fileutils.attributes.AttributeSet.copy_to"><tt class="xref py py-obj docutils literal"><span class="pre">copy_to</span></tt></a></p>
 </dd></dl>

@@ -63,7 +63,7 @@ thus::
 Class ExtendedAttributes
 ------------------------
 
-
+An attribute set providing access to a file's extended user attributes.
 
 *Method resolution order:* :obj:`~fileutils.attributes.AttributeSet`
 
@@ -79,19 +79,22 @@ Class ExtendedAttributes
 
    .. method:: delete(self, name)
 
-
+      Delete the extended user attribute with the specified name.
 
    .. method:: get(self, name)
 
-
+      Get the value of the extended attribute with the specified name, or
+      raise KeyError if no such extended attribute exists.
 
    .. method:: list(self)
 
-
+      Return a list of strings naming all of the extended attributes present
+      on this file.
 
    .. method:: set(self, name, value)
 
-
+      Set the value of the specified extended attribute to the specified
+      value.
 
 ----------------------
 Class PosixPermissions
@@ -126,7 +129,13 @@ bits.
 
    .. attribute:: mode
 
+      The numerical mode of this file.
 
+      Setting the value of this property causes a call to chmod to be made,
+      unless this file is a symbolic link and the underlying platform doesn't
+      support custom permissions on symbolic links (Linux is such a
+      platform); in such a case, nothing whatsoever happens, and the new mode
+      is silently ignored.
 
    .. attribute:: other
 
@@ -138,11 +147,15 @@ bits.
 
    .. attribute:: setgid
 
+      True if this file's setgid bit is set, false if it isn't.
 
+      This property can be modified to set or clear the file's setgid flag.
 
    .. attribute:: setuid
 
+      True if this file's setuid bit is set, false if it isn't.
 
+      This property can be modified to set or clear the file's setuid flag.
 
    .. attribute:: sticky
 
@@ -150,6 +163,18 @@ bits.
 
    .. attribute:: user
 
+      An object with three properties: read, write, and execute. These
+      properties are all booleans corresponding to the respective user
+      permission bit. They can be set to new values to modify the permissions
+      of the file in question.
 
+      For example, one can see if this file's owner has permission to execute
+      this file with::
+
+          self.user.execute
+
+      and one can mark the file as being executable by its owner with::
+
+          self.user.execute = True
 
    *Members inherited from class* :obj:`~fileutils.attributes.AttributeSet`\ *:* :obj:`~fileutils.attributes.AttributeSet.copy_to`

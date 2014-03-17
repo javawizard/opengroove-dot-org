@@ -4,8 +4,8 @@ set -u
 set -e
 set -x
 
-quickdoc --discover ../../projects/fileutils --html fileutils --interlink http://docs.python.org/2.7 --inheritance
-quickdoc --discover ../../projects/stm --html stm --interlink http://docs.python.org/2.7 --inheritance
+python ../../projects/quickdoc/quickdoc_generator.py --discover ../../projects/fileutils --html fileutils --interlink http://docs.python.org/2.7 --inheritance
+python ../../projects/quickdoc/quickdoc_generator.py --discover ../../projects/stm --html stm --interlink http://docs.python.org/2.7 --inheritance
 
 # Keep docs at www.opengroove.org/docs for now for the sake of all of the links that are already out there
 rm -r ../opengroove-dot-org/docs
