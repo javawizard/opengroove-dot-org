@@ -1,0 +1,13 @@
+<html>
+  <body>
+    Hang tight...
+
+    <script>
+      setInterval(() => {
+        console.log('attempting to call fusionSendData...');
+        window.adsk.fusionSendData('authenticated', window.location.search);
+        console.log('successful!');
+      }, 500);
+    </script>
+  </body>
+</html>
